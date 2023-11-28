@@ -32,7 +32,68 @@ public class Floor {
 	// You probably will only be accessing one queue at any
 	// given time based upon direction - you could choose to 
 	// account for this in your methods.
-	
+
+	/**
+	 * Has call on in specified direction
+	 *
+	 * @param dir determines which queue to look at
+	 * @return whether there is a call in that direction
+	 */
+	protected boolean hasCall(int dir) {
+		return dir == UP ? !up.isEmpty() : !down.isEmpty();
+	}
+
+	/**
+	 * Gets number of calls in specifiied queue
+	 *
+	 * @param dir determines which queue to look at
+	 * @return number of calls in queue
+	 */
+	protected int getNumCalls(int dir) {
+		return dir == UP ? up.size() : down.size();
+	}
+
+
+	/**
+	 * Gets next passenger group from specified queue
+	 *
+	 * @param dir determines which queue to look at
+	 * @return Next passenger group in line
+	 */
+	protected Passengers getNextGroup(int dir) {
+		return dir == UP ? up.peek() : down.peek();
+	}
+
+	/**
+	 * Removes next passenger group from specified queue
+	 *
+	 * @param dir determines which queue to look at
+	 * @return passengers who have been removed
+	 */
+	protected Passengers removeNextGroup(int dir) {
+		if (dir == UP) {
+			return up.poll();
+		}
+		else {
+			return down.poll();
+		}
+	}
+
+	/**
+	 * Adds a group of passengers to specified queue
+	 *
+	 * @param dir determines which queue to look at
+	 * @param group passengers to add to queue
+	 */
+	protected void addGroup(int dir, Passengers group) {
+		if (dir == UP) {
+			up.add(group);
+		}
+		else {
+			down.add(group);
+		}
+	}
+
 	/**
 	 * Queue string. This method provides visibility into the queue
 	 * contents as a string. What exactly you would want to visualize 

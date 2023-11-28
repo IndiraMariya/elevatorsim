@@ -54,7 +54,7 @@ public class Building {
 	public Floor[] floors;
 	
 	/** The elevator. */
-	private Elevator elevator;
+	private Elevator elevator; // TODO: ask if this can be public
 	
 	/**  The Call Manager - it tracks calls for the elevator, analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
@@ -65,7 +65,6 @@ public class Building {
 	 * Instantiates a new building.
 	 *
 	 * @param numFloors the num floors
-	 * @param numElevators the num elevators
 	 * @param logfile the logfile
 	 */
 	public Building(int numFloors, String logfile) {
@@ -88,9 +87,78 @@ public class Building {
 		//TODO: if you defined new fields, make sure to initialize them here
 		
 	}
-	
+
 	// TODO: Place all of your code HERE - state methods and helpers...
-	
+
+	/**
+	 * Initialized the elevator based on the parameters passed in
+	 *
+	 * @param capacity the capacity
+	 * @param floorTicks the floor ticks
+	 * @param doorTicks the door ticks
+	 * @param passPerTick the passengers per tick
+	 */
+	public void initializeElevator(int capacity, int floorTicks, int doorTicks, int passPerTick) {
+		// TODO: implement
+	}
+
+	/**
+	 * Adds a group of passengers to the specified floor
+	 *
+	 * @param group group to be added to the floor
+	 * @param floor the floor to add passengers to
+	 * @param time when the passengers were added to the floor
+	 */
+	public void addPassengers(Passengers group, int floor, int time) {
+		// TODO: implement this method
+	}
+
+	/**
+	 * Returns whether simulation has ended (based on elevator state)
+	 *
+	 * @param time current time
+	 * @return whether the simulation ended
+	 */
+	public boolean hasSimulationEnded(int time) {
+		// TODO: implement
+		return false;
+	}
+
+	/**
+	 * Gets the elevator state
+	 *
+	 * @return the elevator state
+	 */
+	public int getElevatorState() {
+		return elevator.getCurrState();
+	};
+
+	/**
+	 * gets the elevator direction
+	 *
+	 * @return the elevator direction
+	 */
+	public int getElevatorDirection() {
+		return elevator.getDirection();
+	};
+
+	/**
+	 * gets the elevator's current floor
+	 *
+	 * @return the elevator floor
+	 */
+	public int getElevatorFloor() {
+		return elevator.getCurrFloor();
+	};
+
+	/**
+	 * gets the number of passengers in the elevator
+	 *
+	 * @return the number of passengers in the elevator
+	 */
+	public int getElevatorPassengerCount() {
+		return elevator.getNumPassengers();
+	};
 	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
@@ -257,8 +325,10 @@ public class Building {
 	 */
 	private void logElevatorConfig(int capacity, int ticksPerFloor, int ticksDoorOpenClose, 
 			                       int passPerTick, int state, int floor) {
-		LOGGER.info("CONFIG:   Capacity="+capacity+"   Ticks-Floor="+ticksPerFloor+"   Ticks-Door="+ticksDoorOpenClose+
-				    "   Ticks-Passengers="+passPerTick+"   CurrState=" + (printState(state))+"   CurrFloor="+(floor+1));
+		LOGGER.info(
+				"CONFIG:   Capacity="+capacity+"   Ticks-Floor="+ticksPerFloor+"   Ticks-Door="+ticksDoorOpenClose+
+				    "   Ticks-Passengers="+passPerTick+"   CurrState=" + (printState(state))+"   CurrFloor="+(floor+1)
+		);
 	}
 		
 	/**

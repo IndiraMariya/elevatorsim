@@ -67,10 +67,23 @@ public class Passengers {
 	 * @param waitTime the amount of time that the passenger will wait before giving up
 	 */
 	public Passengers(int time, int numPass, int on, int dest, boolean polite, int waitTime) {
-	// TODO: Write the constructor for this class
-	//       Remember to appropriately adjust the onFloor and destFloor to account  
+	//       Remember to appropriately adjust the onFloor and destFloor to account
 	//       to convert from American to European numbering...
-		
+		// set values
+		this.time = time;
+		this.numPass = numPass;
+		this.onFloor = on - 1;
+		this.destFloor = dest - 1;
+		this.polite = polite;
+		this.waitTime = waitTime;
+
+		// calculated values
+		this.timeWillGiveUp = time + waitTime;
+		this.direction = on < dest ? UP : DOWN; // if starting floor < end floor -> UP, else DOWN
+
+		// id
+		this.id = ID;
+		ID += 1;
 	}
 	
 	
@@ -82,7 +95,7 @@ public class Passengers {
 	 * @return the id
 	 */
 	public int getId() {
-		return -1;
+		return this.id;
 	}
 
 	/**
@@ -91,34 +104,34 @@ public class Passengers {
 	 * @return the time
 	 */
 	public int getTime() {
-		return -1;
+		return this.time;
 	}
 
 	/**
-	 * Gets the num pass.
+	 * Gets the number of passengers.
 	 *
 	 * @return the num pass
 	 */
 	public int getNumPass() {
-		return -1;
+		return this.numPass;
 	}
 
 	/**
-	 * Gets the on floor.
+	 * Gets the floor the passenger appears on.
 	 *
 	 * @return the on floor
 	 */
 	public int getOnFloor() {
-		return -1;
+		return this.onFloor;
 	}
 
 	/**
-	 * Gets the dest floor.
+	 * Gets the passenger's destination floor.
 	 *
 	 * @return the dest floor
 	 */
 	public int getDestFloor() {
-		return -1;
+		return this.destFloor;
 	}
 
 	/**
@@ -127,7 +140,7 @@ public class Passengers {
 	 * @return the wait time
 	 */
 	public int getWaitTime() {
-		return -1;
+		return this.waitTime;
 	}
 
 	/**
@@ -136,7 +149,7 @@ public class Passengers {
 	 * @return the board time
 	 */
 	public int getBoardTime() {
-		return -1;
+		return this.boardTime;
 	}
 
 	/**
@@ -145,10 +158,55 @@ public class Passengers {
 	 * @return the time arrived
 	 */
 	public int getTimeArrived() {
-		return -1;
+		return this.timeArrived;
 	}
 
-	
+	/**
+	 * Gets if passenger polite
+	 *
+	 * @return politeness
+	 */
+	public boolean isPolite() {
+		return polite;
+	}
+
+	/**
+	 * Gets direction of passenger
+	 *
+	 * @return the direction
+	 */
+	public int getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Gets the time the passenger will give up
+	 *
+	 * @return the time will give up
+	 */
+	public int getTimeWillGiveUp() {
+		return timeWillGiveUp;
+	}
+
+	/**
+	 * Sets the time the passenger boarded
+	 *
+	 * @param boardTime the board time.
+	 */
+	public void setBoardTime(int boardTime) {
+		this.boardTime = boardTime;
+	}
+
+
+	/**
+	 * Sets the time the passenger arrived.
+	 *
+	 * @param timeArrived the time arrived.
+	 */
+	public void setTimeArrived(int timeArrived) {
+		this.timeArrived = timeArrived;
+	}
+
 	/**
 	 * Reset static ID. 
 	 * This method MUST be called during the building constructor BEFORE
