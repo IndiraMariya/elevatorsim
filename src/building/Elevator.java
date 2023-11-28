@@ -75,12 +75,12 @@ public class Elevator {
 	                            // *not* used in all states 
 
 	/** The door state. */
-                            	private int doorState;      // used to model the state of the doors - OPEN, CLOSED
+	private int doorState;      // used to model the state of the doors - OPEN, CLOSED
 	                            // or moving
 
 	
 	/** The passengers. */
-                            	private int passengers;  	// the number of people in the elevator
+	private int passengers;  	// the number of people in the elevator
 	
 	/** The pass by floor. */
 	private ArrayList<Passengers>[] passByFloor;  // Passengers to exit on the corresponding floor
@@ -90,19 +90,19 @@ public class Elevator {
 	                            // stopping.
 	
 	/** The post move to floor dir. */
-                            	private int postMoveToFloorDir; // This is the direction that the elevator will travel AFTER reaching
+	private int postMoveToFloorDir; // This is the direction that the elevator will travel AFTER reaching
 	                                // the moveToFloor in MVTOFLR state.
 
 	/**
-                                	 * Instantiates a new elevator.
-                                	 *
-                                	 * @param numFloors the num floors
-                                	 * @param capacity the capacity
-                                	 * @param floorTicks the floor ticks
-                                	 * @param doorTicks the door ticks
-                                	 * @param passPerTick the pass per tick
-                                	 */
-                                	@SuppressWarnings("unchecked")
+	 * Instantiates a new elevator.
+	 *
+	 * @param numFloors the num floors
+	 * @param capacity the capacity
+	 * @param floorTicks the floor ticks
+	 * @param doorTicks the door ticks
+	 * @param passPerTick the pass per tick
+	 */
+	@SuppressWarnings("unchecked")
 	public Elevator(int numFloors,int capacity, int floorTicks, int doorTicks, int passPerTick) {		
 		this.prevState = STOP;
 		this.currState = STOP;
@@ -115,8 +115,11 @@ public class Elevator {
 
 		//TODO: Finish this constructor, adding configuration initialiation and
 		//      initialization of any other private fields, etc.
+		this.capacity = capacity;
+		this.ticksPerFloor = floorTicks;
+		this.ticksDoorOpenClose = doorTicks;
+		this.passPerTick = passPerTick;
 	}
-
 	
 	//TODO: Add Getter/Setters and any methods that you deem are required. Examples 
 	//      include:
@@ -124,7 +127,47 @@ public class Elevator {
 	//      2) closing the doors
 	//      3) opening the doors
 	//      and so on...
-                         		
+
+	/**
+	 * moves the elevator to the specified floor
+	 *
+	 * @param floor
+	 */
+	protected void moveElevator(int floor) {}
+
+	/**
+	 * closes the elevator door
+	 */
+	protected void closeDoor() {}
+
+	/**
+	 * opens the elevator door
+	 */
+	protected void openDoor() {}
+
+	/**
+	 * unloads all passengers on current floor
+	 */
+	protected void unloadPassengers() {}
+
+	/**
+	 * loads 1 passenger group
+	 *
+	 * @param group group to add to elevator
+	 */
+	protected void loadPassenger(Passengers group) {}
+
+	/**
+	 * Adds multiple passenger groups to elevator
+	 *
+	 * @param groups
+	 */
+	protected void loadMultipleGroups(Passengers[] groups) {
+		for (Passengers group: groups) {
+			loadPassenger(group);
+		}
+	}
+
 	/**
 	 * Gets the capacity.
 	 *
@@ -204,5 +247,30 @@ public class Elevator {
 	 */
 	void updateCurrState(int nextState) {
 		
+	}
+
+	/**
+	 * Gets the direction
+	 *
+	 * @return the direction
+	 */
+	public int getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Gets number of passengers in elevator
+	 *
+	 * @return number of passengers in the elevator
+	 */
+	public int getNumPassengers() {
+		// TODO: consider if you want to keep a running count of passengers (as a field) and only update when necessary
+		int count = 0;
+		for (ArrayList<Passengers> groupByFloor : passByFloor) {
+			for (Passengers group: groupByFloor) {
+				count += group.getNumPass();
+			}
+		}
+		return count;
 	}
 }

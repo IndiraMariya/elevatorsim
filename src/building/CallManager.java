@@ -53,14 +53,30 @@ public class CallManager {
 	}
 	
 	/**
-	 * Update call status. This is an optional method that could be used to compute
+	 * Update call status when a specified queue changes on a floor
+	 *
+	 * This is an optional method that could be used to compute
 	 * the values of all up and down call fields statically once per tick (to be
 	 * more efficient, could only update when there has been a change to the floor queues -
 	 * either passengers being added or being removed. The alternative is to dynamically
 	 * recalculate the values of specific fields when needed.
+	 * @param floor the floor which the queue changed
+	 * @param dir specified relevant queue
 	 */
-	void updateCallStatus() {
+	protected void updateCallStatus(int floor, int dir) {
+
 		//TODO: Write this method if you choose to implement it...
+
+		if (dir == UP) {
+			upCalls[floor] = floors[floor].hasCall(UP);
+			updateCallPending(UP);
+		}
+		else {
+			downCalls[floor] = floors[floor].hasCall(DOWN);
+			updateCallPending(DOWN);
+		}
+
+		// TODO: consider where this should be called (only in building? in floor?)
 	}
 
 	/**
@@ -69,9 +85,30 @@ public class CallManager {
 	 * @param floor the floor
 	 * @return the passengers
 	 */
-	Passengers prioritizePassengerCalls(int floor) {
+	protected Passengers prioritizePassengerCalls(int floor) {
 		//TODO: Write this method based upon prioritization from STOP...
 		return null;
+	}
+
+	/**
+	 * Checks whether there is a call in the specified direction on the given floor
+	 *
+	 * @param floor the floor to check
+	 * @param dir the direction to check
+	 * @return whether there is a call
+	 */
+	protected boolean isCall(int floor, int dir) {
+		return dir == UP ? upCalls[floor] : downCalls[floor];
+	}
+
+	/**
+	 * Checks if there is a call in either direction on the given floor
+	 *
+	 * @param floor floor to check
+	 * @return if there is a call in either direction
+	 */
+	protected boolean isCall(int floor) {
+		return isCall(floor, UP) || isCall(floor, DOWN);
 	}
 
 	//TODO: Write any additional methods here. Things that you might consider:
@@ -83,4 +120,29 @@ public class CallManager {
 	//
 	//      These are an example - you may find you don't need some of these, or you may need more...
 
+	/**
+	 * Updates the relevant variable based on current state
+	 *
+	 * @param dir direction to update
+	 */
+	private void updateCallPending(int dir) {
+		if (dir == UP) {
+			for (boolean hasUpCalls: upCalls) {
+				if (hasUpCalls) {
+					upCallPending = true;
+					return;
+				}
+			}
+			upCallPending = false;
+		}
+		else if (dir == DOWN) {
+			for (boolean hasDownCall: downCalls) {
+				if (hasDownCall) {
+					downCallPending = true;
+					return;
+				}
+			}
+			downCallPending = false;
+		}
+	}
 }
