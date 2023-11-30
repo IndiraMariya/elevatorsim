@@ -183,6 +183,8 @@ public class Building {
 	
 	/** Implement the state methods here */
 	private int currStateStop(int time) {
+		// TODO: make sure time in state in being incremented (somewhere in Elevator)
+
 		// is a call on the current floor
 		if (callMgr.isCall(elevator.getCurrFloor())) {
 			int dir = callMgr.prioritizePassengerCalls(elevator.getCurrFloor()).getDirection();
@@ -192,8 +194,10 @@ public class Building {
 		// calls on other floors
 		else if (callMgr.isCallPending()) {
 			Passengers nextGroup = callMgr.moveToNextFloor();
-			elevator.setMoveToFloor(nextGroup.getOnFloor());
+			int nextFloor = nextGroup.getOnFloor();
+			elevator.setMoveToFloor(nextFloor);
 			elevator.setPostMoveToFloorDir(nextGroup.getDirection());
+			elevator.setDirection(getDirectionToFloor(nextFloor));
 			return Elevator.MVTOFLR;
 		}
 		// no calls in any direction on any floor
@@ -238,7 +242,17 @@ public class Building {
 	private boolean elevatorStateOrFloorChanged() {
 		return elevator.getPrevState() != elevator.getCurrState() || elevator.getPrevFloor() != elevator.getCurrFloor();
 	}
-	
+
+	/**
+	 * Gets the direction to move to the floor from the current floor
+	 *
+	 * @param floor the floor to move to (different than current floor)
+	 * @return direction to move based on the floor
+	 */
+	private int getDirectionToFloor(int floor) {
+		return floor > elevator.getCurrFloor() ? UP : DOWN;
+	}
+
 	/**
 	 * Update elevator - this is called AFTER time has been incremented.
 	 * -  Logs any state changes, if the have occurred,
