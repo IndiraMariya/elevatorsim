@@ -219,7 +219,19 @@ public class Building {
 	}
 	
 	private int currStateOpenDr(int time) {
-		return -1;
+		elevator.openDoor();
+
+		if (elevator.isDoorOpen()) {
+			if (elevator.arePassengersExitingOnFloor(elevator.getCurrFloor())) {
+				return Elevator.OFFLD;
+			}
+			else {
+				return Elevator.BOARD;
+			}
+		}
+		else {
+			return Elevator.OPENDR;
+		}
 	}
 	
 	private int currStateOffLd(int time) {
