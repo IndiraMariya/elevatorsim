@@ -120,6 +120,8 @@ public class CallManager {
 	//
 	//      These are an example - you may find you don't need some of these, or you may need more...
 
+	protected int moveToNextFloor();
+
 	/**
 	 * Updates the relevant variable based on current state
 	 *
