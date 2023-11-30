@@ -99,7 +99,7 @@ public class Building {
 	 * @param passPerTick the passengers per tick
 	 */
 	public void initializeElevator(int capacity, int floorTicks, int doorTicks, int passPerTick) {
-		// TODO: implement
+		elevator = new Elevator(NUM_FLOORS, capacity, floorTicks, doorTicks, passPerTick);
 	}
 
 	/**
@@ -107,10 +107,11 @@ public class Building {
 	 *
 	 * @param group group to be added to the floor
 	 * @param floor the floor to add passengers to
-	 * @param time when the passengers were added to the floor
 	 */
-	public void addPassengers(Passengers group, int floor, int time) {
-		// TODO: implement this method
+	public void addPassengers(Passengers group, int floor) {
+		int dir = group.getDirection();
+		floors[floor].addGroup(dir, group);
+		callMgr.updateCallStatus(floor, dir); // TODO: consider if this should only be called once
 	}
 
 	/**
@@ -120,8 +121,8 @@ public class Building {
 	 * @return whether the simulation ended
 	 */
 	public boolean hasSimulationEnded(int time) {
-		// TODO: implement
-		return false;
+		// TODO: double check this works
+		return elevator.getCurrState() == Elevator.STOP && callMgr.isCallPending();
 	}
 
 	/**
@@ -211,7 +212,7 @@ public class Building {
 	
 	//TODO: Write this method 
 	private boolean elevatorStateOrFloorChanged() {
-		return false;
+		return elevator.getPrevState() != elevator.getCurrState() || elevator.getPrevFloor() != elevator.getCurrFloor();
 	}
 	
 	/**
