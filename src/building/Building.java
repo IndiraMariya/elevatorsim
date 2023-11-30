@@ -183,7 +183,21 @@ public class Building {
 	
 	/** Implement the state methods here */
 	private int currStateStop(int time) {
-		return -1;
+		// is a call on the current floor
+		if (callMgr.isCall(elevator.getCurrFloor())) {
+			int dir = callMgr.prioritizePassengerCalls(elevator.getCurrFloor()).getDirection();
+			elevator.setDirection(dir);
+			return Elevator.OPENDR;
+		}
+		// calls on other floors
+		else if (callMgr.isCallPending()) {
+			Passengers nextGroup = callMgr.moveToNextFloor();
+			elevator.setMoveToFloor(nextGroup.getOnFloor());
+			elevator.setPostMoveToFloorDir(nextGroup.getDirection());
+			return Elevator.MVTOFLR;
+		}
+		// no calls in any direction on any floor
+		return Elevator.STOP;
 	}
 
 	private int currStateMvToFlr(int time) {

@@ -273,4 +273,31 @@ public class Elevator {
 		}
 		return count;
 	}
+
+	/**
+	 * Sets moveToFloor
+	 *
+	 * @param moveToFloor floor to move to
+	 */
+	public void setMoveToFloor(int moveToFloor) {
+		this.moveToFloor = moveToFloor;
+	}
+
+	/**
+	 * Sets direction
+	 *
+	 * @param direction sets direction
+	 */
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	/**
+	 * Sets postMoveToFloor direction
+	 *
+	 * @param postMoveToFloorDir postMoveToFloor direction
+	 */
+	public void setPostMoveToFloorDir(int postMoveToFloorDir) {
+		this.postMoveToFloorDir = postMoveToFloorDir;
+	}
 }
