@@ -174,7 +174,7 @@ public class Elevator {
 	 * @return the capacity
 	 */
 	int getCapacity() {
-		return -1;
+		return this.capacity;
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class Elevator {
 	 * @return the ticks per floor
 	 */
 	int getTicksPerFloor() {
-		return -1;
+		return this.ticksPerFloor;
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class Elevator {
 	 * @return the ticks door open close
 	 */
 	int getTicksDoorOpenClose() {
-		return -1;
+		return this.ticksDoorOpenClose;
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class Elevator {
 	 * @return the pass per tick
 	 */
 	int getPassPerTick() {
-		return -1;
+		return this.passPerTick;
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class Elevator {
 	 * @return the curr state
 	 */
 	int getCurrState() {
-		return -1;
+		return this.currState;
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class Elevator {
 	 * @return the prev state
 	 */
 	int getPrevState() {
-		return -1;
+		return this.prevState;
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class Elevator {
 	 * @return the prev floor
 	 */
 	int getPrevFloor() {
-		return -1;
+		return this.prevFloor;
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class Elevator {
 	 * @return the curr floor
 	 */
 	int getCurrFloor() {
-		return -1;
+		return this.currFloor;
 	}
 
 	/**
@@ -246,7 +246,9 @@ public class Elevator {
 	 * @param nextState the next state
 	 */
 	void updateCurrState(int nextState) {
-		
+		this.prevState = this.currState;
+		this.currState = nextState;
+		if (this.prevState != this.currState) timeInState = 0;
 	}
 
 	/**
