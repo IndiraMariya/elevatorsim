@@ -201,7 +201,17 @@ public class Building {
 	}
 
 	private int currStateMvToFlr(int time) {
-		return -1;
+		elevator.moveElevator();
+
+		// reached target floor
+		if (elevator.getCurrFloor() == elevator.getMoveToFloor()) {
+			elevator.setDirection(elevator.getPostMoveToFloorDir());
+			return Elevator.OPENDR;
+		}
+		// has not reached target floor
+		else {
+			return Elevator.MVTOFLR;
+		}
 	}
 	
 	private int currStateOpenDr(int time) {

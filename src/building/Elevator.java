@@ -275,6 +275,15 @@ public class Elevator {
 	}
 
 	/**
+	 * Gets moveToFloor
+	 *
+	 * @return moveToFloor
+	 */
+	public int getMoveToFloor() {
+		return moveToFloor;
+	}
+
+	/**
 	 * Sets moveToFloor
 	 *
 	 * @param moveToFloor floor to move to
@@ -290,6 +299,15 @@ public class Elevator {
 	 */
 	public void setDirection(int direction) {
 		this.direction = direction;
+	}
+
+	/**
+	 * Gets direction after reaching moveToFloor
+	 *
+	 * @return postMoveToFloorDir
+	 */
+	public int getPostMoveToFloorDir() {
+		return postMoveToFloorDir;
 	}
 
 	/**
