@@ -145,4 +145,14 @@ public class CallManager {
 			downCallPending = false;
 		}
 	}
+
+	/**
+	 * Checks if there is a call pending
+	 *
+	 * @return Whether there is a call pending
+	 */
+	public boolean isCallPending() {
+		return upCallPending || downCallPending;
+	}
+
 }
