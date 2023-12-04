@@ -86,8 +86,44 @@ public class CallManager {
 	 * @return the passengers
 	 */
 	protected Passengers prioritizePassengerCalls(int floor) {
-		//TODO: Write this method based upon prioritization from STOP...
-		return null;
+		Floor currentFloor = floors[floor];
+
+		if (isCall(floor)) {
+			if (upCalls[floor]) {
+				 if (downCalls[floor]) {
+					if (currentFloor.getNumCalls(UP) >= currentFloor.getNumCalls(DOWN)) {
+						updateCallPending(UP);
+						return currentFloor.getNextGroup(UP);
+					} else {
+						updateCallPending(DOWN);
+						return currentFloor.getNextGroup(DOWN);
+					}
+				 } else {
+					updateCallPending(UP);
+					return currentFloor.getNextGroup(UP);
+				 }
+			} else {
+				updateCallPending(DOWN);
+				return currentFloor.getNextGroup(DOWN);
+			}
+		} else {
+			int numUpCalls = 0, numDownCalls = 0, lowestUpFloor = 0, highestDownFloor = 0;
+			for (int i = 0; i < floors.length; i++) {
+				if (numUpCalls == 0 && currentFloor.getNumCalls(UP) > 0) lowestUpFloor = i;
+				if (currentFloor.getNumCalls(DOWN) > 0) highestDownFloor = i;
+				numUpCalls += currentFloor.getNumCalls(UP);
+				numDownCalls += currentFloor.getNumCalls(DOWN);
+			}
+			if (numUpCalls > numDownCalls) return floors[lowestUpFloor].getNextGroup(UP);
+			else if (numUpCalls < numDownCalls) return floors[highestDownFloor].getNextGroup(DOWN);
+			else {
+				int lowestUpDistance = Math.abs(lowestUpFloor - floor);
+				int highestDownDistance = Math.abs(highestDownFloor - floor);
+				return lowestUpDistance > highestDownDistance 
+					? floors[highestDownFloor].getNextGroup(DOWN)
+					: floors[lowestUpFloor].getNextGroup(UP);
+			}
+		}
 	}
 
 	/**
