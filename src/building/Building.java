@@ -183,8 +183,6 @@ public class Building {
 	
 	/** Implement the state methods here */
 	private int currStateStop(int time) {
-		// TODO: make sure time in state in being incremented (somewhere in Elevator)
-
 		// is a call on the current floor
 		if (callMgr.isCall(elevator.getCurrFloor())) {
 			int dir = callMgr.prioritizePassengerCalls(elevator.getCurrFloor()).getDirection();
@@ -235,6 +233,10 @@ public class Building {
 	}
 	
 	private int currStateOffLd(int time) {
+		elevator.unloadPassengers();
+
+		// TODO: finish this (decide if where we want to consider the time)
+
 		return -1;
 	}
 	
@@ -243,6 +245,27 @@ public class Building {
 	}
 	
 	private int currStateCloseDr(int time) {
+		elevator.closeDoor();
+
+		if (elevator.isDoorOpen()) {
+			return Elevator.CLOSEDR;
+		}
+		else {
+			if (elevator.getCapacity() != 0 || callMgr.isCallPending()) {
+
+				if (elevator.getCapacity() == 0) {
+					// TODO: determine direction
+					// Check with callMgr if there are calls above / below
+				}
+				return Elevator.MV1FLR;
+			}
+			else {
+				return Elevator.STOP;
+			}
+		}
+
+		// TODO: determine OPENDR state change
+
 		return -1;
 	}
 	
