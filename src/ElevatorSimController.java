@@ -95,7 +95,9 @@ public class ElevatorSimController {
 	//TODO: Write methods to update the GUI display
 	//      Needs to cover the Elevator state, Elevator passengers
 	//      and queues for each floor, as well as the current time
-	
+	public void updateGUI(int state, int pass) {
+		
+	}
 	/**
 	 * Config simulation. Reads the filename, and parses the
 	 * parameters.
@@ -258,6 +260,7 @@ public class ElevatorSimController {
 			}
 		}
 	}
+
 
 
 	/**
