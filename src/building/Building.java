@@ -258,8 +258,6 @@ public class Building {
 				return Elevator.CLOSEDR;
 			}
 		}
-
-		return -1;
 	}
 	
 	private int currStateBoard(int time) {
@@ -308,11 +306,30 @@ public class Building {
 		else {
 			return Elevator.MV1FLR;
 		}
-
-		return -1;
 	}
 	
 	private int currStateMv1Flr(int time) {
+		elevator.moveElevator();
+
+		if (elevator.atFloor()) { // TODO: Make sure this method is made
+			if (
+					elevator.passengersToExit(elevator.getCurrFloor()) ||
+					callMgr.isCall(elevator.getCurrFloor(), elevator.getDirection())
+			) { // TODO: Make sure this method is made
+				return Elevator.OPENDR;
+			}
+			else if (
+					elevator.getCapacity() == 0 &&
+					!callMgr.getCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
+					callMgr.isCall(elevator.getCurrFloor())
+			) {
+				elevator.switchDirection(); // TODO: make sure this gets made
+				return Elevator.OPENDR;
+			}
+		}
+		else {
+			return Elevator.MV1FLR;
+		}
 		return -1;
 	}
 	
