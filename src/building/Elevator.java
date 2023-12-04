@@ -1,11 +1,6 @@
 package building;
 import java.util.ArrayList;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import passengers.Passengers;
-
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,6 +34,11 @@ public class Elevator {
 	/** The Constant MV1FLR. */
 	public final static int MV1FLR = 6;
 
+	/**  Door State Variables - These are visible publicly. TODO: ADD COMMENTS. */
+	public final static int DRCLOSED = 0;
+	public final static int DROPEN = 1;
+	public static final int DRMOVING = 2;
+
 	/** Default configuration parameters for the elevator. These should be
 	 *  updated in the constructor.
 	 */
@@ -69,14 +69,14 @@ public class Elevator {
 	private int direction;      // direction the Elevator is traveling in.
 
 	/** The time in state. */
-	private int timeInState;    // represents the time in a given state
-	                            // reset on state entry, used to determine if
-	                            // state has completed or if floor has changed
-	                            // *not* used in all states 
+	private int timeInState = 1;	// represents the time in a given state
+	                        		// reset on state entry, used to determine if
+	                            	// state has completed or if floor has changed
+	                            	// *not* used in all states 
 
 	/** The door state. */
 	private int doorState;      // used to model the state of the doors - OPEN, CLOSED
-	                            // or moving
+	                            // or moving. 0 = CLOSED, 1 = OPEN, 2 = MOVING
 
 	
 	/** The passengers. */
@@ -133,22 +133,49 @@ public class Elevator {
 	 *
 	 * @param floor
 	 */
-	protected void moveElevator(int floor) {}
+	protected void moveElevator(int floor) {
+		do {
+			moveElevator();
+		} while (currFloor < floor);
+	}
+
+	/**
+	 * moves the elevator to the specified floor
+	 */
+	protected void moveElevator() {
+		prevFloor = currFloor;
+		if ((timeInState % ticksPerFloor) == 0) {
+			currFloor = currFloor + direction;
+		}
+	}
 
 	/**
 	 * closes the elevator door
 	 */
-	protected void closeDoor() {}
+	protected void closeDoor() {
+		if (timeInState >= ticksDoorOpenClose) {
+			this.doorState = DRCLOSED;
+		}
+	}
 
 	/**
 	 * opens the elevator door
 	 */
-	protected void openDoor() {}
+	protected void openDoor() {
+		if (timeInState >= ticksDoorOpenClose) {
+			this.doorState = DROPEN;
+		}
+	}
 
 	/**
 	 * unloads all passengers on current floor
 	 */
-	protected void unloadPassengers() {}
+	protected void unloadPassengers() {
+		for (int i = 0; i < passPerTick; i++) {
+			// unload one passenger
+			passengers--; // what else should i do here?
+		}
+	}
 
 	/**
 	 * loads 1 passenger group
@@ -174,7 +201,7 @@ public class Elevator {
 	 * @return the capacity
 	 */
 	int getCapacity() {
-		return -1;
+		return this.capacity;
 	}
 
 	/**
@@ -183,7 +210,7 @@ public class Elevator {
 	 * @return the ticks per floor
 	 */
 	int getTicksPerFloor() {
-		return -1;
+		return this.ticksPerFloor;
 	}
 
 	/**
@@ -192,7 +219,7 @@ public class Elevator {
 	 * @return the ticks door open close
 	 */
 	int getTicksDoorOpenClose() {
-		return -1;
+		return this.ticksDoorOpenClose;
 	}
 
 	/**
@@ -201,7 +228,7 @@ public class Elevator {
 	 * @return the pass per tick
 	 */
 	int getPassPerTick() {
-		return -1;
+		return this.passPerTick;
 	}
 
 	/**
@@ -210,7 +237,7 @@ public class Elevator {
 	 * @return the curr state
 	 */
 	int getCurrState() {
-		return -1;
+		return this.currState;
 	}
 
 	/**
@@ -219,7 +246,7 @@ public class Elevator {
 	 * @return the prev state
 	 */
 	int getPrevState() {
-		return -1;
+		return this.prevState;
 	}
 
 	/**
@@ -228,7 +255,7 @@ public class Elevator {
 	 * @return the prev floor
 	 */
 	int getPrevFloor() {
-		return -1;
+		return this.prevFloor;
 	}
 
 	/**
@@ -237,7 +264,7 @@ public class Elevator {
 	 * @return the curr floor
 	 */
 	int getCurrFloor() {
-		return -1;
+		return this.currFloor;
 	}
 
 	/**
@@ -246,7 +273,10 @@ public class Elevator {
 	 * @param nextState the next state
 	 */
 	void updateCurrState(int nextState) {
-		
+		this.prevState = this.currState;
+		this.currState = nextState;
+		if (this.prevState != this.currState) timeInState = 0;
+		else timeInState++;
 	}
 
 	/**
@@ -256,6 +286,16 @@ public class Elevator {
 	 */
 	public int getDirection() {
 		return direction;
+	}
+
+	public boolean arePassengersExitingOnFloor(int floor) {
+		if (passByFloor[floor].size() > 0) return true;
+		else return false;
+	}
+
+	public boolean isDoorOpen() {
+		if (doorState == DROPEN) return true;
+		else return false;
 	}
 
 	/**
