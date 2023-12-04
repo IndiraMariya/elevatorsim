@@ -235,7 +235,29 @@ public class Building {
 	private int currStateOffLd(int time) {
 		elevator.unloadPassengers();
 
-		// TODO: finish this (decide if where we want to consider the time)
+		// TODO: finish this in Elevator (decide where we want to consider the time)
+
+		if (elevator.isOffloading()) {
+			return Elevator.OFFLD;
+		}
+		// no longer offloading
+		else { // TODO: make sure method gets made (or ask where this should be handled)
+			// passengers to board in current direction
+			if (callMgr.isCall(elevator.getCurrFloor(), elevator.getDirection())) {
+				return Elevator.BOARD;
+			}
+			else if (
+					elevator.getCapacity() == 0 &&
+					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
+					callMgr.isCall(elevator.getCurrFloor())
+			) {
+				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
+				return Elevator.BOARD;
+			}
+			else {
+				return Elevator.CLOSEDR;
+			}
+		}
 
 		return -1;
 	}
@@ -268,7 +290,7 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 			// calls not on this floor, in the same direction
-			else if (callMgr.isCallNotOnFloor(elevator.getCurrFloor(), elevator.getDirection())) { // TODO: make sure this method gets made
+			else if (callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection())) { // TODO: make sure this method gets made
 				return Elevator.MV1FLR;
 			}
 			else {
