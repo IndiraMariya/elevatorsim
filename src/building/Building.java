@@ -247,24 +247,45 @@ public class Building {
 	private int currStateCloseDr(int time) {
 		elevator.closeDoor();
 
-		if (elevator.isDoorOpen()) {
+		Passengers nextGroup = getCurrentFloor().getNextGroup(elevator.getDirection()); // get passenger in direction
+		if (nextGroup != null && !nextGroup.isPolite()) {
+			// TODO: check if action needs to be taken
+			return Elevator.OPENDR;
+		}
+
+		// door is still open
+		if (elevator.isDoorOpen()) { // TODO: make sure this method gets made
 			return Elevator.CLOSEDR;
 		}
-		else {
-			if (elevator.getCapacity() != 0 || callMgr.isCallPending()) {
-
-				if (elevator.getCapacity() == 0) {
-					// TODO: determine direction
-					// Check with callMgr if there are calls above / below
-				}
+		// door is closed, elevator is empty
+		else if (elevator.getCapacity() == 0) {
+			// no calls -> STOP
+			if (!callMgr.isCallPending()) {
+				return Elevator.STOP;
+			}
+			// Calls on this floor in the same direction
+			else if (callMgr.isCall(elevator.getCurrFloor(), elevator.getDirection())) {
+				return Elevator.OPENDR;
+			}
+			// calls not on this floor, in the same direction
+			else if (callMgr.isCallNotOnFloor(elevator.getCurrFloor(), elevator.getDirection())) { // TODO: make sure this method gets made
 				return Elevator.MV1FLR;
 			}
 			else {
-				return Elevator.STOP;
+				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
+
+				if (callMgr.isCall(elevator.getCurrFloor())) {
+					return Elevator.OPENDR;
+				}
+				else {
+					return Elevator.MV1FLR;
+				}
 			}
 		}
-
-		// TODO: determine OPENDR state change
+		// people in elevator who need to get off
+		else {
+			return Elevator.MV1FLR;
+		}
 
 		return -1;
 	}
@@ -286,6 +307,15 @@ public class Building {
 	 */
 	private int getDirectionToFloor(int floor) {
 		return floor > elevator.getCurrFloor() ? UP : DOWN;
+	}
+
+	/**
+	 * Gets the current floor
+	 *
+	 * @return current floor object
+	 */
+	private Floor getCurrentFloor() {
+		return this.floors[elevator.getCurrFloor()];
 	}
 
 	/**
