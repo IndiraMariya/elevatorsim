@@ -1,17 +1,16 @@
 package building;
+
+import myfileio.MyFileIO;
+import passengers.Passengers;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.ListIterator;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
-import myfileio.MyFileIO;
-import passengers.Passengers;
-import genericqueue.GenericQueue;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -106,7 +105,6 @@ public class Building {
 	 * Adds a group of passengers to the specified floor
 	 *
 	 * @param group group to be added to the floor
-	 * @param floor the floor to add passengers to
 	 */
 	public void addPassengers(Passengers group) {
 		int dir = group.getDirection();
@@ -220,7 +218,7 @@ public class Building {
 		elevator.openDoor();
 
 		if (elevator.isDoorOpen()) {
-			if (elevator.arePassengersExitingOnFloor(elevator.getCurrFloor())) {
+			if (elevator.passengersToExit(elevator.getCurrFloor())) {
 				return Elevator.OFFLD;
 			}
 			else {
@@ -235,13 +233,13 @@ public class Building {
 	private int currStateOffLd(int time) {
 		elevator.unloadPassengers();
 
-		// TODO: finish this in Elevator (decide where we want to consider the time)
+		// TODO: finish this in Elevator
 
 		if (elevator.isOffloading()) {
 			return Elevator.OFFLD;
 		}
 		// no longer offloading
-		else { // TODO: make sure method gets made (or ask where this should be handled)
+		else {
 			// passengers to board in current direction
 			if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
 				return Elevator.BOARD;
@@ -274,7 +272,7 @@ public class Building {
 		}
 
 		// door is still open
-		if (elevator.isDoorOpen()) { // TODO: make sure this method gets made
+		if (elevator.isDoorOpen()) {
 			return Elevator.CLOSEDR;
 		}
 		// door is closed, elevator is empty
@@ -288,11 +286,11 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 			// calls not on this floor, in the same direction
-			else if (callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection())) { // TODO: make sure this method gets made
+			else if (callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection())) {
 				return Elevator.MV1FLR;
 			}
 			else {
-				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
+				elevator.switchDirection();
 
 				if (callMgr.isCallOnFloor(elevator.getCurrFloor())) {
 					return Elevator.OPENDR;
@@ -311,11 +309,11 @@ public class Building {
 	private int currStateMv1Flr(int time) {
 		elevator.moveElevator();
 
-		if (elevator.atFloor()) { // TODO: Make sure this method is made
+		if (elevator.atFloor()) {
 			if (
 					elevator.passengersToExit(elevator.getCurrFloor()) ||
 					callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())
-			) { // TODO: Make sure this method is made
+			) {
 				return Elevator.OPENDR;
 			}
 			else if (
@@ -323,17 +321,13 @@ public class Building {
 					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
 					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {
-				elevator.switchDirection(); // TODO: make sure this gets made
+				elevator.switchDirection();
 				return Elevator.OPENDR;
 			}
 		}
-		else {
-			return Elevator.MV1FLR;
-		}
-		return -1;
+		return Elevator.MV1FLR;
 	}
 	
-	//TODO: Write this method 
 	private boolean elevatorStateOrFloorChanged() {
 		return elevator.getPrevState() != elevator.getCurrState() || elevator.getPrevFloor() != elevator.getCurrFloor();
 	}
