@@ -231,7 +231,15 @@ public class Building {
 	}
 	
 	private int currStateOffLd(int time) {
-		ArrayList<Passengers> passengersToUnload = elevator.unloadPassengers();
+		if (elevator.getCurrState() != elevator.getPrevState()) {
+			ArrayList<Passengers> passengersToUnload = elevator.unloadPassengers();
+
+			for (Passengers passengers : passengersToUnload) {
+				passengers.setTimeArrived(time);
+				logArrival(time, passengers.getNumPass(), elevator.getCurrFloor(), passengers.getId());
+			}
+			passSuccess.addAll(passengersToUnload);
+		}
 
 		// TODO: finish this in Elevator
 
@@ -266,6 +274,7 @@ public class Building {
 			// passengers have given up
 			// TODO: check >= or >
 			if (nextGroup.getTimeWillGiveUp() >= time) {
+				logGiveUp(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
 				gaveUp.add(nextGroup);
 				currentFloor.removeNextGroup(dir);
 			}
@@ -441,7 +450,7 @@ public class Building {
 	 */
 	public void enableLogging() {
 		LOGGER.setLevel(Level.INFO);
-			logElevatorConfig(elevator.getCapacity(),elevator.getTicksPerFloor(), elevator.getTicksDoorOpenClose(), 
+		logElevatorConfig(elevator.getCapacity(),elevator.getTicksPerFloor(), elevator.getTicksDoorOpenClose(),
 					          elevator.getPassPerTick(), elevator.getCurrState(),elevator.getCurrFloor());
 		
 	}
