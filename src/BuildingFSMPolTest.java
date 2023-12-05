@@ -23,7 +23,7 @@ import building.Building;
 import myfileio.MyFileIO;
 
 @TestMethodOrder(OrderAnnotation.class)
-class BuildingFSMMvToFlrTest {
+class BuildingFSMPolTest {
 	private ElevatorSimController c;
 	private Building b;
 	private MyFileIO fio = new MyFileIO();
@@ -231,16 +231,18 @@ class BuildingFSMMvToFlrTest {
 	@Test
 	@Order(1)
 	//@Disabled
-	void testMv2FCallPri1() {
-		String test = "Mv2FCallPri1";
+	void testPolTest1() {
+		String test = "PolTest1";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
 		b = c.getBuilding();
 		b.enableLogging();
 	    int i;
-		for (i = 0; i < 246;i++) c.stepSim();
+		for (i = 0; i < 51;i++) c.stepSim();
 		b.closeLogs(i);
+		deleteTestCSV(test+".csv");
+		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
 	    runFSMTest(test,cmd);
 	}
@@ -248,16 +250,18 @@ class BuildingFSMMvToFlrTest {
 	@Test
 	@Order(2)
 	//@Disabled
-	void testMv2FCallPri2() {
-		String test = "Mv2FCallPri2";
+	void testPolTest2() {
+		String test = "PolTest2";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
 		b = c.getBuilding();
 		b.enableLogging();
 	    int i;
-		for (i = 0; i < 86;i++) c.stepSim();
+		for (i = 0; i < 55;i++) c.stepSim();
 		b.closeLogs(i);
+		deleteTestCSV(test+".csv");
+		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
 	    runFSMTest(test,cmd);
 	}
@@ -265,59 +269,8 @@ class BuildingFSMMvToFlrTest {
 	@Test
 	@Order(3)
 	//@Disabled
-	void testMv2FCallPri3() {
-		String test = "Mv2FCallPri3";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 136;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(4)
-	//@Disabled
-	void testMv2FCallPri4() {
-		String test = "Mv2FCallPri4";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 152;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(5)
-	//@Disabled
-	void testMv2FCallPri5() {
-		String test = "Mv2FCallPri5";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 116;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(6)
-	//@Disabled
-	void testMv2FCallPri6() {
-		String test = "Mv2FCallPri6";
+	void testPolTest3() {
+		String test = "PolTest3";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -326,94 +279,48 @@ class BuildingFSMMvToFlrTest {
 	    int i;
 		for (i = 0; i < 106;i++) c.stepSim();
 		b.closeLogs(i);
+		deleteTestCSV(test+".csv");
+		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
 	    runFSMTest(test,cmd);
 	}
 
 	@Test
-	@Order(7)
+	@Order(4)
 	//@Disabled
-	void testMv2FCallPri7() {
-		String test = "Mv2FCallPri7";
+	void testPolTest4() {
+		String test = "PolTest4";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
 		b = c.getBuilding();
 		b.enableLogging();
 	    int i;
-		for (i = 0; i < 111;i++) c.stepSim();
+		for (i = 0; i < 143;i++) c.stepSim();
 		b.closeLogs(i);
+		deleteTestCSV(test+".csv");
+		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
 	    runFSMTest(test,cmd);
 	}
 
 	@Test
-	@Order(8)
+	@Order(5)
 	//@Disabled
-	void testMv2FCallPri8() {
-		String test = "Mv2FCallPri8";
+	void testPolTest5() {
+		String test = "PolTest5";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
 		b = c.getBuilding();
 		b.enableLogging();
 	    int i;
-		for (i = 0; i < 111;i++) c.stepSim();
+		for (i = 0; i < 193;i++) c.stepSim();
 		b.closeLogs(i);
+		deleteTestCSV(test+".csv");
+		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
 	    runFSMTest(test,cmd);
 	}
-
-	@Test
-	@Order(9)
-	//@Disabled
-	void testMv2FCallPri9() {
-		String test = "Mv2FCallPri9";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 111;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(10)
-	//@Disabled
-	void testMv2FCallPri10() {
-		String test = "Mv2FCallPri10";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 116;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(11)
-	//@Disabled
-	void testMv2FCallPri11() {
-		String test = "Mv2FCallPri11";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 81;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
 
 }
