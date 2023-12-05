@@ -156,8 +156,8 @@ public class CallManager {
 	//
 	//      These are an example - you may find you don't need some of these, or you may need more...
 
-	protected int moveToNextFloor() {
-		return -1;
+	protected Passengers moveToNextFloor() {
+		return null;
 	}
 
 	/**
