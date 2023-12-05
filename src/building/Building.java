@@ -120,7 +120,7 @@ public class Building {
 	 */
 	public boolean hasSimulationEnded(int time) {
 		// TODO: double check this works
-		return elevator.getCurrState() == Elevator.STOP && callMgr.isCallPending();
+		return elevator.getCurrState() == Elevator.STOP && !callMgr.isCallPending();
 	}
 
 	/**
@@ -231,11 +231,11 @@ public class Building {
 	}
 	
 	private int currStateOffLd(int time) {
-		elevator.unloadPassengers();
+		ArrayList<Passengers> passengersToUnload = elevator.unloadPassengers();
 
 		// TODO: finish this in Elevator
 
-		if (elevator.isOffloading()) {
+		if (elevator.isTransitioning()) {
 			return Elevator.OFFLD;
 		}
 		// no longer offloading
@@ -259,7 +259,38 @@ public class Building {
 	}
 	
 	private int currStateBoard(int time) {
-		return -1;
+		Floor currentFloor = getCurrentFloor();
+		int dir = elevator.getDirection();
+		Passengers nextGroup = currentFloor.peekNextGroup(dir);
+		while (elevator.getNumPassengers() < elevator.getCapacity() && nextGroup != null) {
+			// passengers have given up
+			// TODO: check >= or >
+			if (nextGroup.getTimeWillGiveUp() >= time) {
+				gaveUp.add(nextGroup);
+				currentFloor.removeNextGroup(dir);
+			}
+			// not enough room
+			else if (elevator.getCapacity() - elevator.getNumPassengers() < nextGroup.getNumPass()) {
+				logSkip(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
+				// TODO: adjust passenger if necessary ??
+				break;
+			}
+			else {
+				nextGroup.setBoardTime(time);
+				logBoard(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
+				currentFloor.removeNextGroup(dir);
+				elevator.loadPassenger(nextGroup);
+			}
+			nextGroup = currentFloor.peekNextGroup(elevator.getDirection());
+		}
+
+		// still boarding
+		if (elevator.isTransitioning()) {
+			return Elevator.BOARD;
+		}
+		else {
+			return Elevator.CLOSEDR;
+		}
 	}
 	
 	private int currStateCloseDr(int time) {
