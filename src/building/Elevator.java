@@ -297,7 +297,42 @@ public class Elevator {
 		if (doorState == DROPEN) return true;
 		else return false;
 	}
+	
+	// returns whether the door is between opening and closing
+	protected boolean isDoorTransitioning() {
+		return false;
+		
+	}
 
+	// returns whether there are passengers that need to exit on the specified floor
+	protected boolean passengersToExit(int floor) {
+		return false;
+		
+	}
+
+	// returns true if the elevator is still in the process of offloading (delay has not passed)
+	protected boolean isOffloading() {
+		return false;
+		
+	}
+
+	// returns true if the elevator is still in the process of boarding (delay has not passed)
+	protected boolean isBoarding() {
+		return false;
+		
+	}
+
+	// returns true if the elevator is NOT transitioning between floors
+	protected boolean atFloor() {
+		return false;
+	}
+
+	// helper method to switch direction from up to down or vice versa
+	protected void switchDirection() {
+		
+	}
+
+		
 	/**
 	 * Gets number of passengers in elevator
 	 *

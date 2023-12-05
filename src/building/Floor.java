@@ -60,7 +60,7 @@ public class Floor {
 	 * @param dir determines which queue to look at
 	 * @return Next passenger group in line
 	 */
-	protected Passengers getNextGroup(int dir) {
+	protected Passengers peekNextGroup(int dir) {
 		return dir == UP ? up.peek() : down.peek();
 	}
 
@@ -85,8 +85,8 @@ public class Floor {
 	 * @param dir determines which queue to look at
 	 * @param group passengers to add to queue
 	 */
-	protected void addGroup(int dir, Passengers group) {
-		if (dir == UP) {
+	protected void addGroup(Passengers group) {
+		if (group.getDirection() == UP) {
 			up.add(group);
 		}
 		else {

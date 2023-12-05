@@ -108,10 +108,10 @@ public class Building {
 	 * @param group group to be added to the floor
 	 * @param floor the floor to add passengers to
 	 */
-	public void addPassengers(Passengers group, int floor) {
+	public void addPassengers(Passengers group) {
 		int dir = group.getDirection();
-		floors[floor].addGroup(dir, group);
-		callMgr.updateCallStatus(floor, dir); // TODO: consider if this should only be called once
+		floors[group.getOnFloor()].addGroup(group);
+		callMgr.updateCallStatus(group.getOnFloor(), dir); // TODO: consider if this should only be called once
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class Building {
 	/** Implement the state methods here */
 	private int currStateStop(int time) {
 		// is a call on the current floor
-		if (callMgr.isCall(elevator.getCurrFloor())) {
+		if (callMgr.isCallOnFloor(elevator.getCurrFloor())) {
 			int dir = callMgr.prioritizePassengerCalls(elevator.getCurrFloor()).getDirection();
 			elevator.setDirection(dir);
 			return Elevator.OPENDR;
@@ -243,13 +243,13 @@ public class Building {
 		// no longer offloading
 		else { // TODO: make sure method gets made (or ask where this should be handled)
 			// passengers to board in current direction
-			if (callMgr.isCall(elevator.getCurrFloor(), elevator.getDirection())) {
+			if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
 				return Elevator.BOARD;
 			}
 			else if (
 					elevator.getCapacity() == 0 &&
 					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
-					callMgr.isCall(elevator.getCurrFloor())
+					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {
 				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
 				return Elevator.BOARD;
@@ -267,7 +267,7 @@ public class Building {
 	private int currStateCloseDr(int time) {
 		elevator.closeDoor();
 
-		Passengers nextGroup = getCurrentFloor().getNextGroup(elevator.getDirection()); // get passenger in direction
+		Passengers nextGroup = getCurrentFloor().peekNextGroup(elevator.getDirection()); // get passenger in direction
 		if (nextGroup != null && !nextGroup.isPolite()) {
 			// TODO: check if action needs to be taken
 			return Elevator.OPENDR;
@@ -284,7 +284,7 @@ public class Building {
 				return Elevator.STOP;
 			}
 			// Calls on this floor in the same direction
-			else if (callMgr.isCall(elevator.getCurrFloor(), elevator.getDirection())) {
+			else if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
 				return Elevator.OPENDR;
 			}
 			// calls not on this floor, in the same direction
@@ -294,7 +294,7 @@ public class Building {
 			else {
 				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
 
-				if (callMgr.isCall(elevator.getCurrFloor())) {
+				if (callMgr.isCallOnFloor(elevator.getCurrFloor())) {
 					return Elevator.OPENDR;
 				}
 				else {
@@ -314,14 +314,14 @@ public class Building {
 		if (elevator.atFloor()) { // TODO: Make sure this method is made
 			if (
 					elevator.passengersToExit(elevator.getCurrFloor()) ||
-					callMgr.isCall(elevator.getCurrFloor(), elevator.getDirection())
+					callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())
 			) { // TODO: Make sure this method is made
 				return Elevator.OPENDR;
 			}
 			else if (
 					elevator.getCapacity() == 0 &&
-					!callMgr.getCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
-					callMgr.isCall(elevator.getCurrFloor())
+					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
+					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {
 				elevator.switchDirection(); // TODO: make sure this gets made
 				return Elevator.OPENDR;
