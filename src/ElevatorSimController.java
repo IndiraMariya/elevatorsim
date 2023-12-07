@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ListIterator;
 
@@ -88,15 +87,15 @@ public class ElevatorSimController {
 		logfile = testfile.replaceAll(".csv", ".log");
 		building = new Building(NUM_FLOORS,logfile);
 		passQ = new GenericQueue<>(PASSENGERS_QSIZE);
-		//TODO: YOU still need to configure the elevator in the building here....
+		building.initializeElevator(capacity, floorTicks, doorTicks, passPerTick);
 		initializePassengerData(testfile);	
 	}
 	
 	//TODO: Write methods to update the GUI display
 	//      Needs to cover the Elevator state, Elevator passengers
 	//      and queues for each floor, as well as the current time
-	public void updateGUI(int state, int pass) {
-		
+	public void updateGUI(ElevatorSimulation sim, int state, int pass, int time) {
+		sim.setTimebox(time, state, pass);
 	}
 	/**
 	 * Config simulation. Reads the filename, and parses the
@@ -227,10 +226,26 @@ public class ElevatorSimController {
 	 * Step sim. See the comments below for the functionality you
 	 * must implement......
 	 */
-	public void stepSim() {
+	public void stepSim(Building building, ElevatorSimulation sim) {
  		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
-		
+		while (!building.hasSimulationEnded(sim.getTime()) && !passQ.isEmpty()) {
+			if (passQ.peek().getTimeArrived()== sim.getTime()) {
+				while (passQ.size() > 0) {
+					building.addPassengers(passQ.poll());
+				}
+				building.onAllPassengersAdded();
+				// TODO update elevator???
+				updateGUI(sim, building.getElevatorState(), building.getElevatorPassengerCount(), sim.getTime());
+			}
+			else {
+				updateGUI(sim, building.getElevatorState(), building.getElevatorPassengerCount(), sim.getTime());
+				building.closeLogs(sim.getTime());
+				building.processPassengerData();
+				sim.endSimulation();
+				
+			}
+		}
 		// TODO: Write the rest of this method
 		// If simulation is not completed (not all passengers have been processed
 		// or elevator is not all in STOP state), then

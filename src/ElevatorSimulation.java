@@ -1,13 +1,10 @@
-
-
-
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
-
 import building.Elevator;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -17,13 +14,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
-import javafx.geometry.Insets;
 
 
 public class ElevatorSimulation extends Application {
@@ -50,6 +46,11 @@ public class ElevatorSimulation extends Application {
 	private Scene scene;
 	private StackPane sp;
 	private BorderPane bp;
+	
+	Text currTime= new Text();
+	Text pass= new Text();
+	Text state= new Text();
+	
 
 	/**
 	 * Instantiates a new elevator simulation.
@@ -84,14 +85,17 @@ public class ElevatorSimulation extends Application {
 		
 		Label timeLabel = new Label("Time:");
 		timeLabel.setFont(Font.font("Helvetica", 20));
-		Text time = new Text(34 + "   ");
-		time.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		currTime.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
 		
 		Label passLabel = new Label("Passengers:");
 		passLabel.setFont(Font.font("Helvetica", 20));
-		Text pass = new Text(4  + "   ");
 		pass.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
-		timebox.getChildren().addAll(timeLabel, time, passLabel, pass);
+		
+		Label stateLabel = new Label("State:");
+		stateLabel.setFont(Font.font("Helvetica", 20));
+		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state);
+
 
 		HBox[] floors = new HBox[NUM_FLOORS];
 	    	for (int i = 0; i < floors.length; i++) {
@@ -190,6 +194,30 @@ public class ElevatorSimulation extends Application {
 	     text.setText("1");
 	     text.setFill(Color.WHITE);
 	 }
+	 
+	 public void setTimebox(int time, int eState, int ePass){
+		 currTime.setText("" + time);
+		 state.setText("" + eState);
+		 pass.setText("" + ePass);
+				 
+	 }
+	 
+	 private StackPane showDirection() {
+		 StackPane arr = new StackPane();
+		 Polygon arrowUp = new Polygon(
+	                300, 100 + Math.sqrt(3) / 3 * 25,
+	                300 + 25, 100,
+	                300, 100 - Math.sqrt(3) / 3 * 25
+	        );
+		 Polygon negArrow = new Polygon(
+	                300, 100 + Math.sqrt(3) / 3 * 25,
+	                300 + 25, 100,
+	                300, 100 - Math.sqrt(3) / 3 * 25
+	        );
+		 Rectangle stem = new Rectangle();
+		 arr.getChildren().addAll(arrowUp, negArrow, stem);
+		 return arr;
+	 }
 	
 	 private VBox createFloors(HBox[] floors) {
 	     VBox vb = new VBox();
@@ -200,6 +228,14 @@ public class ElevatorSimulation extends Application {
 	         vb.getChildren().add(floor);
 	     }
 	     return vb;
+	 }
+	 
+	 public int getTime() {
+		 return time; 
+	 }
+	 
+	 public void endSimulation() {
+		 //stop timeline
 	 }
 	
 	/**
