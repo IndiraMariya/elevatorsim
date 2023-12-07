@@ -267,7 +267,7 @@ public class Building {
 	}
 	
 	private int currStateBoard(int time) {
-		Floor currentFloor = getCurrentFloor();
+		Floor currentFloor = floors[elevator.getCurrFloor()];
 		int dir = elevator.getDirection();
 		Passengers nextGroup = currentFloor.peekNextGroup(dir);
 		while (elevator.getNumPassengers() < elevator.getCapacity() && nextGroup != null) {
@@ -305,8 +305,9 @@ public class Building {
 	private int currStateCloseDr(int time) {
 		elevator.closeDoor();
 
-		Passengers nextGroup = getCurrentFloor().peekNextGroup(elevator.getDirection()); // get passenger in direction
-		if (nextGroup != null && !nextGroup.isPolite()) {
+		int curFloor = elevator.getCurrFloor();
+		int dir = elevator.getDirection();
+		if (callMgr.isCallOnFloor(curFloor, dir) && callMgr.isNextGroupOnFloorImpolite(curFloor, dir)) {
 			// TODO: check if action needs to be taken
 			return Elevator.OPENDR;
 		}
@@ -380,15 +381,6 @@ public class Building {
 	 */
 	private int getDirectionToFloor(int floor) {
 		return floor > elevator.getCurrFloor() ? UP : DOWN;
-	}
-
-	/**
-	 * Gets the current floor
-	 *
-	 * @return current floor object
-	 */
-	private Floor getCurrentFloor() {
-		return this.floors[elevator.getCurrFloor()];
 	}
 
 	/**

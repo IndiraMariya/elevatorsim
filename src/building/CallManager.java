@@ -206,4 +206,17 @@ public class CallManager {
 		return false;
 	}
 
+	/**
+	 * Checks politeness of next group
+	 * Assumes there is a group on the floor -> if not, returns False
+	 *
+	 * @param floor floor to check
+	 * @param dir direction of elevator
+	 * @return whether the next group is impolite or not
+	 */
+	protected boolean isNextGroupOnFloorImpolite(int floor, int dir) {
+		Passengers nextGroup = floors[floor].peekNextGroup(dir);
+		if (nextGroup == null) return false;
+		return !nextGroup.isPolite();
+	}
 }
