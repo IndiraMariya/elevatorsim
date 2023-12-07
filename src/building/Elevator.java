@@ -343,23 +343,6 @@ public class Elevator {
 		else return false;
 	}
 
-	public boolean isDoorOpen() {
-		if (doorState == DROPEN) return true;
-		else return false;
-	}
-	
-	// returns whether the door is between opening and closing
-	protected boolean isDoorTransitioning() {
-		return false;
-		
-	}
-
-	// returns whether there are passengers that need to exit on the specified floor
-	protected boolean passengersToExit(int floor) {
-		return false;
-		
-	}
-
 	// returns true if the elevator is still in the process of offloading (delay has not passed)
 	protected boolean isOffloading() {
 		return false;
@@ -370,33 +353,6 @@ public class Elevator {
 	protected boolean isBoarding() {
 		return false;
 		
-	}
-
-	// returns true if the elevator is NOT transitioning between floors
-	protected boolean atFloor() {
-		return false;
-	}
-
-	// helper method to switch direction from up to down or vice versa
-	protected void switchDirection() {
-		
-	}
-
-		
-	/**
-	 * Gets number of passengers in elevator
-	 *
-	 * @return number of passengers in the elevator
-	 */
-	public int getNumPassengers() {
-		// TODO: consider if you want to keep a running count of passengers (as a field) and only update when necessary
-		int count = 0;
-		for (ArrayList<Passengers> groupByFloor : passByFloor) {
-			for (Passengers group: groupByFloor) {
-				count += group.getNumPass();
-			}
-		}
-		return count;
 	}
 
 	/**
