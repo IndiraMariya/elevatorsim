@@ -177,9 +177,14 @@ public class Building {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}	
-	
-	/** Implement the state methods here */
+	}
+
+	/**
+	 * Handles STOP state
+	 *
+	 * @param time time when state is called
+	 * @return next state
+	 */
 	private int currStateStop(int time) {
 		// is a call on the current floor
 		if (callMgr.isCallOnFloor(elevator.getCurrFloor())) {
@@ -200,6 +205,12 @@ public class Building {
 		return Elevator.STOP;
 	}
 
+	/**
+	 * Handles MVTOFLR state
+	 *
+	 * @param time time when state is called
+	 * @return next state
+	 */
 	private int currStateMvToFlr(int time) {
 		elevator.moveElevator();
 
@@ -213,7 +224,13 @@ public class Building {
 			return Elevator.MVTOFLR;
 		}
 	}
-	
+
+	/**
+	 * Handles OPENDR state
+	 *
+	 * @param time time when state is called
+	 * @return next state
+	 */
 	private int currStateOpenDr(int time) {
 		elevator.openDoor();
 
@@ -229,7 +246,13 @@ public class Building {
 			return Elevator.OPENDR;
 		}
 	}
-	
+
+	/**
+	 * Handles OFFLD state
+	 *
+	 * @param time time when state is called
+	 * @return next state
+	 */
 	private int currStateOffLd(int time) {
 		if (elevator.getCurrState() != elevator.getPrevState()) {
 			ArrayList<Passengers> passengersToUnload = elevator.unloadPassengers();
@@ -265,7 +288,13 @@ public class Building {
 			}
 		}
 	}
-	
+
+	/**
+	 * Handles BOARD state
+	 *
+	 * @param time time when state is called
+	 * @return next state
+	 */
 	private int currStateBoard(int time) {
 		Floor currentFloor = floors[elevator.getCurrFloor()];
 		int dir = elevator.getDirection();
@@ -301,7 +330,13 @@ public class Building {
 			return Elevator.CLOSEDR;
 		}
 	}
-	
+
+	/**
+	 * Handles CLOSEDR state
+	 *
+	 * @param time time when state is called
+	 * @return next state
+	 */
 	private int currStateCloseDr(int time) {
 		elevator.closeDoor();
 
@@ -346,7 +381,13 @@ public class Building {
 			return Elevator.MV1FLR;
 		}
 	}
-	
+
+	/**
+	 * Handles MV1FLR state
+	 *
+	 * @param time time when state is called
+	 * @return next state
+	 */
 	private int currStateMv1Flr(int time) {
 		elevator.moveElevator();
 
@@ -368,7 +409,11 @@ public class Building {
 		}
 		return Elevator.MV1FLR;
 	}
-	
+
+	/**
+	 * Checks whether the elevator state or floor changed
+	 * @return whether the elevator state or floor changed
+	 */
 	private boolean elevatorStateOrFloorChanged() {
 		return elevator.getPrevState() != elevator.getCurrState() || elevator.getPrevFloor() != elevator.getCurrFloor();
 	}
