@@ -334,7 +334,7 @@ public class Building {
 		callMgr.updateCallStatus();
 
 		// still boarding
-		if (elevator.isBoarding()) {
+		if (elevator.isTransitioning()) {
 			return Elevator.BOARD;
 		}
 		else {
