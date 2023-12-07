@@ -60,23 +60,14 @@ public class CallManager {
 	 * more efficient, could only update when there has been a change to the floor queues -
 	 * either passengers being added or being removed. The alternative is to dynamically
 	 * recalculate the values of specific fields when needed.
-	 * @param floor the floor which the queue changed
-	 * @param dir specified relevant queue
 	 */
-	protected void updateCallStatus(int floor, int dir) {
-
-		//TODO: Write this method if you choose to implement it...
-
-		if (dir == UP) {
-			upCalls[floor] = floors[floor].hasCall(UP);
-			updateCallPending(UP);
+	protected void updateCallStatus() {
+		for (int i = 0; i < NUM_FLOORS; i++) {
+			upCalls[i] = floors[i].hasCall(UP);
+			downCalls[i] = floors[i].hasCall(DOWN);
 		}
-		else {
-			downCalls[floor] = floors[floor].hasCall(DOWN);
-			updateCallPending(DOWN);
-		}
-
-		// TODO: consider where this should be called (only in building? in floor?)
+		updateCallPending(UP);
+		updateCallPending(DOWN);
 	}
 
 	/**

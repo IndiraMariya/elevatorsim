@@ -18,46 +18,46 @@ import java.util.logging.SimpleFormatter;
  */
 // TODO: Auto-generated Javadoc
 public class Building {
-	
+
 	/**  Constants for direction. */
 	private final static int UP = 1;
-	
+
 	/** The Constant DOWN. */
 	private final static int DOWN = -1;
-	
+
 	/** The Constant LOGGER. */
 	private final static Logger LOGGER = Logger.getLogger(Building.class.getName());
-	
+
 	/**  The fh - used by LOGGER to write the log messages to a file. */
 	private FileHandler fh;
-	
+
 	/**  The fio for writing necessary files for data analysis. */
 	private MyFileIO fio;
-	
+
 	/**  File that will receive the information for data analysis. */
 	private File passDataFile;
 
 	/**  passSuccess holds all Passengers who arrived at their destination floor. */
 	private ArrayList<Passengers> passSuccess;
-	
+
 	/**  gaveUp holds all Passengers who gave up and did not use the elevator. */
 	private ArrayList<Passengers> gaveUp;
-	
+
 	/**  The number of floors - must be initialized in constructor. */
 	private final int NUM_FLOORS;
-	
+
 	/**  The size of the up/down queues on each floor. */
-	private final int FLOOR_QSIZE = 10;	
-	
+	private final int FLOOR_QSIZE = 10;
+
 	/** The floors. */
 	public Floor[] floors;
-	
+
 	/** The elevator. */
 	private Elevator elevator; // TODO: ask if this can be public
-	
+
 	/**  The Call Manager - it tracks calls for the elevator, analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
-	
+
 	// Add any fields that you think you might need here...
 
 	/**
@@ -75,16 +75,16 @@ public class Building {
 		// arrived at their destination and those who gave up...
 		fio = new MyFileIO();
 		passDataFile = fio.getFileHandle(logfile.replaceAll(".log","PassData.csv"));
-		
+
 		// create the floors, call manager and the elevator arrays
 		// note that YOU will need to create and config each specific elevator...
 		floors = new Floor[NUM_FLOORS];
 		for (int i = 0; i < NUM_FLOORS; i++) {
-			floors[i]= new Floor(FLOOR_QSIZE); 
+			floors[i]= new Floor(FLOOR_QSIZE);
 		}
 		callMgr = new CallManager(floors,NUM_FLOORS);
 		//TODO: if you defined new fields, make sure to initialize them here
-		
+
 	}
 
 	// TODO: Place all of your code HERE - state methods and helpers...
@@ -109,7 +109,13 @@ public class Building {
 	public void addPassengers(Passengers group) {
 		int dir = group.getDirection();
 		floors[group.getOnFloor()].addGroup(group);
-		callMgr.updateCallStatus(group.getOnFloor(), dir); // TODO: consider if this should only be called once
+	}
+
+	/**
+	 * Called when all passengers have been added -> updates call manager
+	 */
+	public void onAllPassengersAdded() {
+		callMgr.updateCallStatus();
 	}
 
 	/**
@@ -158,7 +164,7 @@ public class Building {
 	public int getElevatorPassengerCount() {
 		return elevator.getNumPassengers();
 	};
-	
+
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
 	 * Initialize building logger. Sets formating, file to log to, and
@@ -262,6 +268,8 @@ public class Building {
 				logArrival(time, passengers.getNumPass(), elevator.getCurrFloor(), passengers.getId());
 			}
 			passSuccess.addAll(passengersToUnload);
+
+			callMgr.updateCallStatus();
 		}
 
 		// TODO: finish this in Elevator
@@ -321,6 +329,8 @@ public class Building {
 			}
 			nextGroup = currentFloor.peekNextGroup(elevator.getDirection());
 		}
+
+		callMgr.updateCallStatus();
 
 		// still boarding
 		if (elevator.isTransitioning()) {
@@ -455,12 +465,12 @@ public class Building {
 	}
 
 	/**
-	 * Process passenger data. Do NOT change this - it simply dumps the 
+	 * Process passenger data. Do NOT change this - it simply dumps the
 	 * collected passenger data for successful arrivals and give ups. These are
 	 * assumed to be ArrayLists...
 	 */
 	public void processPassengerData() {
-		
+
 		try {
 			BufferedWriter out = fio.openBufferedWriter(passDataFile);
 			out.write("ID,Number,From,To,WaitToBoard,TotalTime\n");
@@ -475,7 +485,7 @@ public class Building {
 				out.write(str);
 			}
 			fio.closeFile(out);
-		} 
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -489,9 +499,9 @@ public class Building {
 		LOGGER.setLevel(Level.INFO);
 		logElevatorConfig(elevator.getCapacity(),elevator.getTicksPerFloor(), elevator.getTicksDoorOpenClose(),
 					          elevator.getPassPerTick(), elevator.getCurrState(),elevator.getCurrFloor());
-		
+
 	}
-	
+
 	/**
 	 * Close logs, and pause the timeline in the GUI.
 	 *
@@ -504,7 +514,7 @@ public class Building {
 			fh.close();
 		}
 	}
-	
+
 	/**
 	 * Prints the state.
 	 *
@@ -513,7 +523,7 @@ public class Building {
 	 */
 	private String printState(int state) {
 		String str = "";
-		
+
 		switch (state) {
 			case Elevator.STOP: 		str =  "STOP   "; break;
 			case Elevator.MVTOFLR: 		str =  "MVTOFLR"; break;
@@ -526,7 +536,7 @@ public class Building {
 		}
 		return(str);
 	}
-	
+
 	/**
 	 * Log elevator config.
 	 *
@@ -537,14 +547,14 @@ public class Building {
 	 * @param state the state
 	 * @param floor the floor
 	 */
-	private void logElevatorConfig(int capacity, int ticksPerFloor, int ticksDoorOpenClose, 
+	private void logElevatorConfig(int capacity, int ticksPerFloor, int ticksDoorOpenClose,
 			                       int passPerTick, int state, int floor) {
 		LOGGER.info(
 				"CONFIG:   Capacity="+capacity+"   Ticks-Floor="+ticksPerFloor+"   Ticks-Door="+ticksDoorOpenClose+
 				    "   Ticks-Passengers="+passPerTick+"   CurrState=" + (printState(state))+"   CurrFloor="+(floor+1)
 		);
 	}
-		
+
 	/**
 	 * Log elevator state changed.
 	 *
@@ -558,7 +568,7 @@ public class Building {
 		LOGGER.info("Time="+time+"   Prev State: " + printState(prevState) + "   Curr State: "+printState(currState)
 		            +"   PrevFloor: "+(prevFloor+1) + "   CurrFloor: " + (currFloor+1));
 	}
-	
+
 	/**
 	 * Log arrival.
 	 *
@@ -569,9 +579,9 @@ public class Building {
 	 */
 	private void logArrival(int time, int numPass, int floor,int id) {
 		LOGGER.info("Time="+time+"   Arrived="+numPass+" Floor="+ (floor+1)
-		            +" passID=" + id);						
+		            +" passID=" + id);
 	}
-	
+
 	/**
 	 * Log calls.
 	 *
@@ -585,7 +595,7 @@ public class Building {
 		LOGGER.info("Time="+time+"   Called="+numPass+" Floor="+ (floor +1)
 			 	    +" Dir="+((dir>0)?"Up":"Down")+"   passID=" + id);
 	}
-	
+
 	/**
 	 * Log give up.
 	 *
@@ -596,8 +606,8 @@ public class Building {
 	 * @param id the id
 	 */
 	private void logGiveUp(int time, int numPass, int floor, int dir, int id) {
-		LOGGER.info("Time="+time+"   GaveUp="+numPass+" Floor="+ (floor+1) 
-				    +" Dir="+((dir>0)?"Up":"Down")+"   passID=" + id);				
+		LOGGER.info("Time="+time+"   GaveUp="+numPass+" Floor="+ (floor+1)
+				    +" Dir="+((dir>0)?"Up":"Down")+"   passID=" + id);
 	}
 
 	/**
@@ -610,10 +620,10 @@ public class Building {
 	 * @param id the id
 	 */
 	private void logSkip(int time, int numPass, int floor, int dir, int id) {
-		LOGGER.info("Time="+time+"   Skip="+numPass+" Floor="+ (floor+1) 
-			   	    +" Dir="+((dir>0)?"Up":"Down")+"   passID=" + id);				
+		LOGGER.info("Time="+time+"   Skip="+numPass+" Floor="+ (floor+1)
+			   	    +" Dir="+((dir>0)?"Up":"Down")+"   passID=" + id);
 	}
-	
+
 	/**
 	 * Log board.
 	 *
@@ -624,10 +634,10 @@ public class Building {
 	 * @param id the id
 	 */
 	private void logBoard(int time, int numPass, int floor, int dir, int id) {
-		LOGGER.info("Time="+time+"   Board="+numPass+" Floor="+ (floor+1) 
-				    +" Dir="+((dir>0)?"Up":"Down")+"   passID=" + id);				
+		LOGGER.info("Time="+time+"   Board="+numPass+" Floor="+ (floor+1)
+				    +" Dir="+((dir>0)?"Up":"Down")+"   passID=" + id);
 	}
-	
+
 	/**
 	 * Log end simulation.
 	 *
