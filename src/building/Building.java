@@ -99,7 +99,7 @@ public class Building {
 	 * @param passPerTick the passengers per tick
 	 */
 	public void initializeElevator(int capacity, int floorTicks, int doorTicks, int passPerTick) {
-		// TODO: implement
+		elevator = new Elevator(NUM_FLOORS, capacity, floorTicks, doorTicks, passPerTick);
 	}
 
 	/**
@@ -107,10 +107,11 @@ public class Building {
 	 *
 	 * @param group group to be added to the floor
 	 * @param floor the floor to add passengers to
-	 * @param time when the passengers were added to the floor
 	 */
-	public void addPassengers(Passengers group, int floor, int time) {
-		// TODO: implement this method
+	public void addPassengers(Passengers group) {
+		int dir = group.getDirection();
+		floors[group.getOnFloor()].addGroup(group);
+		callMgr.updateCallStatus(group.getOnFloor(), dir); // TODO: consider if this should only be called once
 	}
 
 	/**
@@ -120,8 +121,8 @@ public class Building {
 	 * @return whether the simulation ended
 	 */
 	public boolean hasSimulationEnded(int time) {
-		// TODO: implement
-		return false;
+		// TODO: double check this works
+		return elevator.getCurrState() == Elevator.STOP && callMgr.isCallPending();
 	}
 
 	/**
@@ -182,19 +183,81 @@ public class Building {
 	
 	/** Implement the state methods here */
 	private int currStateStop(int time) {
-		return -1;
+		// is a call on the current floor
+		if (callMgr.isCallOnFloor(elevator.getCurrFloor())) {
+			int dir = callMgr.prioritizePassengerCalls(elevator.getCurrFloor()).getDirection();
+			elevator.setDirection(dir);
+			return Elevator.OPENDR;
+		}
+		// calls on other floors
+		else if (callMgr.isCallPending()) {
+			Passengers nextGroup = callMgr.moveToNextFloor();
+			int nextFloor = nextGroup.getOnFloor();
+			elevator.setMoveToFloor(nextFloor);
+			elevator.setPostMoveToFloorDir(nextGroup.getDirection());
+			elevator.setDirection(getDirectionToFloor(nextFloor));
+			return Elevator.MVTOFLR;
+		}
+		// no calls in any direction on any floor
+		return Elevator.STOP;
 	}
 
 	private int currStateMvToFlr(int time) {
-		return -1;
+		elevator.moveElevator();
+
+		// reached target floor
+		if (elevator.getCurrFloor() == elevator.getMoveToFloor()) {
+			elevator.setDirection(elevator.getPostMoveToFloorDir());
+			return Elevator.OPENDR;
+		}
+		// has not reached target floor
+		else {
+			return Elevator.MVTOFLR;
+		}
 	}
 	
 	private int currStateOpenDr(int time) {
-		return -1;
+		elevator.openDoor();
+
+		if (elevator.isDoorOpen()) {
+			if (elevator.arePassengersExitingOnFloor(elevator.getCurrFloor())) {
+				return Elevator.OFFLD;
+			}
+			else {
+				return Elevator.BOARD;
+			}
+		}
+		else {
+			return Elevator.OPENDR;
+		}
 	}
 	
 	private int currStateOffLd(int time) {
-		return -1;
+		elevator.unloadPassengers();
+
+		// TODO: finish this in Elevator (decide where we want to consider the time)
+
+		if (elevator.isOffloading()) {
+			return Elevator.OFFLD;
+		}
+		// no longer offloading
+		else { // TODO: make sure method gets made (or ask where this should be handled)
+			// passengers to board in current direction
+			if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
+				return Elevator.BOARD;
+			}
+			else if (
+					elevator.getCapacity() == 0 &&
+					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
+					callMgr.isCallOnFloor(elevator.getCurrFloor())
+			) {
+				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
+				return Elevator.BOARD;
+			}
+			else {
+				return Elevator.CLOSEDR;
+			}
+		}
 	}
 	
 	private int currStateBoard(int time) {
@@ -202,18 +265,98 @@ public class Building {
 	}
 	
 	private int currStateCloseDr(int time) {
-		return -1;
+		elevator.closeDoor();
+
+		Passengers nextGroup = getCurrentFloor().peekNextGroup(elevator.getDirection()); // get passenger in direction
+		if (nextGroup != null && !nextGroup.isPolite()) {
+			// TODO: check if action needs to be taken
+			return Elevator.OPENDR;
+		}
+
+		// door is still open
+		if (elevator.isDoorOpen()) { // TODO: make sure this method gets made
+			return Elevator.CLOSEDR;
+		}
+		// door is closed, elevator is empty
+		else if (elevator.getCapacity() == 0) {
+			// no calls -> STOP
+			if (!callMgr.isCallPending()) {
+				return Elevator.STOP;
+			}
+			// Calls on this floor in the same direction
+			else if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
+				return Elevator.OPENDR;
+			}
+			// calls not on this floor, in the same direction
+			else if (callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection())) { // TODO: make sure this method gets made
+				return Elevator.MV1FLR;
+			}
+			else {
+				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
+
+				if (callMgr.isCallOnFloor(elevator.getCurrFloor())) {
+					return Elevator.OPENDR;
+				}
+				else {
+					return Elevator.MV1FLR;
+				}
+			}
+		}
+		// people in elevator who need to get off
+		else {
+			return Elevator.MV1FLR;
+		}
 	}
 	
 	private int currStateMv1Flr(int time) {
+		elevator.moveElevator();
+
+		if (elevator.atFloor()) { // TODO: Make sure this method is made
+			if (
+					elevator.passengersToExit(elevator.getCurrFloor()) ||
+					callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())
+			) { // TODO: Make sure this method is made
+				return Elevator.OPENDR;
+			}
+			else if (
+					elevator.getCapacity() == 0 &&
+					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
+					callMgr.isCallOnFloor(elevator.getCurrFloor())
+			) {
+				elevator.switchDirection(); // TODO: make sure this gets made
+				return Elevator.OPENDR;
+			}
+		}
+		else {
+			return Elevator.MV1FLR;
+		}
 		return -1;
 	}
 	
 	//TODO: Write this method 
 	private boolean elevatorStateOrFloorChanged() {
-		return false;
+		return elevator.getPrevState() != elevator.getCurrState() || elevator.getPrevFloor() != elevator.getCurrFloor();
 	}
-	
+
+	/**
+	 * Gets the direction to move to the floor from the current floor
+	 *
+	 * @param floor the floor to move to (different than current floor)
+	 * @return direction to move based on the floor
+	 */
+	private int getDirectionToFloor(int floor) {
+		return floor > elevator.getCurrFloor() ? UP : DOWN;
+	}
+
+	/**
+	 * Gets the current floor
+	 *
+	 * @return current floor object
+	 */
+	private Floor getCurrentFloor() {
+		return this.floors[elevator.getCurrFloor()];
+	}
+
 	/**
 	 * Update elevator - this is called AFTER time has been incremented.
 	 * -  Logs any state changes, if the have occurred,

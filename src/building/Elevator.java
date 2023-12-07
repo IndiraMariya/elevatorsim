@@ -337,4 +337,110 @@ public class Elevator {
 	public int getDirection() {
 		return direction;
 	}
+
+	public boolean arePassengersExitingOnFloor(int floor) {
+		if (passByFloor[floor].size() > 0) return true;
+		else return false;
+	}
+
+	public boolean isDoorOpen() {
+		if (doorState == DROPEN) return true;
+		else return false;
+	}
+	
+	// returns whether the door is between opening and closing
+	protected boolean isDoorTransitioning() {
+		return false;
+		
+	}
+
+	// returns whether there are passengers that need to exit on the specified floor
+	protected boolean passengersToExit(int floor) {
+		return false;
+		
+	}
+
+	// returns true if the elevator is still in the process of offloading (delay has not passed)
+	protected boolean isOffloading() {
+		return false;
+		
+	}
+
+	// returns true if the elevator is still in the process of boarding (delay has not passed)
+	protected boolean isBoarding() {
+		return false;
+		
+	}
+
+	// returns true if the elevator is NOT transitioning between floors
+	protected boolean atFloor() {
+		return false;
+	}
+
+	// helper method to switch direction from up to down or vice versa
+	protected void switchDirection() {
+		
+	}
+
+		
+	/**
+	 * Gets number of passengers in elevator
+	 *
+	 * @return number of passengers in the elevator
+	 */
+	public int getNumPassengers() {
+		// TODO: consider if you want to keep a running count of passengers (as a field) and only update when necessary
+		int count = 0;
+		for (ArrayList<Passengers> groupByFloor : passByFloor) {
+			for (Passengers group: groupByFloor) {
+				count += group.getNumPass();
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * Gets moveToFloor
+	 *
+	 * @return moveToFloor
+	 */
+	public int getMoveToFloor() {
+		return moveToFloor;
+	}
+
+	/**
+	 * Sets moveToFloor
+	 *
+	 * @param moveToFloor floor to move to
+	 */
+	public void setMoveToFloor(int moveToFloor) {
+		this.moveToFloor = moveToFloor;
+	}
+
+	/**
+	 * Sets direction
+	 *
+	 * @param direction sets direction
+	 */
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	/**
+	 * Gets direction after reaching moveToFloor
+	 *
+	 * @return postMoveToFloorDir
+	 */
+	public int getPostMoveToFloorDir() {
+		return postMoveToFloorDir;
+	}
+
+	/**
+	 * Sets postMoveToFloor direction
+	 *
+	 * @param postMoveToFloorDir postMoveToFloor direction
+	 */
+	public void setPostMoveToFloorDir(int postMoveToFloorDir) {
+		this.postMoveToFloorDir = postMoveToFloorDir;
+	}
 }

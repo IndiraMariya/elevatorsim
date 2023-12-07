@@ -85,23 +85,23 @@ public class CallManager {
 	protected Passengers prioritizePassengerCalls(int floor) {
 		Floor currentFloor = floors[floor];
 
-		if (isCall(floor)) {
+		if (isCallOnFloor(floor)) {
 			if (upCalls[floor]) {
 				 if (downCalls[floor]) {
 					if (currentFloor.getNumCalls(UP) >= currentFloor.getNumCalls(DOWN)) {
 						updateCallPending(UP);
-						return currentFloor.getNextGroup(UP);
+						return currentFloor.peekNextGroup(UP);
 					} else {
 						updateCallPending(DOWN);
-						return currentFloor.getNextGroup(DOWN);
+						return currentFloor.peekNextGroup(DOWN);
 					}
 				 } else {
 					updateCallPending(UP);
-					return currentFloor.getNextGroup(UP);
+					return currentFloor.peekNextGroup(UP);
 				 }
 			} else {
 				updateCallPending(DOWN);
-				return currentFloor.getNextGroup(DOWN);
+				return currentFloor.peekNextGroup(DOWN);
 			}
 		} else {
 			int numUpCalls = 0, numDownCalls = 0, lowestUpFloor = 0, highestDownFloor = 0;
@@ -111,14 +111,14 @@ public class CallManager {
 				numUpCalls += currentFloor.getNumCalls(UP);
 				numDownCalls += currentFloor.getNumCalls(DOWN);
 			}
-			if (numUpCalls > numDownCalls) return floors[lowestUpFloor].getNextGroup(UP);
-			else if (numUpCalls < numDownCalls) return floors[highestDownFloor].getNextGroup(DOWN);
+			if (numUpCalls > numDownCalls) return floors[lowestUpFloor].peekNextGroup(UP);
+			else if (numUpCalls < numDownCalls) return floors[highestDownFloor].peekNextGroup(DOWN);
 			else {
 				int lowestUpDistance = Math.abs(lowestUpFloor - floor);
 				int highestDownDistance = Math.abs(highestDownFloor - floor);
 				return lowestUpDistance > highestDownDistance 
-					? floors[highestDownFloor].getNextGroup(DOWN)
-					: floors[lowestUpFloor].getNextGroup(UP);
+					? floors[highestDownFloor].peekNextGroup(DOWN)
+					: floors[lowestUpFloor].peekNextGroup(UP);
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public class CallManager {
 	 * @param dir the direction to check
 	 * @return whether there is a call
 	 */
-	protected boolean isCall(int floor, int dir) {
+	protected boolean isCallOnFloor(int floor, int dir) {
 		return dir == UP ? upCalls[floor] : downCalls[floor];
 	}
 
@@ -140,8 +140,8 @@ public class CallManager {
 	 * @param floor floor to check
 	 * @return if there is a call in either direction
 	 */
-	protected boolean isCall(int floor) {
-		return isCall(floor, UP) || isCall(floor, DOWN);
+	protected boolean isCallOnFloor(int floor) {
+		return isCallOnFloor(floor, UP) || isCallOnFloor(floor, DOWN);
 	}
 
 	//TODO: Write any additional methods here. Things that you might consider:
@@ -153,8 +153,8 @@ public class CallManager {
 	//
 	//      These are an example - you may find you don't need some of these, or you may need more...
 
-	protected int moveToNextFloor() {
-		return -1;
+	protected Passengers moveToNextFloor() {
+		return null;
 	}
 
 	/**
@@ -182,4 +182,25 @@ public class CallManager {
 			downCallPending = false;
 		}
 	}
+
+	/**
+	 * Checks if there is a call pending
+	 *
+	 * @return Whether there is a call pending
+	 */
+	public boolean isCallPending() {
+		return upCallPending || downCallPending;
+	}
+		
+	/**
+	 * returns if there are calls (in any direction) above / below the current floor
+	 *
+	 * @param floor the floor to check from
+	 * @param dir the direction to check
+	 * @return whether there is a call in the specified direction
+	 */
+	protected boolean isCallInDirection(int floor, int dir) {
+		return false;
+	}
+
 }

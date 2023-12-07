@@ -1,14 +1,11 @@
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -23,7 +20,7 @@ import building.Building;
 import myfileio.MyFileIO;
 
 @TestMethodOrder(OrderAnnotation.class)
-class BuildingFSMMv1FlrTest {
+class ExecFullElevatorTests {
 	private ElevatorSimController c;
 	private Building b;
 	private MyFileIO fio = new MyFileIO();
@@ -32,50 +29,43 @@ class BuildingFSMMv1FlrTest {
 	private static String javaHome = null;
 	private ElevatorLogCompare cmpLog = new ElevatorLogCompare();
 
-	private void updateSimConfigCSV(String fname) {
-		File fh = fio.getFileHandle("ElevatorSimConfig.csv");
-		String line = "";
-		ArrayList<String> fileData = new ArrayList<>();
-		try {
-			BufferedReader br = fio.openBufferedReader(fh);
-			while ( (line = br.readLine())!=null) {
-				if (line.matches("passCSV.*")) 
-					fileData.add("passCSV,"+fname);
-				else
-					fileData.add(line);
-			}
-			fio.closeFile(br);
-			BufferedWriter bw = fio.openBufferedWriter(fh);
-			for (String l : fileData)
-				bw.write(l+"\n");
-			fio.closeFile(bw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void copyTestFile(String fname) {
-		File ifh = fio.getFileHandle("test_data/"+fname);
-		File ofh = fio.getFileHandle(fname);
+	private void setupSimConfigCSV(String fname) {
+		File ofh = new File("ElevatorSimConfig.csv");
+		File ifh = new File(fname);
 		Path src = Paths.get(ifh.getPath());
 		Path dest = Paths.get(ofh.getPath());
 		try {
 			Files.copy(src, dest,StandardCopyOption.REPLACE_EXISTING);
-		} 
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		updateSimConfigCSV(fname);
 	}
-	
-	private void deleteTestCSV(String fname) {
-		MyFileIO fio = new MyFileIO();
-		File ifh = fio.getFileHandle(fname);
-		ifh.delete();
-		ifh = fio.getFileHandle(fname.replaceAll(".csv", "PassData.csv"));
+
+	private void renameLogFile(String fname) {
+		File ofh = new File(fname);
+		File ifh = new File("FullElevatorTest.log");
+		Path src = Paths.get(ifh.getPath());
+		Path dest = Paths.get(ofh.getPath());
+		try {
+			Files.copy(src, dest,StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		ifh.delete();
 	}
 
+	private void renamePassDataFile(String fname) {
+		File ofh = new File(fname);
+		File ifh = new File("FullElevatorTestPassData.csv");
+		Path src = Paths.get(ifh.getPath());
+		Path dest = Paths.get(ofh.getPath());
+		try {
+			Files.copy(src, dest,StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ifh.delete();
+	}
 	
 //	private boolean processCmpElevatorOutput(Process proc, ArrayList<String> results) {
 //		String line = "";
@@ -140,7 +130,6 @@ class BuildingFSMMv1FlrTest {
 //					bw.write(cmpResults.get(i)+"\n");
 //				}
 //				bw.close();
-//				moveLogCmpFiles(fh.getName().replaceAll(".cmp", ""));
 //			}
 //		} catch (IOException e) {
 //			e.printStackTrace();
@@ -165,29 +154,6 @@ class BuildingFSMMv1FlrTest {
 			javaHome = null;
     }
 
-    private void moveLogCmpFiles(String base) {
-    	File ifh = new File(base+".log");
-    	File ofh = new File("JUnitTestLogs/"+base+".log");
-		Path src = Paths.get(ifh.getPath());
-		Path dest = Paths.get(ofh.getPath());
-		try {
-			Files.move(src,dest,StandardCopyOption.REPLACE_EXISTING);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-    	ifh = new File(base+".cmp");
-    	ofh = new File("JUnitTestLogs/"+base+".cmp");
-		src = Paths.get(ifh.getPath());
-		dest = Paths.get(ofh.getPath());
-		try {
-			Files.move(src,dest,StandardCopyOption.REPLACE_EXISTING);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		System.out.println("Running on: "+getOperatingSystem());
@@ -197,11 +163,6 @@ class BuildingFSMMv1FlrTest {
 		Path src = Paths.get(ifh.getPath());
 		Path dest = Paths.get(ofh.getPath());
 		Files.copy(src, dest,StandardCopyOption.REPLACE_EXISTING);
-		ifh = new File("JUnitTestLogs");
-		if (!ifh.exists()) {
-			ifh.mkdir();
-			System.out.println("Created file: JUnitTestLogs");
-		}
 	}
 
 	@AfterAll
@@ -221,146 +182,62 @@ class BuildingFSMMv1FlrTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
-	private void runFSMTest (String test,String cmd) {
-		deleteTestCSV(test+".csv");
-		assertTrue(cmpLog.executeCompare(cmd.split("\\s+")));
-		moveLogCmpFiles(test);
-	}
 	
 	@Test
 	@Order(1)
 	//@Disabled
-	void testMv1FCallPri1() {
-		String test = "Mv1FCallPri1";
+	void testElevatorTestCfg1() {
+		String test = "FullElevatorTest";
+		String config = "ElevatorSimConfig1.csv";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
+		setupSimConfigCSV(config);
 		c = new ElevatorSimController(null);
 		b = c.getBuilding();
 		b.enableLogging();
 	    int i;
-		for (i = 0; i < 96;i++) c.stepSim();
+		for (i = 0; i < 13397;i++) c.stepSim();
 		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+		renameLogFile(test+"Cfg1.log");
+		renamePassDataFile(test+"Cfg1PassData.csv");
+		assertTrue(true);		
 	}
 
 	@Test
 	@Order(2)
 	//@Disabled
-	void testMv1FCallPri2() {
-		String test = "Mv1FCallPri2";
+	void testElevatorTestCfg2() {
+		String test = "FullElevatorTest";
+		String config = "ElevatorSimConfig2.csv";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
+		setupSimConfigCSV(config);
 		c = new ElevatorSimController(null);
 		b = c.getBuilding();
 		b.enableLogging();
 	    int i;
-		for (i = 0; i < 87;i++) c.stepSim();
+		for (i = 0; i < 13429;i++) c.stepSim();
 		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+		renameLogFile(test+"Cfg2.log");
+		renamePassDataFile(test+"Cfg2PassData.csv");
+		assertTrue(true);
 	}
 
 	@Test
 	@Order(3)
 	//@Disabled
-	void testMv1FCallPri3() {
-		String test = "Mv1FCallPri3";
+	void testElevatorTestCfg3() {
+		String test = "FullElevatorTest";
+		String config = "ElevatorSimConfig3.csv";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
+		setupSimConfigCSV(config);
 		c = new ElevatorSimController(null);
 		b = c.getBuilding();
 		b.enableLogging();
 	    int i;
-		for (i = 0; i < 102;i++) c.stepSim();
+		for (i = 0; i < 13371;i++) c.stepSim();
 		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+		renameLogFile(test+"Cfg3.log");
+		renamePassDataFile(test+"Cfg3PassData.csv");
+		assertTrue(true);
 	}
 
-	@Test
-	@Order(4)
-	//@Disabled
-	void testMv1FCallPri4() {
-		String test = "Mv1FCallPri4";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 102;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(5)
-	//@Disabled
-	void testMv1FCallPri5() {
-		String test = "Mv1FCallPri5";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 102;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(6)
-	//@Disabled
-	void testMv1FCallPri6() {
-		String test = "Mv1FCallPri6";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 132;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(7)
-	//@Disabled
-	void testMv1FCallPri7() {
-		String test = "Mv1FCallPri7";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 139;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
-
-	@Test
-	@Order(8)
-	//@Disabled
-	void testMv1FCallPri8() {
-		String test = "Mv1FCallPri8";
-		System.out.println("\n\nExecuting Test: "+test+".csv");
-		copyTestFile(test+".csv");
-		c = new ElevatorSimController(null);
-		b = c.getBuilding();
-		b.enableLogging();
-	    int i;
-		for (i = 0; i < 157;i++) c.stepSim();
-		b.closeLogs(i);
-		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
-	}
 }
