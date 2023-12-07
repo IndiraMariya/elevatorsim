@@ -343,18 +343,6 @@ public class Elevator {
 		else return false;
 	}
 
-	// returns true if the elevator is still in the process of offloading (delay has not passed)
-	protected boolean isOffloading() {
-		return false;
-		
-	}
-
-	// returns true if the elevator is still in the process of boarding (delay has not passed)
-	protected boolean isBoarding() {
-		return false;
-		
-	}
-
 	/**
 	 * Gets moveToFloor
 	 *
