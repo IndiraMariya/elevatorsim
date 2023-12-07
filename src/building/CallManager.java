@@ -64,9 +64,6 @@ public class CallManager {
 	 * @param dir specified relevant queue
 	 */
 	protected void updateCallStatus(int floor, int dir) {
-
-		//TODO: Write this method if you choose to implement it...
-
 		if (dir == UP) {
 			upCalls[floor] = floors[floor].hasCall(UP);
 			updateCallPending(UP);

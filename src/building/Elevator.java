@@ -53,6 +53,8 @@ public class Elevator {
 	/** The pass per tick. */
 	private int passPerTick = 3;            // The number of PEOPLE that can enter/exit the elevator per tick
 	
+	private int numPassengersTransitioning = 0; 	// This is set whenever passengers are offloading or boarding. 
+
 	/**  Finite State Machine State Variables. */
 	private int currState;		// current state
 	
@@ -77,7 +79,6 @@ public class Elevator {
 	/** The door state. */
 	private int doorState;      // used to model the state of the doors - OPEN, CLOSED
 	                            // or moving. 0 = CLOSED, 1 = OPEN, 2 = MOVING
-
 	
 	/** The passengers. */
 	private int passengers;  	// the number of people in the elevator
@@ -103,7 +104,7 @@ public class Elevator {
 	 * @param passPerTick the pass per tick
 	 */
 	@SuppressWarnings("unchecked")
-	public Elevator(int numFloors,int capacity, int floorTicks, int doorTicks, int passPerTick) {		
+	public Elevator(int numFloors, int capacity, int floorTicks, int doorTicks, int passPerTick) {		
 		this.prevState = STOP;
 		this.currState = STOP;
 		this.timeInState = 0;
@@ -168,13 +169,16 @@ public class Elevator {
 	}
 
 	/**
-	 * unloads all passengers on current floor
+	 * returns all passengers on current floor to be unloaded
 	 */
-	protected void unloadPassengers() {
-		for (int i = 0; i < passPerTick; i++) {
-			// unload one passenger
-			passengers--; // what else should i do here?
+	protected ArrayList<Passengers> unloadPassengers() {
+		numPassengersTransitioning += passByFloor[currFloor].size();
+		ArrayList<Passengers> passengersToUnload = new ArrayList<Passengers>();
+		for (int i = 0; i < passByFloor[currFloor].size(); i++) {
+			passengersToUnload.add(passByFloor[currFloor].get(i));
 		}
+		passByFloor[currFloor].clear(); 
+		return passengersToUnload;
 	}
 
 	/**
@@ -182,17 +186,75 @@ public class Elevator {
 	 *
 	 * @param group group to add to elevator
 	 */
-	protected void loadPassenger(Passengers group) {}
+	protected void loadPassenger(Passengers group) {
+		numPassengersTransitioning += group.getNumPass();
+		if (getNumPassengers() + group.getNumPass() > 15) return;
+		passByFloor[group.getDestFloor()].add(group);
+	}
 
 	/**
-	 * Adds multiple passenger groups to elevator
+	 * Update curr state.
 	 *
-	 * @param groups
+	 * @param nextState the next state
 	 */
-	protected void loadMultipleGroups(Passengers[] groups) {
-		for (Passengers group: groups) {
-			loadPassenger(group);
+	void updateCurrState(int nextState) {
+		this.prevState = this.currState;
+		this.currState = nextState;
+		if (this.prevState != this.currState) {
+			timeInState = 1;
+			numPassengersTransitioning = 0;
 		}
+		else timeInState++;
+	}
+
+	public boolean isDoorOpen() {
+		if (doorState == DROPEN) return true;
+		else return false;
+	}
+	
+	// returns whether the door is between opening and closing
+	protected boolean isDoorTransitioning() {
+		if (doorState == DRMOVING) return true;
+		else return false;
+	}
+
+	// returns whether there are passengers that need to exit on the specified floor
+	protected boolean passengersToExit(int floor) {
+		if (passByFloor[floor].size() > 0) return true;
+		else return false;
+	}
+
+	// returns true if the elevator is still in the process of offloading or boarding (delay has not passed)
+	protected boolean isTransitioning() {
+		numPassengersTransitioning -= passPerTick;
+		return numPassengersTransitioning > 0;
+	}
+
+	// returns true if the elevator is NOT transitioning between floors
+	protected boolean atFloor() {
+		if (currState == MV1FLR || currState == MVTOFLR) return false;
+		return true;
+	}
+
+	// helper method to switch direction from up to down or vice versa
+	protected void switchDirection() {
+		direction *= -1;
+	}
+		
+	/**
+	 * Gets number of passengers in elevator
+	 *
+	 * @return number of passengers in the elevator
+	 */
+	public int getNumPassengers() {
+		// TODO: consider if you want to keep a running count of passengers (as a field) and only update when necessary
+		int count = 0;
+		for (ArrayList<Passengers> groupByFloor : passByFloor) {
+			for (Passengers group: groupByFloor) {
+				count += group.getNumPass();
+			}
+		}
+		return count;
 	}
 
 	/**
@@ -268,49 +330,11 @@ public class Elevator {
 	}
 
 	/**
-	 * Update curr state.
-	 *
-	 * @param nextState the next state
-	 */
-	void updateCurrState(int nextState) {
-		this.prevState = this.currState;
-		this.currState = nextState;
-		if (this.prevState != this.currState) timeInState = 0;
-		else timeInState++;
-	}
-
-	/**
 	 * Gets the direction
 	 *
 	 * @return the direction
 	 */
 	public int getDirection() {
 		return direction;
-	}
-
-	public boolean arePassengersExitingOnFloor(int floor) {
-		if (passByFloor[floor].size() > 0) return true;
-		else return false;
-	}
-
-	public boolean isDoorOpen() {
-		if (doorState == DROPEN) return true;
-		else return false;
-	}
-
-	/**
-	 * Gets number of passengers in elevator
-	 *
-	 * @return number of passengers in the elevator
-	 */
-	public int getNumPassengers() {
-		// TODO: consider if you want to keep a running count of passengers (as a field) and only update when necessary
-		int count = 0;
-		for (ArrayList<Passengers> groupByFloor : passByFloor) {
-			for (Passengers group: groupByFloor) {
-				count += group.getNumPass();
-			}
-		}
-		return count;
 	}
 }
