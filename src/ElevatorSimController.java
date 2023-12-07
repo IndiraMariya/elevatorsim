@@ -229,23 +229,26 @@ public class ElevatorSimController {
 	public void stepSim() {
  		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
-		while (!building.hasSimulationEnded(gui.getTime()) && !passQ.isEmpty()) {
-			if (passQ.peek().getTimeArrived()== gui.getTime()) {
-				while (passQ.size() > 0) {
-					building.addPassengers(passQ.poll());
+		if (gui != null) {
+			while (!building.hasSimulationEnded(gui.getTime()) && !passQ.isEmpty()) {
+				if (passQ.peek().getTimeArrived()== gui.getTime()) {
+					while (passQ.size() > 0) {
+						building.addPassengers(passQ.poll());
+					}
+					building.onAllPassengersAdded();
+					// TODO update elevator???
+					updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), gui.getTime());
 				}
-				building.onAllPassengersAdded();
-				// TODO update elevator???
-				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), gui.getTime());
-			}
-			else {
-				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), gui.getTime());
-				building.closeLogs(gui.getTime());
-				building.processPassengerData();
-				gui.endSimulation();
-				
+				else {
+					updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), gui.getTime());
+					building.closeLogs(gui.getTime());
+					building.processPassengerData();
+					gui.endSimulation();
+					
+				}
 			}
 		}
+		
 		// TODO: Write the rest of this method
 		// If simulation is not completed (not all passengers have been processed
 		// or elevator is not all in STOP state), then
