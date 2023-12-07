@@ -60,20 +60,14 @@ public class CallManager {
 	 * more efficient, could only update when there has been a change to the floor queues -
 	 * either passengers being added or being removed. The alternative is to dynamically
 	 * recalculate the values of specific fields when needed.
-	 * @param floor the floor which the queue changed
-	 * @param dir specified relevant queue
 	 */
-	protected void updateCallStatus(int floor, int dir) {
-		if (dir == UP) {
-			upCalls[floor] = floors[floor].hasCall(UP);
-			updateCallPending(UP);
+	protected void updateCallStatus() {
+		for (int i = 0; i < NUM_FLOORS; i++) {
+			upCalls[i] = floors[i].hasCall(UP);
+			downCalls[i] = floors[i].hasCall(DOWN);
 		}
-		else {
-			downCalls[floor] = floors[floor].hasCall(DOWN);
-			updateCallPending(DOWN);
-		}
-
-		// TODO: consider where this should be called (only in building? in floor?)
+		updateCallPending(UP);
+		updateCallPending(DOWN);
 	}
 
 	/**
@@ -203,4 +197,17 @@ public class CallManager {
 		return false;
 	}
 
+	/**
+	 * Checks politeness of next group
+	 * Assumes there is a group on the floor -> if not, returns False
+	 *
+	 * @param floor floor to check
+	 * @param dir direction of elevator
+	 * @return whether the next group is impolite or not
+	 */
+	protected boolean isNextGroupOnFloorImpolite(int floor, int dir) {
+		Passengers nextGroup = floors[floor].peekNextGroup(dir);
+		if (nextGroup == null) return false;
+		return !nextGroup.isPolite();
+	}
 }
