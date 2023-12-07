@@ -109,6 +109,7 @@ public class Building {
 	public void addPassengers(Passengers group) {
 		int dir = group.getDirection();
 		floors[group.getOnFloor()].addGroup(group);
+		logCalls(group.getTime(), group.getNumPass(), group.getOnFloor(), group.getDirection(), group.getId());
 	}
 
 	/**
