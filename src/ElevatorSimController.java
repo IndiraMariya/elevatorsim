@@ -226,23 +226,23 @@ public class ElevatorSimController {
 	 * Step sim. See the comments below for the functionality you
 	 * must implement......
 	 */
-	public void stepSim(Building building, ElevatorSimulation sim) {
+	public void stepSim() {
  		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
-		while (!building.hasSimulationEnded(sim.getTime()) && !passQ.isEmpty()) {
-			if (passQ.peek().getTimeArrived()== sim.getTime()) {
+		while (!building.hasSimulationEnded(gui.getTime()) && !passQ.isEmpty()) {
+			if (passQ.peek().getTimeArrived()== gui.getTime()) {
 				while (passQ.size() > 0) {
 					building.addPassengers(passQ.poll());
 				}
 				building.onAllPassengersAdded();
 				// TODO update elevator???
-				updateGUI(sim, building.getElevatorState(), building.getElevatorPassengerCount(), sim.getTime());
+				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), gui.getTime());
 			}
 			else {
-				updateGUI(sim, building.getElevatorState(), building.getElevatorPassengerCount(), sim.getTime());
-				building.closeLogs(sim.getTime());
+				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), gui.getTime());
+				building.closeLogs(gui.getTime());
 				building.processPassengerData();
-				sim.endSimulation();
+				gui.endSimulation();
 				
 			}
 		}
