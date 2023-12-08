@@ -125,7 +125,7 @@ public class Building {
 	 * @return whether the simulation ended
 	 */
 	public boolean hasSimulationEnded(int time) {
-		// TODO: double check this works
+		// TODO: double check this works - check with murray if this is what intended -> should STOP state be called once before ending the simulation?
 		return elevator.getCurrState() == Elevator.STOP && elevator.getPrevState() == Elevator.STOP && !callMgr.isCallPending();
 	}
 

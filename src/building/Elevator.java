@@ -176,10 +176,10 @@ public class Elevator {
 	 * returns all passengers on current floor to be unloaded
 	 */
 	protected ArrayList<Passengers> unloadPassengers() {
-		numPassengersTransitioning += passByFloor[currFloor].size();
 		ArrayList<Passengers> passengersToUnload = new ArrayList<Passengers>();
-		for (int i = 0; i < passByFloor[currFloor].size(); i++) {
-			passengersToUnload.add(passByFloor[currFloor].get(i));
+		for (Passengers group : passByFloor[currFloor]) {
+			passengersToUnload.add(group);
+			numPassengersTransitioning +=  group.getNumPass();
 		}
 		passByFloor[currFloor].clear(); 
 		return passengersToUnload;
