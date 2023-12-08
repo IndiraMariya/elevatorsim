@@ -200,7 +200,7 @@ public class Building {
 		}
 		// calls on other floors
 		else if (callMgr.isCallPending()) {
-			Passengers nextGroup = callMgr.moveToNextFloor();
+			Passengers nextGroup = callMgr.prioritizePassengerCalls(elevator.getCurrFloor());
 			int nextFloor = nextGroup.getOnFloor();
 			elevator.setMoveToFloor(nextFloor);
 			elevator.setPostMoveToFloorDir(nextGroup.getDirection());

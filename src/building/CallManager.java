@@ -100,10 +100,10 @@ public class CallManager {
 		} else {
 			int numUpCalls = 0, numDownCalls = 0, lowestUpFloor = 0, highestDownFloor = 0;
 			for (int i = 0; i < floors.length; i++) {
-				if (numUpCalls == 0 && currentFloor.getNumCalls(UP) > 0) lowestUpFloor = i;
-				if (currentFloor.getNumCalls(DOWN) > 0) highestDownFloor = i;
-				numUpCalls += currentFloor.getNumCalls(UP);
-				numDownCalls += currentFloor.getNumCalls(DOWN);
+				if (numUpCalls == 0 && upCalls[i]) lowestUpFloor = i;
+				if (downCalls[i]) highestDownFloor = i;
+				numUpCalls += upCalls[i] ? 1 : 0;
+				numDownCalls += downCalls[i] ? 1 : 0;
 			}
 			if (numUpCalls > numDownCalls) return floors[lowestUpFloor].peekNextGroup(UP);
 			else if (numUpCalls < numDownCalls) return floors[highestDownFloor].peekNextGroup(DOWN);
