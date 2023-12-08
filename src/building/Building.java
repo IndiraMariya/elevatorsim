@@ -126,7 +126,7 @@ public class Building {
 	 */
 	public boolean hasSimulationEnded(int time) {
 		// TODO: double check this works
-		return elevator.getCurrState() == Elevator.STOP && !callMgr.isCallPending();
+		return elevator.getCurrState() == Elevator.STOP && elevator.getPrevState() == Elevator.STOP && !callMgr.isCallPending();
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class Building {
 	private int currStateOpenDr(int time) {
 		elevator.openDoor();
 
-		if (elevator.isDoorOpen()) {
+		if (elevator.isDoorTransitioning() || elevator.isDoorOpen()) {
 			if (elevator.passengersToExit(elevator.getCurrFloor())) {
 				return Elevator.OFFLD;
 			}
@@ -362,7 +362,7 @@ public class Building {
 			return Elevator.CLOSEDR;
 		}
 		// door is closed, elevator is empty
-		else if (elevator.getCapacity() == 0) {
+		else if (elevator.getNumPassengers() == 0) {
 			// no calls -> STOP
 			if (!callMgr.isCallPending()) {
 				return Elevator.STOP;

@@ -163,6 +163,10 @@ public class Elevator {
 	 * opens the elevator door
 	 */
 	protected void openDoor() {
+		// update previous floor upon entry
+		if (prevState != currState) {
+			prevFloor = currFloor;
+		}
 		if (timeInState >= ticksDoorOpenClose) {
 			this.doorState = DROPEN;
 		}
@@ -232,7 +236,9 @@ public class Elevator {
 
 	// returns true if the elevator is NOT transitioning between floors
 	protected boolean atFloor() {
-		if (currState == MV1FLR || currState == MVTOFLR) return false;
+		if (currState == MV1FLR || currState == MVTOFLR) {
+			return timeInState % getTicksPerFloor() == 0;
+		}
 		return true;
 	}
 
