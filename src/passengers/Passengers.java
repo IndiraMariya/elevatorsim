@@ -208,6 +208,15 @@ public class Passengers {
 	}
 
 	/**
+	 * Sets the politeness
+	 *
+	 * @param polite the politeness
+	 */
+	public void setPolite(boolean polite) {
+		this.polite = polite;
+	}
+
+	/**
 	 * Reset static ID. 
 	 * This method MUST be called during the building constructor BEFORE
 	 * reading the configuration files. This is to provide consistency in the

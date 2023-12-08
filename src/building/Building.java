@@ -307,7 +307,7 @@ public class Building {
 		Floor currentFloor = floors[elevator.getCurrFloor()];
 		int dir = elevator.getDirection();
 		Passengers nextGroup = currentFloor.peekNextGroup(dir);
-		while (elevator.getNumPassengers() < elevator.getCapacity() && nextGroup != null) {
+		while (nextGroup != null) {
 			// passengers have given up
 			// TODO: check >= or >
 			if (time >= nextGroup.getTimeWillGiveUp()) {
@@ -318,9 +318,13 @@ public class Building {
 			// not enough room
 			else if (elevator.getCapacity() - elevator.getNumPassengers() < nextGroup.getNumPass()) {
 				logSkip(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
-				// TODO: adjust passenger if necessary ??
+				// mark skipped group as polite if necessary
+				if (!nextGroup.isPolite()) {
+					nextGroup.setPolite(true);
+				}
 				break;
 			}
+			// board the passenger
 			else {
 				nextGroup.setBoardTime(time);
 				logBoard(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
