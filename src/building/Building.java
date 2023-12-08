@@ -310,7 +310,7 @@ public class Building {
 		while (elevator.getNumPassengers() < elevator.getCapacity() && nextGroup != null) {
 			// passengers have given up
 			// TODO: check >= or >
-			if (nextGroup.getTimeWillGiveUp() >= time) {
+			if (time >= nextGroup.getTimeWillGiveUp()) {
 				logGiveUp(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
 				gaveUp.add(nextGroup);
 				currentFloor.removeNextGroup(dir);

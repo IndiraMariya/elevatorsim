@@ -235,6 +235,7 @@ public class ElevatorSimController {
 			}
 			// TODO: consider if we want to update everytime (even if no passengers were added)
 			building.onAllPassengersAdded();
+			building.updateElevator(stepCnt);
 			// TODO update elevator???
 			if (gui != null) {
 				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
