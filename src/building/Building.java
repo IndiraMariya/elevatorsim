@@ -367,13 +367,13 @@ public class Building {
 			if (!callMgr.isCallPending()) {
 				return Elevator.STOP;
 			}
-			// Calls on this floor in the same direction
-			else if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
-				return Elevator.OPENDR;
-			}
 			// calls not on this floor, in the same direction
 			else if (callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection())) {
 				return Elevator.MV1FLR;
+			}
+			// Calls on this floor in the same direction
+			else if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
+				return Elevator.OPENDR;
 			}
 			else {
 				elevator.switchDirection();
