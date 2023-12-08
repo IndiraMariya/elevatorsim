@@ -284,7 +284,7 @@ public class Building {
 				return Elevator.BOARD;
 			}
 			else if (
-					elevator.getCapacity() == 0 &&
+					elevator.getNumPassengers() == 0 &&
 					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
 					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {
@@ -409,7 +409,7 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 			else if (
-					elevator.getCapacity() == 0 &&
+					elevator.getNumPassengers() == 0 &&
 					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
 					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {
