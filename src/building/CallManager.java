@@ -81,18 +81,19 @@ public class CallManager {
 
 		if (isCallOnFloor(floor)) {
 			if (upCalls[floor]) {
-				 if (downCalls[floor]) {
-					if (currentFloor.getNumCalls(UP) >= currentFloor.getNumCalls(DOWN)) {
+				// calls both above and below
+				if (downCalls[floor]) {
+					if (getNumCallsInDirection(floor, UP) >= getNumCallsInDirection(floor, DOWN)) {
 						updateCallPending(UP);
 						return currentFloor.peekNextGroup(UP);
 					} else {
 						updateCallPending(DOWN);
 						return currentFloor.peekNextGroup(DOWN);
 					}
-				 } else {
+				} else {
 					updateCallPending(UP);
 					return currentFloor.peekNextGroup(UP);
-				 }
+				}
 			} else {
 				updateCallPending(DOWN);
 				return currentFloor.peekNextGroup(DOWN);
@@ -205,6 +206,28 @@ public class CallManager {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * returns the number of calls (in any direction) above / below the current floor
+	 *
+	 * @param floor the floor to check from
+	 * @param dir the direction to check
+	 * @return number of calls in the specified direction (does NOT include current floor)
+	 */
+	private int getNumCallsInDirection(int floor, int dir) {
+		int count = 0;
+		if (dir == UP) {
+			for (int i = floor + 1; i < NUM_FLOORS; i++) {
+				if (upCalls[i] || downCalls[i]) count ++;
+			}
+		}
+		else if (dir == DOWN) {
+			for (int i = floor - 1; i >= 0; i--) {
+				if (upCalls[i] || downCalls[i]) count++;
+			}
+		}
+		return count;
 	}
 
 	/**
