@@ -315,8 +315,7 @@ public class Building {
 		Passengers nextGroup = currentFloor.peekNextGroup(dir);
 		while (nextGroup != null) {
 			// passengers have given up
-			// TODO: check >= or >
-			if (time >= nextGroup.getTimeWillGiveUp()) {
+			if (time > nextGroup.getTimeWillGiveUp()) {
 				logGiveUp(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
 				gaveUp.add(nextGroup);
 				currentFloor.removeNextGroup(dir);
