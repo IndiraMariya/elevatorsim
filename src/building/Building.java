@@ -58,6 +58,8 @@ public class Building {
 	/**  The Call Manager - it tracks calls for the elevator, analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
 
+	private boolean hasLoggedSkip = false;
+
 	// Add any fields that you think you might need here...
 
 	/**
@@ -304,6 +306,10 @@ public class Building {
 	 * @return next state
 	 */
 	private int currStateBoard(int time) {
+		if (elevator.getPrevState() != elevator.getCurrState()) {
+			hasLoggedSkip = false;
+		}
+
 		Floor currentFloor = floors[elevator.getCurrFloor()];
 		int dir = elevator.getDirection();
 		Passengers nextGroup = currentFloor.peekNextGroup(dir);
@@ -317,7 +323,10 @@ public class Building {
 			}
 			// not enough room
 			else if (elevator.getCapacity() - elevator.getNumPassengers() < nextGroup.getNumPass()) {
-				logSkip(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
+				if (!hasLoggedSkip) {
+					logSkip(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
+					hasLoggedSkip = true;
+				}
 				// mark skipped group as polite if necessary
 				if (!nextGroup.isPolite()) {
 					nextGroup.setPolite(true);
