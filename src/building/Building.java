@@ -6,6 +6,7 @@ import passengers.Passengers;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -166,6 +167,17 @@ public class Building {
 	public int getElevatorPassengerCount() {
 		return elevator.getNumPassengers();
 	};
+
+	/**
+	 * Returns the number of passenger groups on a floor and a specific direction
+	 *
+	 * @param floor floor to look at
+	 * @param dir direction to look at
+	 * @return Number of passenger groups
+	 */
+	public int getNumPassengerGroupsOnFloor(int floor, int dir) {
+		return floors[floor].getNumCalls(dir);
+	}
 
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
