@@ -94,8 +94,9 @@ public class ElevatorSimController {
 	//TODO: Write methods to update the GUI display
 	//      Needs to cover the Elevator state, Elevator passengers
 	//      and queues for each floor, as well as the current time
-	public void updateGUI(ElevatorSimulation sim, int state, int pass, int time) {
-		sim.setTimebox(time, state, pass);
+	public void updateGUI() {
+		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
+		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
 	}
 	/**
 	 * Config simulation. Reads the filename, and parses the
@@ -236,14 +237,13 @@ public class ElevatorSimController {
 			// TODO: consider if we want to update everytime (even if no passengers were added)
 			building.onAllPassengersAdded();
 			building.updateElevator(stepCnt);
-			// TODO update elevator???
 			if (gui != null) {
-				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
+				updateGUI();
 			}
 		}
 		else {
 			if (gui != null) {
-				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
+				updateGUI();
 			}
 			building.closeLogs(stepCnt);
 			building.processPassengerData();
