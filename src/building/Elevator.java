@@ -163,6 +163,10 @@ public class Elevator {
 	 * opens the elevator door
 	 */
 	protected void openDoor() {
+		// update previous floor upon entry
+		if (prevState != currState) {
+			prevFloor = currFloor;
+		}
 		if (timeInState >= ticksDoorOpenClose) {
 			this.doorState = DROPEN;
 		}
@@ -172,10 +176,10 @@ public class Elevator {
 	 * returns all passengers on current floor to be unloaded
 	 */
 	protected ArrayList<Passengers> unloadPassengers() {
-		numPassengersTransitioning += passByFloor[currFloor].size();
 		ArrayList<Passengers> passengersToUnload = new ArrayList<Passengers>();
-		for (int i = 0; i < passByFloor[currFloor].size(); i++) {
-			passengersToUnload.add(passByFloor[currFloor].get(i));
+		for (Passengers group : passByFloor[currFloor]) {
+			passengersToUnload.add(group);
+			numPassengersTransitioning +=  group.getNumPass();
 		}
 		passByFloor[currFloor].clear(); 
 		return passengersToUnload;
@@ -232,7 +236,9 @@ public class Elevator {
 
 	// returns true if the elevator is NOT transitioning between floors
 	protected boolean atFloor() {
-		if (currState == MV1FLR || currState == MVTOFLR) return false;
+		if (currState == MV1FLR || currState == MVTOFLR) {
+			return timeInState % getTicksPerFloor() == 0;
+		}
 		return true;
 	}
 

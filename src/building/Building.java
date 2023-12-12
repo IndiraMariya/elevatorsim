@@ -58,6 +58,8 @@ public class Building {
 	/**  The Call Manager - it tracks calls for the elevator, analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
 
+	private boolean hasLoggedSkip = false;
+
 	// Add any fields that you think you might need here...
 
 	/**
@@ -125,8 +127,8 @@ public class Building {
 	 * @return whether the simulation ended
 	 */
 	public boolean hasSimulationEnded(int time) {
-		// TODO: double check this works
-		return elevator.getCurrState() == Elevator.STOP && !callMgr.isCallPending();
+		// TODO: double check this works - check with murray if this is what intended -> should STOP state be called once before ending the simulation?
+		return elevator.getCurrState() == Elevator.STOP && elevator.getPrevState() == Elevator.STOP && !callMgr.isCallPending();
 	}
 
 	/**
@@ -200,7 +202,7 @@ public class Building {
 		}
 		// calls on other floors
 		else if (callMgr.isCallPending()) {
-			Passengers nextGroup = callMgr.moveToNextFloor();
+			Passengers nextGroup = callMgr.prioritizePassengerCalls(elevator.getCurrFloor());
 			int nextFloor = nextGroup.getOnFloor();
 			elevator.setMoveToFloor(nextFloor);
 			elevator.setPostMoveToFloorDir(nextGroup.getDirection());
@@ -240,7 +242,7 @@ public class Building {
 	private int currStateOpenDr(int time) {
 		elevator.openDoor();
 
-		if (elevator.isDoorOpen()) {
+		if (elevator.isDoorTransitioning() || elevator.isDoorOpen()) {
 			if (elevator.passengersToExit(elevator.getCurrFloor())) {
 				return Elevator.OFFLD;
 			}
@@ -284,7 +286,7 @@ public class Building {
 				return Elevator.BOARD;
 			}
 			else if (
-					elevator.getCapacity() == 0 &&
+					elevator.getNumPassengers() == 0 &&
 					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
 					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {
@@ -304,23 +306,33 @@ public class Building {
 	 * @return next state
 	 */
 	private int currStateBoard(int time) {
+		if (elevator.getPrevState() != elevator.getCurrState()) {
+			hasLoggedSkip = false;
+		}
+
 		Floor currentFloor = floors[elevator.getCurrFloor()];
 		int dir = elevator.getDirection();
 		Passengers nextGroup = currentFloor.peekNextGroup(dir);
-		while (elevator.getNumPassengers() < elevator.getCapacity() && nextGroup != null) {
+		while (nextGroup != null) {
 			// passengers have given up
-			// TODO: check >= or >
-			if (time >= nextGroup.getTimeWillGiveUp()) {
+			if (time > nextGroup.getTimeWillGiveUp()) {
 				logGiveUp(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
 				gaveUp.add(nextGroup);
 				currentFloor.removeNextGroup(dir);
 			}
 			// not enough room
 			else if (elevator.getCapacity() - elevator.getNumPassengers() < nextGroup.getNumPass()) {
-				logSkip(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
-				// TODO: adjust passenger if necessary ??
+				if (!hasLoggedSkip) {
+					logSkip(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
+					hasLoggedSkip = true;
+				}
+				// mark skipped group as polite if necessary
+				if (!nextGroup.isPolite()) {
+					nextGroup.setPolite(true);
+				}
 				break;
 			}
+			// board the passenger
 			else {
 				nextGroup.setBoardTime(time);
 				logBoard(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
@@ -362,18 +374,18 @@ public class Building {
 			return Elevator.CLOSEDR;
 		}
 		// door is closed, elevator is empty
-		else if (elevator.getCapacity() == 0) {
+		else if (elevator.getNumPassengers() == 0) {
 			// no calls -> STOP
 			if (!callMgr.isCallPending()) {
 				return Elevator.STOP;
 			}
-			// Calls on this floor in the same direction
-			else if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
-				return Elevator.OPENDR;
-			}
 			// calls not on this floor, in the same direction
 			else if (callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection())) {
 				return Elevator.MV1FLR;
+			}
+			// Calls on this floor in the same direction
+			else if (callMgr.isCallOnFloor(elevator.getCurrFloor(), elevator.getDirection())) {
+				return Elevator.OPENDR;
 			}
 			else {
 				elevator.switchDirection();
@@ -409,7 +421,7 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 			else if (
-					elevator.getCapacity() == 0 &&
+					elevator.getNumPassengers() == 0 &&
 					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
 					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {

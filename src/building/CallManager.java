@@ -81,18 +81,19 @@ public class CallManager {
 
 		if (isCallOnFloor(floor)) {
 			if (upCalls[floor]) {
-				 if (downCalls[floor]) {
-					if (currentFloor.getNumCalls(UP) >= currentFloor.getNumCalls(DOWN)) {
+				// calls both above and below
+				if (downCalls[floor]) {
+					if (getNumCallsInDirection(floor, UP) >= getNumCallsInDirection(floor, DOWN)) {
 						updateCallPending(UP);
 						return currentFloor.peekNextGroup(UP);
 					} else {
 						updateCallPending(DOWN);
 						return currentFloor.peekNextGroup(DOWN);
 					}
-				 } else {
+				} else {
 					updateCallPending(UP);
 					return currentFloor.peekNextGroup(UP);
-				 }
+				}
 			} else {
 				updateCallPending(DOWN);
 				return currentFloor.peekNextGroup(DOWN);
@@ -100,10 +101,10 @@ public class CallManager {
 		} else {
 			int numUpCalls = 0, numDownCalls = 0, lowestUpFloor = 0, highestDownFloor = 0;
 			for (int i = 0; i < floors.length; i++) {
-				if (numUpCalls == 0 && currentFloor.getNumCalls(UP) > 0) lowestUpFloor = i;
-				if (currentFloor.getNumCalls(DOWN) > 0) highestDownFloor = i;
-				numUpCalls += currentFloor.getNumCalls(UP);
-				numDownCalls += currentFloor.getNumCalls(DOWN);
+				if (numUpCalls == 0 && upCalls[i]) lowestUpFloor = i;
+				if (downCalls[i]) highestDownFloor = i;
+				numUpCalls += upCalls[i] ? 1 : 0;
+				numDownCalls += downCalls[i] ? 1 : 0;
 			}
 			if (numUpCalls > numDownCalls) return floors[lowestUpFloor].peekNextGroup(UP);
 			else if (numUpCalls < numDownCalls) return floors[highestDownFloor].peekNextGroup(DOWN);
@@ -194,7 +195,29 @@ public class CallManager {
 	 * @return whether there is a call in the specified direction
 	 */
 	protected boolean isCallInDirection(int floor, int dir) {
-		return false;
+		return getNumCallsInDirection(floor, dir) != 0;
+	}
+
+	/**
+	 * returns the number of calls (in any direction) above / below the current floor
+	 *
+	 * @param floor the floor to check from
+	 * @param dir the direction to check
+	 * @return number of calls in the specified direction (does NOT include current floor)
+	 */
+	private int getNumCallsInDirection(int floor, int dir) {
+		int count = 0;
+		if (dir == UP) {
+			for (int i = floor + 1; i < NUM_FLOORS; i++) {
+				if (upCalls[i] || downCalls[i]) count ++;
+			}
+		}
+		else if (dir == DOWN) {
+			for (int i = floor - 1; i >= 0; i--) {
+				if (upCalls[i] || downCalls[i]) count++;
+			}
+		}
+		return count;
 	}
 
 	/**
