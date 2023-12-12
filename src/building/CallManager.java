@@ -78,26 +78,19 @@ public class CallManager {
 	 */
 	protected Passengers prioritizePassengerCalls(int floor) {
 		Floor currentFloor = floors[floor];
+		int direction;
 
 		if (isCallOnFloor(floor)) {
 			if (upCalls[floor]) {
-				// calls both above and below
 				if (downCalls[floor]) {
-					if (getNumCallsInDirection(floor, UP) >= getNumCallsInDirection(floor, DOWN)) {
-						updateCallPending(UP);
-						return currentFloor.peekNextGroup(UP);
-					} else {
-						updateCallPending(DOWN);
-						return currentFloor.peekNextGroup(DOWN);
-					}
-				} else {
-					updateCallPending(UP);
-					return currentFloor.peekNextGroup(UP);
-				}
-			} else {
-				updateCallPending(DOWN);
-				return currentFloor.peekNextGroup(DOWN);
-			}
+					 direction = 
+					 	getNumCallsInDirection(floor, UP) >= getNumCallsInDirection(floor, DOWN) 
+						? UP : DOWN;
+				} else direction = UP; // if only up calls
+			} else direction = DOWN; // if only down calls
+			
+		updateCallPending(direction);
+		return currentFloor.peekNextGroup(direction);
 		} else {
 			int numUpCalls = 0, numDownCalls = 0, lowestUpFloor = 0, highestDownFloor = 0;
 			for (int i = 0; i < floors.length; i++) {
@@ -139,19 +132,6 @@ public class CallManager {
 		return isCallOnFloor(floor, UP) || isCallOnFloor(floor, DOWN);
 	}
 
-	//TODO: Write any additional methods here. Things that you might consider:
-	//      1. pending calls - are there any? only up? only down?
-	//      2. is there a call on the current floor in the current direction
-	//      3. How many up calls are pending? how many down calls are pending? 
-	//      4. How many calls are pending in the direction that the elevator is going
-	//      5. Should the elevator change direction?
-	//
-	//      These are an example - you may find you don't need some of these, or you may need more...
-
-	protected Passengers moveToNextFloor() {
-		return null;
-	}
-
 	/**
 	 * Updates the relevant variable based on current state
 	 *
@@ -183,7 +163,7 @@ public class CallManager {
 	 *
 	 * @return Whether there is a call pending
 	 */
-	public boolean isCallPending() {
+	protected boolean isCallPending() {
 		return upCallPending || downCallPending;
 	}
 		

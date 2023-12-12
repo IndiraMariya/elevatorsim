@@ -58,7 +58,7 @@ public class Building {
 	/**  The Call Manager - it tracks calls for the elevator, analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
 
-	private boolean hasLoggedSkip = false;
+	private int lastSkippedID = -1;
 
 	// Add any fields that you think you might need here...
 
@@ -127,8 +127,7 @@ public class Building {
 	 * @return whether the simulation ended
 	 */
 	public boolean hasSimulationEnded(int time) {
-		// TODO: double check this works - check with murray if this is what intended -> should STOP state be called once before ending the simulation?
-		return elevator.getCurrState() == Elevator.STOP && elevator.getPrevState() == Elevator.STOP && !callMgr.isCallPending();
+		return elevator.getCurrState() == Elevator.STOP && !callMgr.isCallPending();
 	}
 
 	/**
@@ -166,6 +165,17 @@ public class Building {
 	public int getElevatorPassengerCount() {
 		return elevator.getNumPassengers();
 	};
+
+	/**
+	 * Returns the number of passenger groups on a floor and a specific direction
+	 *
+	 * @param floor floor to look at
+	 * @param dir direction to look at
+	 * @return Number of passenger groups
+	 */
+	public int getNumPassengerGroupsOnFloor(int floor, int dir) {
+		return floors[floor].getNumGroups(dir);
+	}
 
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
@@ -307,7 +317,7 @@ public class Building {
 	 */
 	private int currStateBoard(int time) {
 		if (elevator.getPrevState() != elevator.getCurrState()) {
-			hasLoggedSkip = false;
+			lastSkippedID = -1;
 		}
 
 		Floor currentFloor = floors[elevator.getCurrFloor()];
@@ -317,14 +327,17 @@ public class Building {
 			// passengers have given up
 			if (time > nextGroup.getTimeWillGiveUp()) {
 				logGiveUp(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
+				if (lastSkippedID == nextGroup.getId()) {
+					lastSkippedID = -1; // RESET if skipped group gives up
+				}
 				gaveUp.add(nextGroup);
 				currentFloor.removeNextGroup(dir);
 			}
 			// not enough room
 			else if (elevator.getCapacity() - elevator.getNumPassengers() < nextGroup.getNumPass()) {
-				if (!hasLoggedSkip) {
+				if (lastSkippedID != nextGroup.getId()) {
 					logSkip(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
-					hasLoggedSkip = true;
+					lastSkippedID = nextGroup.getId();
 				}
 				// mark skipped group as polite if necessary
 				if (!nextGroup.isPolite()) {

@@ -46,7 +46,7 @@ public class Floor {
 	 * @param dir determines which queue to look at
 	 * @return number of calls in queue
 	 */
-	protected int getNumCalls(int dir) {
+	protected int getNumGroups(int dir) {
 		return dir == UP ? up.size() : down.size();
 	}
 
