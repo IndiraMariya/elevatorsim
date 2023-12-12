@@ -387,7 +387,7 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
-	 * TODO: LINE LENGTH@!!
+	 * PEER REVIEWED BY MK
 	 */
 	private int currStateCloseDr(int time) {
 		elevator.closeDoor();

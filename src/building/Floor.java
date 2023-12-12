@@ -1,12 +1,10 @@
 package building;
-// ListIterater can be used to look at the contents of the floor queues for 
+// ListIterator can be used to look at the contents of the floor queues for 
 // debug/display purposes...
 import java.util.ListIterator;
 
 import genericqueue.GenericQueue;
 import passengers.Passengers;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class Floor. This class provides the up/down queues to hold
  * Passengers as they wait for the Elevator.
@@ -30,37 +28,37 @@ public class Floor {
 		up = new GenericQueue<Passengers>(qSize);
 	}
 	
-	// TODO: Write the helper methods needed for this class. 
-	// You probably will only be accessing one queue at any
-	// given time based upon direction - you could choose to 
-	// account for this in your methods.
-
 	/**
 	 * Has call on in specified direction
 	 *
 	 * @param dir determines which queue to look at
 	 * @return whether there is a call in that direction
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	protected boolean hasCall(int dir) {
 		return dir == UP ? !up.isEmpty() : !down.isEmpty();
 	}
 
 	/**
-	 * Gets number of calls in specifiied queue
+	 * Gets number of calls in specified queue
 	 *
 	 * @param dir determines which queue to look at
 	 * @return number of calls in queue
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	protected int getNumGroups(int dir) {
 		return dir == UP ? up.size() : down.size();
 	}
-
 
 	/**
 	 * Gets next passenger group from specified queue
 	 *
 	 * @param dir determines which queue to look at
 	 * @return Next passenger group in line
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	protected Passengers peekNextGroup(int dir) {
 		return dir == UP ? up.peek() : down.peek();
@@ -71,6 +69,8 @@ public class Floor {
 	 *
 	 * @param dir determines which queue to look at
 	 * @return passengers who have been removed
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	protected Passengers removeNextGroup(int dir) {
 		if (dir == UP) {
@@ -84,8 +84,9 @@ public class Floor {
 	/**
 	 * Adds a group of passengers to specified queue
 	 *
-	 * @param dir determines which queue to look at
 	 * @param group passengers to add to queue
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	protected void addGroup(Passengers group) {
 		if (group.getDirection() == UP) {
@@ -103,6 +104,7 @@ public class Floor {
 	 *
 	 * @param dir determines which queue to look at
 	 * @return the string of queue contents
+	 * 
 	 */
 	String queueString(int dir) {
 		String str = "";
@@ -117,6 +119,5 @@ public class Floor {
 		}
 		return str;	
 	}
-	
 	
 }
