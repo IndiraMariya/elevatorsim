@@ -180,7 +180,7 @@ public class Elevator {
 	 */
 	protected void loadPassenger(Passengers group) {
 		numPassengersTransitioning += group.getNumPass();
-		if (getNumPassengers() + group.getNumPass() > 15) return;
+		if (getNumPassengers() + group.getNumPass() > capacity) return;
 		passByFloor[group.getDestFloor()].add(group);
 	}
 
