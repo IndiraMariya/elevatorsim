@@ -183,7 +183,7 @@ public class CallManager {
 	 *
 	 * @return Whether there is a call pending
 	 */
-	public boolean isCallPending() {
+	protected boolean isCallPending() {
 		return upCallPending || downCallPending;
 	}
 		

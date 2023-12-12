@@ -6,7 +6,6 @@ import passengers.Passengers;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -176,7 +175,7 @@ public class Building {
 	 * @return Number of passenger groups
 	 */
 	public int getNumPassengerGroupsOnFloor(int floor, int dir) {
-		return floors[floor].getNumCalls(dir);
+		return floors[floor].getNumGroups(dir);
 	}
 
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
