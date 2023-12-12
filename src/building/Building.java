@@ -189,6 +189,17 @@ public class Building {
 		return floors[floor].getNumGroups(dir);
 	}
 
+	/**
+	 * Whether there is a call on the specified floor (for GUI)
+	 *
+	 * @param floor floor to look at
+	 * @param dir direction to look call
+	 * @return whether there is a call
+	 */
+	public boolean isCallInDirectionOnFloor(int floor, int dir) {
+		return floors[floor].hasCall(dir);
+	}
+
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
 	 * Initialize building logger. Sets formating, file to log to, and
