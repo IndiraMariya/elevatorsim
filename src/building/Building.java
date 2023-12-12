@@ -12,11 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Building.
  */
-// TODO: Auto-generated Javadoc
 public class Building {
 
 	/**  Constants for direction. */
@@ -53,20 +51,22 @@ public class Building {
 	public Floor[] floors;
 
 	/** The elevator. */
-	private Elevator elevator; // TODO: ask if this can be public
+	private Elevator elevator;
 
-	/**  The Call Manager - it tracks calls for the elevator, analyzes them to answer questions and prioritize calls. */
+	/**  The Call Manager - it tracks calls for the elevator, 
+	 * analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
 
+	// TODO: ADD COMMENT HERE
 	private int lastSkippedID = -1;
-
-	// Add any fields that you think you might need here...
 
 	/**
 	 * Instantiates a new building.
 	 *
 	 * @param numFloors the num floors
 	 * @param logfile the logfile
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public Building(int numFloors, String logfile) {
 		NUM_FLOORS = numFloors;
@@ -85,11 +85,7 @@ public class Building {
 			floors[i]= new Floor(FLOOR_QSIZE);
 		}
 		callMgr = new CallManager(floors,NUM_FLOORS);
-		//TODO: if you defined new fields, make sure to initialize them here
-
 	}
-
-	// TODO: Place all of your code HERE - state methods and helpers...
 
 	/**
 	 * Initialized the elevator based on the parameters passed in
@@ -98,6 +94,8 @@ public class Building {
 	 * @param floorTicks the floor ticks
 	 * @param doorTicks the door ticks
 	 * @param passPerTick the passengers per tick
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void initializeElevator(int capacity, int floorTicks, int doorTicks, int passPerTick) {
 		elevator = new Elevator(NUM_FLOORS, capacity, floorTicks, doorTicks, passPerTick);
@@ -107,6 +105,8 @@ public class Building {
 	 * Adds a group of passengers to the specified floor
 	 *
 	 * @param group group to be added to the floor
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void addPassengers(Passengers group) {
 		floors[group.getOnFloor()].addGroup(group);
@@ -115,6 +115,8 @@ public class Building {
 
 	/**
 	 * Called when all passengers have been added -> updates call manager
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void onAllPassengersAdded() {
 		callMgr.updateCallStatus();
@@ -125,6 +127,8 @@ public class Building {
 	 *
 	 * @param time current time
 	 * @return whether the simulation ended
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public boolean hasSimulationEnded(int time) {
 		return elevator.getCurrState() == Elevator.STOP && !callMgr.isCallPending();
@@ -134,6 +138,8 @@ public class Building {
 	 * Gets the elevator state
 	 *
 	 * @return the elevator state
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorState() {
 		return elevator.getCurrState();
@@ -143,6 +149,8 @@ public class Building {
 	 * gets the elevator direction
 	 *
 	 * @return the elevator direction
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorDirection() {
 		return elevator.getDirection();
@@ -161,6 +169,8 @@ public class Building {
 	 * gets the number of passengers in the elevator
 	 *
 	 * @return the number of passengers in the elevator
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorPassengerCount() {
 		return elevator.getNumPassengers();
@@ -172,6 +182,8 @@ public class Building {
 	 * @param floor floor to look at
 	 * @param dir direction to look at
 	 * @return Number of passenger groups
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public int getNumPassengerGroupsOnFloor(int floor, int dir) {
 		return floors[floor].getNumGroups(dir);
@@ -202,6 +214,8 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private int currStateStop(int time) {
 		// is a call on the current floor
@@ -228,6 +242,8 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private int currStateMvToFlr(int time) {
 		elevator.moveElevator();
@@ -248,19 +264,16 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private int currStateOpenDr(int time) {
 		elevator.openDoor();
 
 		if (elevator.isDoorTransitioning() || elevator.isDoorOpen()) {
-			if (elevator.passengersToExit(elevator.getCurrFloor())) {
-				return Elevator.OFFLD;
-			}
-			else {
-				return Elevator.BOARD;
-			}
-		}
-		else {
+			if (elevator.passengersToExit(elevator.getCurrFloor())) return Elevator.OFFLD;
+			else return Elevator.BOARD;
+		} else {
 			return Elevator.OPENDR;
 		}
 	}
@@ -270,6 +283,8 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private int currStateOffLd(int time) {
 		if (elevator.getCurrState() != elevator.getPrevState()) {
@@ -283,8 +298,6 @@ public class Building {
 
 			callMgr.updateCallStatus();
 		}
-
-		// TODO: finish this in Elevator
 
 		if (elevator.isTransitioning()) {
 			return Elevator.OFFLD;
@@ -300,7 +313,7 @@ public class Building {
 					!callMgr.isCallInDirection(elevator.getCurrFloor(), elevator.getDirection()) &&
 					callMgr.isCallOnFloor(elevator.getCurrFloor())
 			) {
-				elevator.setDirection(elevator.getDirection() == UP ? DOWN : UP); // TODO: Make this its own method?
+				elevator.switchDirection();
 				return Elevator.BOARD;
 			}
 			else {
@@ -314,6 +327,9 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * TODO: LINE LENGTH!!
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private int currStateBoard(int time) {
 		if (elevator.getPrevState() != elevator.getCurrState()) {
@@ -371,6 +387,7 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * TODO: LINE LENGTH@!!
 	 */
 	private int currStateCloseDr(int time) {
 		elevator.closeDoor();
@@ -422,6 +439,8 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private int currStateMv1Flr(int time) {
 		elevator.moveElevator();
@@ -448,6 +467,8 @@ public class Building {
 	/**
 	 * Checks whether the elevator state or floor changed
 	 * @return whether the elevator state or floor changed
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private boolean elevatorStateOrFloorChanged() {
 		return elevator.getPrevState() != elevator.getCurrState() || elevator.getPrevFloor() != elevator.getCurrFloor();
@@ -458,6 +479,8 @@ public class Building {
 	 *
 	 * @param floor the floor to move to (different than current floor)
 	 * @return direction to move based on the floor
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private int getDirectionToFloor(int floor) {
 		return floor > elevator.getCurrFloor() ? UP : DOWN;
@@ -471,7 +494,6 @@ public class Building {
 	 *
 	 * @param time the time
 	 */
-	// YOU WILL NEED TO CODE ANY MISSING METHODS IN THE APPROPRIATE CLASSES...
 	public void updateElevator(int time) {
 		if (elevatorStateOrFloorChanged())
 			logElevatorStateOrFloorChanged(time,elevator.getPrevState(),elevator.getCurrState(),
@@ -519,6 +541,8 @@ public class Building {
 	/**
 	 * Enable logging. Prints the initial configuration message.
 	 * For testing, logging must be enabled BEFORE the run starts.
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void enableLogging() {
 		LOGGER.setLevel(Level.INFO);
@@ -629,6 +653,8 @@ public class Building {
 	 * @param floor the floor
 	 * @param dir the dir
 	 * @param id the id
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void logGiveUp(int time, int numPass, int floor, int dir, int id) {
 		LOGGER.info("Time="+time+"   GaveUp="+numPass+" Floor="+ (floor+1)
