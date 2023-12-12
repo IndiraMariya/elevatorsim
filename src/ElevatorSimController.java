@@ -242,6 +242,7 @@ public class ElevatorSimController {
 			}
 		}
 		else {
+			building.updateElevator(stepCnt);
 			if (gui != null) {
 				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
 			}
