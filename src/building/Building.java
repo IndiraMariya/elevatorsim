@@ -57,7 +57,7 @@ public class Building {
 	 * analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
 
-	// TODO: ADD COMMENT HERE
+	/** The ID of the last passenger group skipped (for BOARD state)  */
 	private int lastSkippedID = -1;
 
 	/**
@@ -327,25 +327,23 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
-	 * TODO: LINE LENGTH!!
-	 * 
+	 *
 	 * PEER REVIEWED BY MK
 	 */
 	private int currStateBoard(int time) {
-		if (elevator.getPrevState() != elevator.getCurrState()) {
-			lastSkippedID = -1;
-		}
+		if (elevator.getPrevState() != elevator.getCurrState()) lastSkippedID = -1;
 
 		Floor currentFloor = floors[elevator.getCurrFloor()];
 		int dir = elevator.getDirection();
 		Passengers nextGroup = currentFloor.peekNextGroup(dir);
+
 		while (nextGroup != null) {
 			// passengers have given up
 			if (time > nextGroup.getTimeWillGiveUp()) {
 				logGiveUp(time, nextGroup.getNumPass(), elevator.getCurrFloor(), dir, nextGroup.getId());
-				if (lastSkippedID == nextGroup.getId()) {
-					lastSkippedID = -1; // RESET if skipped group gives up
-				}
+
+				if (lastSkippedID == nextGroup.getId()) lastSkippedID = -1; // RESET if skipped group gives up
+
 				gaveUp.add(nextGroup);
 				currentFloor.removeNextGroup(dir);
 			}
@@ -356,9 +354,7 @@ public class Building {
 					lastSkippedID = nextGroup.getId();
 				}
 				// mark skipped group as polite if necessary
-				if (!nextGroup.isPolite()) {
-					nextGroup.setPolite(true);
-				}
+				if (!nextGroup.isPolite()) nextGroup.setPolite(true);
 				break;
 			}
 			// board the passenger
@@ -374,12 +370,7 @@ public class Building {
 		callMgr.updateCallStatus();
 
 		// still boarding
-		if (elevator.isTransitioning()) {
-			return Elevator.BOARD;
-		}
-		else {
-			return Elevator.CLOSEDR;
-		}
+		return (elevator.isTransitioning()) ? Elevator.BOARD : Elevator.CLOSEDR;
 	}
 
 	/**
@@ -387,6 +378,7 @@ public class Building {
 	 *
 	 * @param time time when state is called
 	 * @return next state
+	 * 
 	 * PEER REVIEWED BY MK
 	 */
 	private int currStateCloseDr(int time) {
@@ -420,12 +412,8 @@ public class Building {
 			else {
 				elevator.switchDirection();
 
-				if (callMgr.isCallOnFloor(elevator.getCurrFloor())) {
-					return Elevator.OPENDR;
-				}
-				else {
-					return Elevator.MV1FLR;
-				}
+				// if call on current floor
+				return (callMgr.isCallOnFloor(elevator.getCurrFloor())) ? Elevator.OPENDR : Elevator.MV1FLR;
 			}
 		}
 		// people in elevator who need to get off
