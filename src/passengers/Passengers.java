@@ -1,6 +1,5 @@
 package passengers;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Passengers. Represents a GROUP of passengers that are 
  * traveling together from one floor to another. Tracks information that 
@@ -15,7 +14,7 @@ public class Passengers {
 	private static final int DOWN = -1;
 	
 	/**  ID represents the NEXT available id for the passenger group. */
-	private static int ID=0;
+	private static int ID = 0;
 
 	/** id is the unique ID assigned to each Passenger during construction.
 	 *  After assignment, static ID must be incremented.
@@ -51,10 +50,10 @@ public class Passengers {
 	private int timeWillGiveUp; // The calculated time when the Passenger will give up
 	
 	/** These values will actually be set during execution. Initialized to -1 */
-	private int boardTime=-1;
+	private int boardTime = -1;
 	
 	/** The time arrived. */
-	private int timeArrived=-1;
+	private int timeArrived = -1;
 
 	/**
 	 * Instantiates a new passengers.
@@ -65,6 +64,8 @@ public class Passengers {
 	 * @param dest the floor that the Passenger is going to
 	 * @param polite - are the passengers polite?
 	 * @param waitTime the amount of time that the passenger will wait before giving up
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public Passengers(int time, int numPass, int on, int dest, boolean polite, int waitTime) {
 	//       Remember to appropriately adjust the onFloor and destFloor to account
@@ -86,9 +87,6 @@ public class Passengers {
 		ID += 1;
 	}
 	
-	
-	// TODO: Write any required getters/setters for this class
-
 	/**
 	 * Gets the id.
 	 *
@@ -221,6 +219,8 @@ public class Passengers {
 	 * This method MUST be called during the building constructor BEFORE
 	 * reading the configuration files. This is to provide consistency in the
 	 * Passenger ID's during JUnit testing.
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public static void resetStaticID() {
 		ID = 0;
@@ -229,11 +229,21 @@ public class Passengers {
 	/**
 	 * toString - returns the formatted string for this class.
 	 *
-	 * @return the
+	 * @return the string
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	@Override
 	public String toString() {
-		return("ID="+id+"   Time="+time+"   NumPass="+numPass+"   From="+(onFloor+1)+"   To="+(destFloor+1)+"   Polite="+polite+"   Wait="+waitTime);
+		return(
+			"ID="+id+
+			"   Time="+time+
+			"   NumPass="+numPass+
+			"   From="+(onFloor+1)+
+			"   To="+(destFloor+1)+
+			"   Polite="+polite+
+			"   Wait="+waitTime
+		);
 	}
 
 }
