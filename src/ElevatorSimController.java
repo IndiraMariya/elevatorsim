@@ -89,6 +89,7 @@ public class ElevatorSimController {
 		passQ = new GenericQueue<>(PASSENGERS_QSIZE);
 		building.initializeElevator(capacity, floorTicks, doorTicks, passPerTick);
 		initializePassengerData(testfile);	
+		enableLogging();
 	}
 	
 	//TODO: Write methods to update the GUI display
@@ -96,13 +97,12 @@ public class ElevatorSimController {
 	//      and queues for each floor, as well as the current time
 	public void updateGUI() {
 		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
-		System.out.print(building.getElevatorFloor());
+		int passUp = building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), 1);
+		int passDown = building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), -1);
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
-		for (int i = 0; i < NUM_FLOORS; i ++) {
-			int dir = 1;
-			gui.createPass(i, dir);
-			gui.showDirection(i, dir, null);
-		}
+//		gui.createPass(passUp, 1);
+//		gui.createPass(passDown, -1);
+
 	}
 	/**
 	 * Config simulation. Reads the filename, and parses the

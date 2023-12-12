@@ -2,9 +2,6 @@ package building;
 // ListIterater can be used to look at the contents of the floor queues for 
 // debug/display purposes...
 import java.util.ListIterator;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import genericqueue.GenericQueue;
 import passengers.Passengers;

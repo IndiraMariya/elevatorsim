@@ -206,11 +206,17 @@ public class ElevatorSimulation extends Application {
 //		 }
 	 }
 	 
-	 public void createPass(int groupNum, int floorNum) {
-		 for (int i = 0; i < groupNum; i ++) {
+	 public void createPass(int floorNum, int groups, int dir) {
+		 for (int i = 0; i < groups; i ++) {
 			 HBox floor = floors[floorNum];
 			 StackPane group = new StackPane();
 			 Rectangle r = new Rectangle(50, 50);
+			 if (dir == 1) {
+				 
+			 }
+			 if (dir == -1) {
+				 
+			 }
 			 r.setFill(Color.rgb(191, 232, 181));
 			 r.setStroke(Color.rgb(161, 161, 161));
 			 Text passengers = new Text("1");
