@@ -196,32 +196,34 @@ public class ElevatorSimulation extends Application {
 	 }
 
 	 public void showDirection(int floor, int dir, Boolean call) {
-//		 if (dir == 1 && call) {
-//			 VBox arrows = (VBox) floors[floor].getChildren().get(1);
-//		     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
-//			 triangle2.setFill(Color.RED);
-//		 }
-//		 if (dir == -1 && call) {
-//			 triangleDown.setFill(Color.SPRINGGREEN);
-//		 }
+		 VBox arrows = (VBox) floors[floor].getChildren().get(1);
+		 if (dir == 1 && call) {
+		     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
+			 triangle2.setFill(Color.RED);
+		 }
+		 if (dir == -1 && call) {
+			 Polygon triangle3 = (Polygon) arrows.getChildren().get(1);
+			 triangle3.setFill(Color.SPRINGGREEN);
+		 }
 	 }
 	 
 	 public void createPass(int floorNum, int groups, int dir) {
+		 HBox floor = floors[floorNum];
+		 StackPane group = new StackPane();
+		 Text passengers = new Text();
 		 for (int i = 0; i < groups; i ++) {
-			 HBox floor = floors[floorNum];
-			 StackPane group = new StackPane();
 			 Rectangle r = new Rectangle(50, 50);
+			 r.setStroke(Color.rgb(161, 161, 161));
 			 if (dir == 1) {
-				 
+				 r.setFill(Color.rgb(255, 242, 161));
+				 passengers.setText("UP");
 			 }
 			 if (dir == -1) {
-				 
+				 r.setFill(Color.rgb(208, 194, 255));
+				 passengers.setText("DOWN");
 			 }
-			 r.setFill(Color.rgb(191, 232, 181));
-			 r.setStroke(Color.rgb(161, 161, 161));
-			 Text passengers = new Text("1");
-			 passengers.setFont(Font.font("Helvetica",FontWeight.EXTRA_BOLD,18));
-			 passengers.setFill(Color.BLACK);
+			 passengers.setFont(Font.font("Helvetica",FontWeight.EXTRA_BOLD,12));
+			 passengers.setFill(Color.WHITE);
 			 group.getChildren().addAll(r,passengers);
 			 floor.getChildren().addAll(group);
 		 }
@@ -241,7 +243,7 @@ public class ElevatorSimulation extends Application {
 				 
 	 }
 	 
-	 public void createButtons() {
+	 private void createButtons() {
 		buttons = new HBox();
 		buttons.setSpacing(10);
 		buttons.setAlignment(Pos.CENTER);
