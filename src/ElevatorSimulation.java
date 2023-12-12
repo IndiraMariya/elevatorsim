@@ -1,3 +1,4 @@
+//Owned By: Indira Mariya
 import building.Elevator;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -15,7 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Stop;
+
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -64,6 +65,8 @@ public class ElevatorSimulation extends Application {
 	Label stepLabel;
 	TextField stepBy;
 	HBox[] floors;
+	Polygon triangle;
+	Polygon triangleDown;
 	
 
 	/**
@@ -149,7 +152,7 @@ public class ElevatorSimulation extends Application {
 		 people.setFill(Color.WHITE);
 		 stackPane.getChildren().addAll(c, people);
 
-        Polygon triangle = new Polygon(
+        triangle = new Polygon(
         		 300, 100 + Math.sqrt(3) / 3 * 25,   // x1, y1 (top vertex)
                  300 + 25, 100,                      // x2, y2 (right vertex)
                  300, 100 - Math.sqrt(3) / 3 * 25    // x3, y3 (left vertex)
@@ -159,7 +162,7 @@ public class ElevatorSimulation extends Application {
         triangle.setFill(Color.rgb(179, 224, 232));
 //        triangle.setStroke(Color.BLACK);
         
-        Polygon triangleDown = new Polygon(
+        triangleDown = new Polygon(
                 300, 100 + Math.sqrt(3) / 3 * 25,
                 300 + 25, 100,
                 300, 100 - Math.sqrt(3) / 3 * 25
@@ -172,7 +175,6 @@ public class ElevatorSimulation extends Application {
         
 	    arrow.getChildren().addAll(triangle,triangleDown);
 		hBox.getChildren().addAll(stackPane, arrow);
-        createPass(3, hBox);
 		
 		Insets padding = new Insets(0, 0, 0, 10);
 		HBox.setMargin(stackPane, padding);
@@ -180,17 +182,33 @@ public class ElevatorSimulation extends Application {
 	 }
 	
 	 public void setFloor(int floor, int state) {
-	     StackPane floorStackPane = (StackPane) floors[0].getChildren().get(floor);
+		 for (int i = 0; i < floors.length; i++) {
+			 StackPane floorStackPane = (StackPane) floors[i].getChildren().get(0);
+		     Circle circle = (Circle) floorStackPane.getChildren().get(0);
+			 circle.setFill(Color.rgb(161, 161, 161));
+		 }
+	     StackPane floorStackPane = (StackPane) floors[floors.length-floor-1].getChildren().get(0);
 	     Circle circle = (Circle) floorStackPane.getChildren().get(0);
-	     
 		 circle.setFill(Color.rgb(191, 232, 181));
 //		 if (state == OFFLD || state == BOARD) circle.setFill(Color.rgb(121, 224, 135));
 
 //		 circle.setStroke(Color.BLACK);
 	 }
+
+	 public void showDirection(int floor, int dir, Boolean call) {
+//		 if (dir == 1 && call) {
+//			 VBox arrows = (VBox) floors[floor].getChildren().get(1);
+//		     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
+//			 triangle2.setFill(Color.RED);
+//		 }
+//		 if (dir == -1 && call) {
+//			 triangleDown.setFill(Color.SPRINGGREEN);
+//		 }
+	 }
 	 
-	 private void createPass(int groupNum, HBox floor) {
+	 public void createPass(int groupNum, int floorNum) {
 		 for (int i = 0; i < groupNum; i ++) {
+			 HBox floor = floors[floorNum];
 			 StackPane group = new StackPane();
 			 Rectangle r = new Rectangle(50, 50);
 			 r.setFill(Color.rgb(191, 232, 181));

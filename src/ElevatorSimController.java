@@ -96,7 +96,13 @@ public class ElevatorSimController {
 	//      and queues for each floor, as well as the current time
 	public void updateGUI() {
 		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
+		System.out.print(building.getElevatorFloor());
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
+		for (int i = 0; i < NUM_FLOORS; i ++) {
+			int dir = 1;
+			gui.createPass(i, dir);
+			gui.showDirection(i, dir, null);
+		}
 	}
 	/**
 	 * Config simulation. Reads the filename, and parses the
