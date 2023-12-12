@@ -20,6 +20,11 @@ public class Floor {
 	private GenericQueue<Passengers> down;
 	private GenericQueue<Passengers> up;
 
+	/**
+	 * Initializes a new floor
+	 *
+	 * @param qSize Size of the queue
+	 */
 	public Floor(int qSize) {
 		down = new GenericQueue<Passengers>(qSize);
 		up = new GenericQueue<Passengers>(qSize);
