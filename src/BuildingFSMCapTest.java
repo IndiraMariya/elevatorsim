@@ -104,7 +104,7 @@ class BuildingFSMCapTest {
 			javaHome = null;
     }
 
-    private void moveLogCmpFiles(String base) {
+    private void moveCmpFiles(String base) {
     	File ifh = new File(base+".log");
     	File ofh = new File("JUnitTestLogs/"+base+".log");
 		Path src = Paths.get(ifh.getPath());
@@ -162,10 +162,24 @@ class BuildingFSMCapTest {
 		deleteTestLog(test+".log");
 	}
 
+	private void copyLogFiles(String base) {
+    	File ifh = new File(base+".log");
+    	File ofh = new File("JUnitTestLogs/"+base+".log");
+		Path src = Paths.get(ifh.getPath());
+		Path dest = Paths.get(ofh.getPath());
+		try {
+			Files.copy(src,dest,StandardCopyOption.REPLACE_EXISTING);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
 	private void runFSMTest (String cmd) {
 		deleteTestCSV(test+".csv");
+		copyLogFiles(test);
 		boolean compareStatus = cmpLog.executeCompare(cmd.split("\\s+"));
-		moveLogCmpFiles(test);
+		moveCmpFiles(test);
 		assertTrue(compareStatus);
 	}
 	

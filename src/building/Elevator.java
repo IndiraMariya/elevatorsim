@@ -106,6 +106,8 @@ public class Elevator {
 	 * @param floorTicks the floor ticks
 	 * @param doorTicks the door ticks
 	 * @param passPerTick the pass per tick
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	@SuppressWarnings("unchecked")
 	public Elevator(int numFloors, int capacity, int floorTicks, int doorTicks, int passPerTick) {		
@@ -127,6 +129,8 @@ public class Elevator {
 	/**
 	 * Moves the elevator by one floor, 
 	 * up or down (depending on direction).
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected void moveElevator() {
 		prevFloor = currFloor;
@@ -137,6 +141,8 @@ public class Elevator {
 
 	/**
 	 * Closes the elevator door.
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected void closeDoor() {
 		if (timeInState >= ticksDoorOpenClose) {
@@ -146,6 +152,8 @@ public class Elevator {
 
 	/**
 	 * Opens the elevator door.
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected void openDoor() {
 		// update previous floor upon entry
@@ -162,6 +170,8 @@ public class Elevator {
 	 * on current floor to be unloaded.
 	 * 
 	 * @return ArrayList of Passengers
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected ArrayList<Passengers> unloadPassengers() {
 		ArrayList<Passengers> passengersToUnload = new ArrayList<Passengers>();
@@ -177,10 +187,12 @@ public class Elevator {
 	 * loads 1 passenger group.
 	 *
 	 * @param group group to add to elevator
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected void loadPassenger(Passengers group) {
-		numPassengersTransitioning += group.getNumPass();
 		if (getNumPassengers() + group.getNumPass() > capacity) return;
+		numPassengersTransitioning += group.getNumPass();
 		passByFloor[group.getDestFloor()].add(group);
 	}
 
@@ -188,6 +200,8 @@ public class Elevator {
 	 * Update current state.
 	 *
 	 * @param nextState the next state
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	void updateCurrState(int nextState) {
 		this.prevState = this.currState;
@@ -204,20 +218,22 @@ public class Elevator {
 	 * Returns true if the door's state is open; false otherwise.
 	 * 
 	 * @return is door open boolean
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	public boolean isDoorOpen() {
-		if (doorState == DROPEN) return true;
-		else return false;
+		return doorState == DROPEN;
 	}
 	
 	/** 
 	 * Returns true if the door's state is moving; false otherwise.
 	 * 
 	 * @return is door transitioning boolean
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected boolean isDoorTransitioning() {
-		if (doorState == DRMOVING) return true;
-		else return false;
+		return doorState == DRMOVING;
 	}
 
 	/** 
@@ -226,10 +242,11 @@ public class Elevator {
 	 * 
 	 * @param floor the floor to check
 	 * @return do any passengers need to exit -- boolean
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected boolean passengersToExit(int floor) {
-		if (passByFloor[floor].size() > 0) return true;
-		else return false;
+		return !passByFloor[floor].isEmpty();
 	}
 
 	/** 
@@ -239,7 +256,7 @@ public class Elevator {
 	 * @return is elevator offloading or boarding -- boolean
 	 */
 	protected boolean isTransitioning() {
-		numPassengersTransitioning -= passPerTick;
+		numPassengersTransitioning -= passPerTick; // TODO: consider if we want this in its own method
 		return numPassengersTransitioning > 0;
 	}
 
@@ -259,6 +276,8 @@ public class Elevator {
 
 	/** 
 	 * Switches direction from up to down and vice versa.
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected void switchDirection() {
 		direction *= -1;
@@ -268,6 +287,8 @@ public class Elevator {
 	 * Gets number of passengers in elevator
 	 *
 	 * @return number of passengers in the elevator
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	public int getNumPassengers() {
 		int count = 0;
