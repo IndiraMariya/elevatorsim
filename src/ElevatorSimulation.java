@@ -210,11 +210,12 @@ public class ElevatorSimulation extends Application {
 		 StackPane group = new StackPane();
 		 HBox passengerGroups = new HBox();
 		 Text passengers = new Text();
-		 Boolean remove = floor.getChildren().removeAll(passengerGroups);
+		 floor.getChildren().add(passengerGroups);
+//		 Boolean remove = floor.getChildren().removeAll(passengerGroups);
 		 
 		 for (int i = 0; i < groups; i ++) {
 			 Rectangle r = new Rectangle(50, 50);
-			 r.setStroke(Color.rgb(161, 161, 161));
+			 r.setStroke(Color.BLACK);
 			 if (dir == 1) {
 				 r.setFill(Color.rgb(255, 242, 161));
 				 passengers.setText("UP");
@@ -224,11 +225,12 @@ public class ElevatorSimulation extends Application {
 				 passengers.setText("DOWN");
 			 }
 			 passengers.setFont(Font.font("Helvetica",FontWeight.EXTRA_BOLD,12));
-			 passengers.setFill(Color.WHITE);
+			 passengers.setFill(Color.BLACK);
 			 group.getChildren().addAll(r,passengers);
 			 passengerGroups.getChildren().addAll(group);
 		 }
-		 floor.getChildren().addAll(passengerGroups);
+		 floor.getChildren().remove(2);
+		 floor.getChildren().add(passengerGroups);
 	 }
 	 
 	 public void setTimebox(int time, int eState, int ePass){
