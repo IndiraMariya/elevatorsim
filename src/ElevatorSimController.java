@@ -233,16 +233,13 @@ public class ElevatorSimController {
 			while (!passQ.isEmpty() && passQ.peek().getTime() == stepCnt) {
 				building.addPassengers(passQ.poll());
 			}
-			// TODO: consider if we want to update everytime (even if no passengers were added)
 			building.onAllPassengersAdded();
 			building.updateElevator(stepCnt);
-			// TODO update elevator???
 			if (gui != null) {
 				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
 			}
 		}
 		else {
-			building.updateElevator(stepCnt);
 			if (gui != null) {
 				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
 			}
