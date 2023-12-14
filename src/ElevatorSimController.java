@@ -8,11 +8,9 @@ import genericqueue.GenericQueue;
 import myfileio.MyFileIO;
 import passengers.Passengers;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ElevatorSimController.
  */
-// TODO: Auto-generated Javadoc
 public class ElevatorSimController {
 	
 	/**  Constant to specify the configuration file for the simulation. */
@@ -76,6 +74,8 @@ public class ElevatorSimController {
 	 * initialize the passenger queue in building...
 	 *
 	 * @param gui the gui
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public ElevatorSimController(ElevatorSimulation gui) {
 		this.gui = gui;
@@ -91,21 +91,21 @@ public class ElevatorSimController {
 		initializePassengerData(testfile);	
 	}
 	
-	//TODO: Write methods to update the GUI display
-	//      Needs to cover the Elevator state, Elevator passengers
-	//      and queues for each floor, as well as the current time
+	// TODO: ADD JAVADOC
 	public void updateGUI(ElevatorSimulation sim, int state, int pass, int time) {
 		sim.setTimebox(time, state, pass);
 	}
 	/**
-	 * Config simulation. Reads the filename, and parses the
+	 * Config simulation. Reads the filename and parses the
 	 * parameters.
 	 *
 	 * @param filename the filename
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void configSimulation(String filename) {
 		File configFile = fio.getFileHandle(filename);
-		try ( BufferedReader br = fio.openBufferedReader(configFile)) {
+		try (BufferedReader br = fio.openBufferedReader(configFile)) {
 			String line;
 			while ((line = br.readLine())!= null) {
 				parseElevatorConfigData(line);
@@ -124,6 +124,8 @@ public class ElevatorSimController {
 	 *
 	 * @param line the line
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void parseElevatorConfigData(String line) throws IOException {
 		String[] values = line.split(",");
@@ -148,6 +150,8 @@ public class ElevatorSimController {
 	 * and adds it to the passengers queue in Building...
 	 *
 	 * @param filename the filename
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void initializePassengerData(String filename) {
 		boolean firstLine = true;
@@ -175,6 +179,8 @@ public class ElevatorSimController {
 	 * passenger queue.
 	 *
 	 * @param line the line of passenger input data
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void parsePassengerData(String line) {
 		int time=0, numPass=0,fromFloor=0, toFloor=0;
@@ -207,6 +213,8 @@ public class ElevatorSimController {
 	 * Gets the test name.
 	 *
 	 * @return the test name
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public String getTestName() {
 		return (testfile.replaceAll(".csv", ""));
@@ -217,14 +225,13 @@ public class ElevatorSimController {
 	 */
 	public void enableLogging() {
 		building.enableLogging();
-	}
-	
-	// TODO: Write any other helper methods that you may need to access data from the building...
-	
+	}	
 	
  	/**
 	 * Step sim. See the comments below for the functionality you
 	 * must implement......
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void stepSim() {
  		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
@@ -249,25 +256,12 @@ public class ElevatorSimController {
 				gui.endSimulation();
 			}
 		}
-
-		// TODO: Write the rest of this method
-		// If simulation is not completed (not all passengers have been processed
-		// or elevator is not all in STOP state), then
-		// 		1) check passQ for appearance of new passengers at this time
-		//         - if there are, add all new passengers to building 
-		//         - let building know that all new passengers for this tick have
-		//           been added.
-		// 		2) update the elevator
-		// 		3) update the GUI 
-		//  else 
-		//    	1) update the GUI
-		//		2) close the logs
-		//		3) process the passenger results
-		//		4) send endSimulation to the GUI to stop ticks.
 	}
 
 	/**
 	 * Dump passQ contents. Debug hook to view the contents of the passenger queue...
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void dumpPassQ() {
 		ListIterator<Passengers> passengers = passQ.getListIterator();
