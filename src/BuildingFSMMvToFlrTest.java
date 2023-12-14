@@ -31,6 +31,7 @@ class BuildingFSMMvToFlrTest {
 	private static String os = null;
 	private static String javaHome = null;
 	private ElevatorLogCompare cmpLog = new ElevatorLogCompare();
+	private static String test = "";
 
 	private void updateSimConfigCSV(String fname) {
 		File fh = fio.getFileHandle("ElevatorSimConfig.csv");
@@ -77,79 +78,18 @@ class BuildingFSMMvToFlrTest {
 	}
 
 	
-//	private boolean processCmpElevatorOutput(Process proc, ArrayList<String> results) {
-//		String line = "";
-//		boolean pass = true;
-//		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-//		try {
-//			while ((line = br.readLine())!=null) {
-//				results.add(line);
-//				System.out.println(line);
-//				if (line.contains("FAILED")) pass = false;
-//			}
-//			br.close();		
-//		} catch (IOException e) {
-//			e.printStackTrace();			
-//		}
-//		return pass;
-//	}
-//	
-//	private void printManualCmpElevatorInstructions(File fh) {
-//		System.out.println("ERROR: cmpElevator failed to run - you will need to run manually.");
-//		System.out.println("       1) cd to your project directory in the terminal.");
-//		System.out.println("       2) java -jar cmpElevator.jar "+fh.getName().replaceAll(".cmp", ".log"));	
-//	}
-//	
-//	private boolean processCmpElevatorError(Process proc, ArrayList<String> results, File fh) {
-//		String line = "";
-//		boolean pass = true;
-//		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-//		try {
-//			while ((line = br.readLine())!=null) {
-//				results.add(line);
-//				System.out.println(line);
-//				pass = false;
-//			}
-//			br.close();		
-//			printManualCmpElevatorInstructions(fh);
-//		} catch (IOException e) {
-//			e.printStackTrace();			
-//		}
-//		return pass;
-//	}
-//	
-//	private boolean executeCmpElevator(File fh,String cmd) {
-//		boolean pass = true;
-//		ArrayList<String> cmpResults = new ArrayList<String>();
-//		if (javaHome == null) {
-//			printManualCmpElevatorInstructions(fh);
-//			fail();
-//		}
-//		cmd = javaHome+"/"+cmd;
-//		String[] execCmpElevator = cmd.split("\\s+");
-//		try {
-//			Process proc = new ProcessBuilder(execCmpElevator).start();
-//			proc.waitFor();
-//			pass = pass && processCmpElevatorOutput(proc,cmpResults);
-//			if (cmpResults.isEmpty()) 
-//				pass = pass && processCmpElevatorError(proc,cmpResults,fh);
-//			
-//			if (!cmpResults.isEmpty()) {
-//				BufferedWriter bw = fio.openBufferedWriter(fh);
-//				for (int i = 0; i < cmpResults.size() ; i++) {
-//					bw.write(cmpResults.get(i)+"\n");
-//				}
-//				bw.close();
-//				moveLogCmpFiles(fh.getName().replaceAll(".cmp", ""));
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//	    return(pass);	
-//	}
-
+	private static void deleteTestLog(String fname) {
+		MyFileIO fio = new MyFileIO();
+		File fh = fio.getFileHandle(fname);
+		if (fh.exists()) {
+			boolean status = fh.delete();
+			if (!status) {
+				System.out.println("Warning: Unable to delete "+fname+"\n"+
+						"       You should remove this manually or cmpElevator results\n"+
+						"       may be incorrect\n");
+			}
+		} 		
+	}
 	
     private static String getOperatingSystem() {
     	os = System.getProperty("os.name");
@@ -213,26 +153,28 @@ class BuildingFSMMvToFlrTest {
 		Files.copy(src, dest,StandardCopyOption.REPLACE_EXISTING);
 		ifh.delete();
 	}
-
+	
 	@BeforeEach
 	void setUp() throws Exception {
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
+		deleteTestLog(test+".log");
 	}
 
-	private void runFSMTest (String test,String cmd) {
+	private void runFSMTest (String cmd) {
 		deleteTestCSV(test+".csv");
-		assertTrue(cmpLog.executeCompare(cmd.split("\\s+")));
+		boolean compareStatus = cmpLog.executeCompare(cmd.split("\\s+"));
 		moveLogCmpFiles(test);
+		assertTrue(compareStatus);
 	}
 	
 	@Test
 	@Order(1)
 	//@Disabled
 	void testMv2FCallPri1() {
-		String test = "Mv2FCallPri1";
+		test = "Mv2FCallPri1";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -242,14 +184,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 246;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(2)
 	//@Disabled
 	void testMv2FCallPri2() {
-		String test = "Mv2FCallPri2";
+		test = "Mv2FCallPri2";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -259,14 +201,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 86;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(3)
 	//@Disabled
 	void testMv2FCallPri3() {
-		String test = "Mv2FCallPri3";
+		test = "Mv2FCallPri3";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -276,14 +218,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 136;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(4)
 	//@Disabled
 	void testMv2FCallPri4() {
-		String test = "Mv2FCallPri4";
+		test = "Mv2FCallPri4";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -293,14 +235,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 152;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(5)
 	//@Disabled
 	void testMv2FCallPri5() {
-		String test = "Mv2FCallPri5";
+		test = "Mv2FCallPri5";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -310,14 +252,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 116;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(6)
 	//@Disabled
 	void testMv2FCallPri6() {
-		String test = "Mv2FCallPri6";
+		test = "Mv2FCallPri6";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -327,14 +269,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 106;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(7)
 	//@Disabled
 	void testMv2FCallPri7() {
-		String test = "Mv2FCallPri7";
+		test = "Mv2FCallPri7";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -344,14 +286,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 111;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(8)
 	//@Disabled
 	void testMv2FCallPri8() {
-		String test = "Mv2FCallPri8";
+		test = "Mv2FCallPri8";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -361,14 +303,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 111;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(9)
 	//@Disabled
 	void testMv2FCallPri9() {
-		String test = "Mv2FCallPri9";
+		test = "Mv2FCallPri9";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -378,14 +320,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 111;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(10)
 	//@Disabled
 	void testMv2FCallPri10() {
-		String test = "Mv2FCallPri10";
+		test = "Mv2FCallPri10";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -395,14 +337,14 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 116;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(11)
 	//@Disabled
 	void testMv2FCallPri11() {
-		String test = "Mv2FCallPri11";
+		test = "Mv2FCallPri11";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -412,8 +354,43 @@ class BuildingFSMMvToFlrTest {
 		for (i = 0; i < 81;i++) c.stepSim();
 		b.closeLogs(i);
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
+
+	@Test
+	@Order(12)
+	//@Disabled
+	void testMv2FCallPri3a() {
+		test = "Mv2FCallPri3a";
+		System.out.println("\n\nExecuting Test: "+test+".csv");
+		copyTestFile(test+".csv");
+		c = new ElevatorSimController(null);
+		b = c.getBuilding();
+		b.enableLogging();
+	    int i;
+		for (i = 0; i < 138;i++) c.stepSim();
+		b.closeLogs(i);
+		String cmd = "java -jar cmpElevator.jar "+test+".log";
+	    runFSMTest(cmd);
+	}
+
+	@Test
+	@Order(13)
+	//@Disabled
+	void testMv2FCallPri4a() {
+		test = "Mv2FCallPri4a";
+		System.out.println("\n\nExecuting Test: "+test+".csv");
+		copyTestFile(test+".csv");
+		c = new ElevatorSimController(null);
+		b = c.getBuilding();
+		b.enableLogging();
+	    int i;
+		for (i = 0; i < 152;i++) c.stepSim();
+		b.closeLogs(i);
+		String cmd = "java -jar cmpElevator.jar "+test+".log";
+	    runFSMTest(cmd);
+	}
+
 
 
 }
