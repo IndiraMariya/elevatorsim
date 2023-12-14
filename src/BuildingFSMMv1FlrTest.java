@@ -105,21 +105,11 @@ class BuildingFSMMv1FlrTest {
 			javaHome = null;
     }
 
-    private void moveLogCmpFiles(String base) {
-    	File ifh = new File(base+".log");
-    	File ofh = new File("JUnitTestLogs/"+base+".log");
+    private void moveCmpFiles(String base) {
+    	File ifh = new File(base+".cmp");
+    	File ofh = new File("JUnitTestLogs/"+base+".cmp");
 		Path src = Paths.get(ifh.getPath());
 		Path dest = Paths.get(ofh.getPath());
-		try {
-			Files.move(src,dest,StandardCopyOption.REPLACE_EXISTING);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-    	ifh = new File(base+".cmp");
-    	ofh = new File("JUnitTestLogs/"+base+".cmp");
-		src = Paths.get(ifh.getPath());
-		dest = Paths.get(ofh.getPath());
 		try {
 			Files.move(src,dest,StandardCopyOption.REPLACE_EXISTING);
 		}
@@ -163,10 +153,24 @@ class BuildingFSMMv1FlrTest {
 		deleteTestLog(test+".log");
 	}
 
+	private void copyLogFiles(String base) {
+    	File ifh = new File(base+".log");
+    	File ofh = new File("JUnitTestLogs/"+base+".log");
+		Path src = Paths.get(ifh.getPath());
+		Path dest = Paths.get(ofh.getPath());
+		try {
+			Files.copy(src,dest,StandardCopyOption.REPLACE_EXISTING);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
 	private void runFSMTest (String cmd) {
 		deleteTestCSV(test+".csv");
+		copyLogFiles(test);
 		boolean compareStatus = cmpLog.executeCompare(cmd.split("\\s+"));
-		moveLogCmpFiles(test);
+		moveCmpFiles(test);
 		assertTrue(compareStatus);
 	}
 	
