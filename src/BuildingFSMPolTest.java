@@ -31,6 +31,7 @@ class BuildingFSMPolTest {
 	private static String os = null;
 	private static String javaHome = null;
 	private ElevatorLogCompare cmpLog = new ElevatorLogCompare();
+	private static String test = "";
 
 	private void updateSimConfigCSV(String fname) {
 		File fh = fio.getFileHandle("ElevatorSimConfig.csv");
@@ -77,79 +78,18 @@ class BuildingFSMPolTest {
 	}
 
 	
-//	private boolean processCmpElevatorOutput(Process proc, ArrayList<String> results) {
-//		String line = "";
-//		boolean pass = true;
-//		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-//		try {
-//			while ((line = br.readLine())!=null) {
-//				results.add(line);
-//				System.out.println(line);
-//				if (line.contains("FAILED")) pass = false;
-//			}
-//			br.close();		
-//		} catch (IOException e) {
-//			e.printStackTrace();			
-//		}
-//		return pass;
-//	}
-//	
-//	private void printManualCmpElevatorInstructions(File fh) {
-//		System.out.println("ERROR: cmpElevator failed to run - you will need to run manually.");
-//		System.out.println("       1) cd to your project directory in the terminal.");
-//		System.out.println("       2) java -jar cmpElevator.jar "+fh.getName().replaceAll(".cmp", ".log"));	
-//	}
-//	
-//	private boolean processCmpElevatorError(Process proc, ArrayList<String> results, File fh) {
-//		String line = "";
-//		boolean pass = true;
-//		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-//		try {
-//			while ((line = br.readLine())!=null) {
-//				results.add(line);
-//				System.out.println(line);
-//				pass = false;
-//			}
-//			br.close();		
-//			printManualCmpElevatorInstructions(fh);
-//		} catch (IOException e) {
-//			e.printStackTrace();			
-//		}
-//		return pass;
-//	}
-//	
-//	private boolean executeCmpElevator(File fh,String cmd) {
-//		boolean pass = true;
-//		ArrayList<String> cmpResults = new ArrayList<String>();
-//		if (javaHome == null) {
-//			printManualCmpElevatorInstructions(fh);
-//			fail();
-//		}
-//		cmd = javaHome+"/"+cmd;
-//		String[] execCmpElevator = cmd.split("\\s+");
-//		try {
-//			Process proc = new ProcessBuilder(execCmpElevator).start();
-//			proc.waitFor();
-//			pass = pass && processCmpElevatorOutput(proc,cmpResults);
-//			if (cmpResults.isEmpty()) 
-//				pass = pass && processCmpElevatorError(proc,cmpResults,fh);
-//			
-//			if (!cmpResults.isEmpty()) {
-//				BufferedWriter bw = fio.openBufferedWriter(fh);
-//				for (int i = 0; i < cmpResults.size() ; i++) {
-//					bw.write(cmpResults.get(i)+"\n");
-//				}
-//				bw.close();
-//				moveLogCmpFiles(fh.getName().replaceAll(".cmp", ""));
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//	    return(pass);	
-//	}
-
+	private static void deleteTestLog(String fname) {
+		MyFileIO fio = new MyFileIO();
+		File fh = fio.getFileHandle(fname);
+		if (fh.exists()) {
+			boolean status = fh.delete();
+			if (!status) {
+				System.out.println("Warning: Unable to delete "+fname+"\n"+
+						"       You should remove this manually or cmpElevator results\n"+
+						"       may be incorrect\n");
+			}
+		} 		
+	}
 	
     private static String getOperatingSystem() {
     	os = System.getProperty("os.name");
@@ -213,16 +153,17 @@ class BuildingFSMPolTest {
 		Files.copy(src, dest,StandardCopyOption.REPLACE_EXISTING);
 		ifh.delete();
 	}
-
+	
 	@BeforeEach
 	void setUp() throws Exception {
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
+		deleteTestLog(test+".log");
 	}
 
-	private void runFSMTest (String test,String cmd) {
+	private void runFSMTest (String cmd) {
 		deleteTestCSV(test+".csv");
 		assertTrue(cmpLog.executeCompare(cmd.split("\\s+")));
 		moveLogCmpFiles(test);
@@ -232,7 +173,7 @@ class BuildingFSMPolTest {
 	@Order(1)
 	//@Disabled
 	void testPolTest1() {
-		String test = "PolTest1";
+		test = "PolTest1";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -244,14 +185,14 @@ class BuildingFSMPolTest {
 		deleteTestCSV(test+".csv");
 		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(2)
 	//@Disabled
 	void testPolTest2() {
-		String test = "PolTest2";
+		test = "PolTest2";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -263,14 +204,14 @@ class BuildingFSMPolTest {
 		deleteTestCSV(test+".csv");
 		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(3)
 	//@Disabled
 	void testPolTest3() {
-		String test = "PolTest3";
+		test = "PolTest3";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -282,14 +223,14 @@ class BuildingFSMPolTest {
 		deleteTestCSV(test+".csv");
 		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(4)
 	//@Disabled
 	void testPolTest4() {
-		String test = "PolTest4";
+		test = "PolTest4";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -301,14 +242,14 @@ class BuildingFSMPolTest {
 		deleteTestCSV(test+".csv");
 		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 	@Test
 	@Order(5)
 	//@Disabled
 	void testPolTest5() {
-		String test = "PolTest5";
+		test = "PolTest5";
 		System.out.println("\n\nExecuting Test: "+test+".csv");
 		copyTestFile(test+".csv");
 		c = new ElevatorSimController(null);
@@ -320,7 +261,7 @@ class BuildingFSMPolTest {
 		deleteTestCSV(test+".csv");
 		File fh = fio.getFileHandle(test+".cmp");
 		String cmd = "java -jar cmpElevator.jar "+test+".log";
-	    runFSMTest(test,cmd);
+	    runFSMTest(cmd);
 	}
 
 }
