@@ -139,9 +139,10 @@ public class ElevatorSimulation extends Application {
 	 private HBox createHBox(String floor) {
 		 HBox hBox = new HBox();
 		 hBox.setSpacing(15);
-		 hBox.setAlignment(Pos.CENTER);
+		 hBox.setAlignment(Pos.CENTER_LEFT);
 		
 		 StackPane stackPane = new StackPane();
+		 hBox.setMinWidth(150); // Set a fixed width for the HBox
 		 VBox arrow = new VBox();
 		 arrow.setSpacing(-5);
 		
@@ -190,13 +191,10 @@ public class ElevatorSimulation extends Application {
 	     StackPane floorStackPane = (StackPane) floors[floors.length-floor-1].getChildren().get(0);
 	     Circle circle = (Circle) floorStackPane.getChildren().get(0);
 		 circle.setFill(Color.rgb(191, 232, 181));
-//		 if (state == OFFLD || state == BOARD) circle.setFill(Color.rgb(121, 224, 135));
-
-//		 circle.setStroke(Color.BLACK);
 	 }
 
 	 public void showDirection(int floor, int dir, Boolean call) {
-		 VBox arrows = (VBox) floors[floor].getChildren().get(1);
+		 VBox arrows = (VBox) floors[floors.length-floor-1].getChildren().get(1);
 		 if (dir == 1 && call) {
 		     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
 			 triangle2.setFill(Color.RED);
@@ -208,9 +206,12 @@ public class ElevatorSimulation extends Application {
 	 }
 	 
 	 public void createPass(int floorNum, int groups, int dir) {
-		 HBox floor = floors[floorNum];
+		 HBox floor = floors[floors.length-1-floorNum];
 		 StackPane group = new StackPane();
+		 HBox passengerGroups = new HBox();
 		 Text passengers = new Text();
+		 Boolean remove = floor.getChildren().removeAll(passengerGroups);
+		 
 		 for (int i = 0; i < groups; i ++) {
 			 Rectangle r = new Rectangle(50, 50);
 			 r.setStroke(Color.rgb(161, 161, 161));
@@ -225,8 +226,9 @@ public class ElevatorSimulation extends Application {
 			 passengers.setFont(Font.font("Helvetica",FontWeight.EXTRA_BOLD,12));
 			 passengers.setFill(Color.WHITE);
 			 group.getChildren().addAll(r,passengers);
-			 floor.getChildren().addAll(group);
+			 passengerGroups.getChildren().addAll(group);
 		 }
+		 floor.getChildren().addAll(passengerGroups);
 	 }
 	 
 	 public void setTimebox(int time, int eState, int ePass){
@@ -249,6 +251,7 @@ public class ElevatorSimulation extends Application {
 		buttons.setAlignment(Pos.CENTER);
 		
 		logging = new Button("Logging");
+		logging.setOnAction(e -> controller.enableLogging());
 		logging.setFont(Font.font("Helvetica", 16));
 		logging.setStyle("-fx-background-color: rgb(199, 186, 255); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
 		

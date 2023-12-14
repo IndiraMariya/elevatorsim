@@ -100,9 +100,10 @@ public class ElevatorSimController {
 		int passUp = building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), 1);
 		int passDown = building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), -1);
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
-		gui.createPass(building.getElevatorFloor(),building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), 1), 1);
-		gui.createPass(building.getElevatorFloor(),building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), -1), -1);
-		gui.showDirection(building.getElevatorFloor(), building.getElevatorDirection(), building.isCall);
+		gui.createPass(building.getElevatorFloor(),passUp, 1);
+		gui.createPass(building.getElevatorFloor(),passDown, -1);
+		gui.showDirection(building.getElevatorFloor(), 1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), 1));
+		gui.showDirection(building.getElevatorFloor(), -1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), -1));
 
 	}
 	/**
