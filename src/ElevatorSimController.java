@@ -97,13 +97,17 @@ public class ElevatorSimController {
 	//      and queues for each floor, as well as the current time
 	public void updateGUI() {
 		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
-		int passUp = building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), 1);
-		int passDown = building.getNumPassengerGroupsOnFloor(building.getElevatorFloor(), -1);
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
-		gui.createPass(building.getElevatorFloor(),passUp, 1);
-		gui.createPass(building.getElevatorFloor(),passDown, -1);
+		for (int i = 0; i < NUM_FLOORS; i ++) {
+			int passUp = building.getNumPassengerGroupsOnFloor(i, 1);
+			int passDown = building.getNumPassengerGroupsOnFloor(i, -1);
+			gui.createPass(i,passUp, passDown);
+		}
 		gui.showDirection(building.getElevatorFloor(), 1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), 1));
 		gui.showDirection(building.getElevatorFloor(), -1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), -1));
+		if (endSim) {
+			gui.endSimulation();
+		}
 
 	}
 	/**

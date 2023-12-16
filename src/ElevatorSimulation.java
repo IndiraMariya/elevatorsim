@@ -160,8 +160,7 @@ public class ElevatorSimulation extends Application {
         );
         Rotate rotate = new Rotate(30, 300, 100);
         triangle.getTransforms().add(rotate);
-        triangle.setFill(Color.rgb(179, 224, 232));
-//        triangle.setStroke(Color.BLACK);
+        triangle.setFill(Color.rgb(184, 212, 217));	
         
         triangleDown = new Polygon(
                 300, 100 + Math.sqrt(3) / 3 * 25,
@@ -171,7 +170,6 @@ public class ElevatorSimulation extends Application {
         Rotate rotate2 = new Rotate(210, 308, 100);
         triangleDown.getTransforms().add(rotate2);
         triangleDown.setFill(Color.rgb(184, 212, 217));	
-//      triangleDown.setStroke(Color.BLACK);
 	  
         
 	    arrow.getChildren().addAll(triangle,triangleDown);
@@ -195,42 +193,58 @@ public class ElevatorSimulation extends Application {
 
 	 public void showDirection(int floor, int dir, Boolean call) {
 		 VBox arrows = (VBox) floors[floors.length-floor-1].getChildren().get(1);
+	     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
+		 Polygon triangle3 = (Polygon) arrows.getChildren().get(1);
 		 if (dir == 1 && call) {
-		     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
-			 triangle2.setFill(Color.RED);
+			 triangle2.setFill(Color.DARKGRAY);
 		 }
-		 if (dir == -1 && call) {
-			 Polygon triangle3 = (Polygon) arrows.getChildren().get(1);
-			 triangle3.setFill(Color.SPRINGGREEN);
+		 else if (dir == -1 && call) {
+			 triangle3.setFill(Color.DARKGRAY);
+		 }
+		 else if (dir == 1 && !call) {
+			 triangle2.setFill(Color.rgb(184, 212, 217));
+		 }
+		 else if (dir == -1 && !call) {
+			 triangle3.setFill(Color.rgb(184, 212, 217));
 		 }
 	 }
 	 
-	 public void createPass(int floorNum, int groups, int dir) {
-		 HBox floor = floors[floors.length-1-floorNum];
-		 StackPane group = new StackPane();
-		 HBox passengerGroups = new HBox();
-		 Text passengers = new Text();
-		 floor.getChildren().add(passengerGroups);
-//		 Boolean remove = floor.getChildren().removeAll(passengerGroups);
-		 
-		 for (int i = 0; i < groups; i ++) {
-			 Rectangle r = new Rectangle(50, 50);
-			 r.setStroke(Color.BLACK);
-			 if (dir == 1) {
-				 r.setFill(Color.rgb(255, 242, 161));
-				 passengers.setText("UP");
-			 }
-			 if (dir == -1) {
-				 r.setFill(Color.rgb(208, 194, 255));
-				 passengers.setText("DOWN");
-			 }
-			 passengers.setFont(Font.font("Helvetica",FontWeight.EXTRA_BOLD,12));
-			 passengers.setFill(Color.BLACK);
-			 group.getChildren().addAll(r,passengers);
-			 passengerGroups.getChildren().addAll(group);
-		 }
-		 floor.getChildren().remove(2);
-		 floor.getChildren().add(passengerGroups);
+	 public void createPass(int floorNum, int groupUp, int groupDown) {
+		 HBox floor = floors[floors.length - 1 - floorNum];
+		    HBox passengerGroups = new HBox();
+		    passengerGroups.setSpacing(10);
+		    Text passengers;
+		    StackPane group;
+
+		    for (int i = 0; i < groupUp; i++) {
+		        group = new StackPane();
+		        Rectangle r = new Rectangle(50, 50);
+		        r.setStroke(Color.BLACK);
+	            r.setFill(Color.rgb(255, 242, 161));
+	            passengers = new Text();
+	            passengers.setText("UP");
+		        passengers.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 12));
+		        passengers.setFill(Color.BLACK);
+		        group.getChildren().addAll(r, passengers);
+		        passengerGroups.getChildren().add(group);
+		    }
+		    for (int i = 0; i < groupDown; i++) {
+		        group = new StackPane();
+		        Rectangle r = new Rectangle(50, 50);
+		        r.setStroke(Color.BLACK);
+	            r.setFill(Color.rgb(208, 194, 255));
+	            passengers = new Text();
+	            passengers.setText("DOWN");;
+		        passengers.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 12));
+		        passengers.setFill(Color.BLACK);
+		        group.getChildren().addAll(r, passengers);
+		        passengerGroups.getChildren().add(group);
+		    }
+
+		    while(floor.getChildren().size() > groupUp + groupDown +2) {
+		        floor.getChildren().remove(floor.getChildren().size()-1);
+		    }
+		    floor.getChildren().add(passengerGroups);
 	 }
 	 
 	 public void setTimebox(int time, int eState, int ePass){
@@ -277,23 +291,6 @@ public class ElevatorSimulation extends Application {
 		//			step.setOnMouseEntered(e -> step.setStyle("-fx-font-weight: bold;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
 		//	        step.setOnMouseExited(e -> step.setStyle("-fx-font-weight: normal;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
 
-	 }
-	 
-	 private StackPane showDirection() {
-		 StackPane arr = new StackPane();
-		 Polygon arrowUp = new Polygon(
-	                300, 100 + Math.sqrt(3) / 3 * 25,
-	                300 + 25, 100,
-	                300, 100 - Math.sqrt(3) / 3 * 25
-	        );
-		 Polygon negArrow = new Polygon(
-	                300, 100 + Math.sqrt(3) / 3 * 25,
-	                300 + 25, 100,
-	                300, 100 - Math.sqrt(3) / 3 * 25
-	        );
-		 Rectangle stem = new Rectangle();
-		 arr.getChildren().addAll(arrowUp, negArrow, stem);
-		 return arr;
 	 }
 	
 	 private VBox createFloors(HBox[] floors) {
