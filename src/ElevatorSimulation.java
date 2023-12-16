@@ -1,4 +1,8 @@
+//Owned By: Indira Mariya
 import building.Elevator;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -20,6 +25,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 
 public class ElevatorSimulation extends Application {
@@ -50,6 +56,17 @@ public class ElevatorSimulation extends Application {
 	Text currTime= new Text();
 	Text pass= new Text();
 	Text state= new Text();
+	private Timeline t;
+	String currState;
+	HBox buttons;
+	Button logging;
+	Button run;
+	Button step;
+	Label stepLabel;
+	TextField stepBy;
+	HBox[] floors;
+	Polygon triangle;
+	Polygon triangleDown;
 	
 
 	/**
@@ -97,81 +114,55 @@ public class ElevatorSimulation extends Application {
 		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state);
 
 
-		HBox[] floors = new HBox[NUM_FLOORS];
+		floors = new HBox[NUM_FLOORS];
 	    	for (int i = 0; i < floors.length; i++) {
-	    		floors[i] = createHBox();
+	    		floors[i] = createHBox((NUM_FLOORS-i) + "");
 	    }
-
-	    // Access the first floor's Circle and Text
-	    StackPane firstFloorStackPane = (StackPane) floors[0].getChildren().get(0);
-	    Circle firstFloorCircle = (Circle) firstFloorStackPane.getChildren().get(0);
-	    Text firstFloorText = (Text) firstFloorStackPane.getChildren().get(1);
-
-	    // Call changeCircleProperties for the first floor
-	    changeCircleProperties(firstFloorCircle, firstFloorText);
 
 	    // Create the scene with VBox containing all floors
 	    VBox vb = createFloors(floors);
         pane.getChildren().addAll(createFloors(floors));
 		
-		HBox buttons = new HBox();
-		buttons.setSpacing(10);
-		buttons.setAlignment(Pos.CENTER);
-		Button logging = new Button("Logging");
-		logging.setFont(Font.font("Helvetica", 16));
-		logging.setStyle("-fx-background-color: rgb(199, 186, 255); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
-		Button run = new Button("Run");
-		run.setFont(Font.font("Helvetica", 16));
-		run.setStyle("-fx-background-color: rgb(121, 224, 135); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
-		Button step = new Button("Step");
-		step.setFont(Font.font("Helvetica", 16));
-		step.setStyle("-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
-		Label stepLabel = new Label("Step #:");
-		stepLabel.setFont(Font.font("Helvetica", 16));
-		TextField stepBy = new TextField();
-		stepBy.setPrefColumnCount(7);
-		stepBy.setStyle("-fx-background-color: WHITE; -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black;");
-//		step.setOnMouseEntered(e -> step.setStyle("-fx-font-weight: bold;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
-//        step.setOnMouseExited(e -> step.setStyle("-fx-font-weight: normal;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
-
+		createButtons();
 		buttons.getChildren().addAll(run,step, stepLabel, stepBy,logging);
 		buttons.setStyle("-fx-padding: 0 0 10 0;");
 		bp.setBottom(buttons);
 		timebox.setStyle("-fx-padding: 10 0 20 0;");
 		bp.setTop(timebox);
+		
+        initTimeline();
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
 		
 	}
 
-	private HBox createHBox() {
+	 private HBox createHBox(String floor) {
 		 HBox hBox = new HBox();
 		 hBox.setSpacing(15);
-		 hBox.setAlignment(Pos.CENTER);
+		 hBox.setAlignment(Pos.CENTER_LEFT);
 		
 		 StackPane stackPane = new StackPane();
+		 hBox.setMinWidth(150); // Set a fixed width for the HBox
 		 VBox arrow = new VBox();
 		 arrow.setSpacing(-5);
 		
 		 Circle c = new Circle(25);
-//		 c.setStroke(Color.BLACK);
-		 c.setFill(Color.rgb(255, 138, 138));
-		 Text people = new Text("0");
+		 c.setFill(Color.rgb(161, 161, 161));
+		 Text people = new Text(floor);
 		 people.setFont(Font.font("Helvetica",FontWeight.EXTRA_BOLD,18));
 		 people.setFill(Color.WHITE);
 		 stackPane.getChildren().addAll(c, people);
 
-        Polygon triangle = new Polygon(
+        triangle = new Polygon(
         		 300, 100 + Math.sqrt(3) / 3 * 25,   // x1, y1 (top vertex)
                  300 + 25, 100,                      // x2, y2 (right vertex)
                  300, 100 - Math.sqrt(3) / 3 * 25    // x3, y3 (left vertex)
         );
         Rotate rotate = new Rotate(30, 300, 100);
         triangle.getTransforms().add(rotate);
-        triangle.setFill(Color.rgb(179, 224, 232));
-//        triangle.setStroke(Color.BLACK);
+        triangle.setFill(Color.rgb(184, 212, 217));	
         
-        Polygon triangleDown = new Polygon(
+        triangleDown = new Polygon(
                 300, 100 + Math.sqrt(3) / 3 * 25,
                 300 + 25, 100,
                 300, 100 - Math.sqrt(3) / 3 * 25
@@ -179,44 +170,127 @@ public class ElevatorSimulation extends Application {
         Rotate rotate2 = new Rotate(210, 308, 100);
         triangleDown.getTransforms().add(rotate2);
         triangleDown.setFill(Color.rgb(184, 212, 217));	
-//        triangleDown.setStroke(Color.BLACK);
-	        
-	     arrow.getChildren().addAll(triangle,triangleDown);
-		 hBox.getChildren().addAll(stackPane, arrow);
+	  
+        
+	    arrow.getChildren().addAll(triangle,triangleDown);
+		hBox.getChildren().addAll(stackPane, arrow);
 		
-		 Insets padding = new Insets(0, 0, 0, 10);
-		 HBox.setMargin(stackPane, padding);
-		 return hBox;
+		Insets padding = new Insets(0, 0, 0, 10);
+		HBox.setMargin(stackPane, padding);
+		return hBox;
 	 }
 	
-	 private void changeCircleProperties(Circle circle, Text text) {
-	     circle.setFill(Color.rgb(121, 224, 135));
-	     text.setText("1");
-	     text.setFill(Color.WHITE);
+	 public void setFloor(int floor, int state) {
+		 for (int i = 0; i < floors.length; i++) {
+			 StackPane floorStackPane = (StackPane) floors[i].getChildren().get(0);
+		     Circle circle = (Circle) floorStackPane.getChildren().get(0);
+			 circle.setFill(Color.rgb(161, 161, 161));
+		 }
+	     StackPane floorStackPane = (StackPane) floors[floors.length-floor-1].getChildren().get(0);
+	     Circle circle = (Circle) floorStackPane.getChildren().get(0);
+		 circle.setFill(Color.rgb(191, 232, 181));
+	 }
+
+	 public void showDirection(int floor, int dir, Boolean call) {
+		 VBox arrows = (VBox) floors[floors.length-floor-1].getChildren().get(1);
+	     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
+		 Polygon triangle3 = (Polygon) arrows.getChildren().get(1);
+		 if (dir == 1 && call) {
+			 triangle2.setFill(Color.DARKGRAY);
+		 }
+		 else if (dir == -1 && call) {
+			 triangle3.setFill(Color.DARKGRAY);
+		 }
+		 else if (dir == 1 && !call) {
+			 triangle2.setFill(Color.rgb(184, 212, 217));
+		 }
+		 else if (dir == -1 && !call) {
+			 triangle3.setFill(Color.rgb(184, 212, 217));
+		 }
+	 }
+	 
+	 public void createPass(int floorNum, int groupUp, int groupDown) {
+		 HBox floor = floors[floors.length - 1 - floorNum];
+		    HBox passengerGroups = new HBox();
+		    passengerGroups.setSpacing(10);
+		    Text passengers;
+		    StackPane group;
+
+		    for (int i = 0; i < groupUp; i++) {
+		        group = new StackPane();
+		        Rectangle r = new Rectangle(50, 50);
+		        r.setStroke(Color.BLACK);
+	            r.setFill(Color.rgb(255, 242, 161));
+	            passengers = new Text();
+	            passengers.setText("UP");
+		        passengers.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 12));
+		        passengers.setFill(Color.BLACK);
+		        group.getChildren().addAll(r, passengers);
+		        passengerGroups.getChildren().add(group);
+		    }
+		    for (int i = 0; i < groupDown; i++) {
+		        group = new StackPane();
+		        Rectangle r = new Rectangle(50, 50);
+		        r.setStroke(Color.BLACK);
+	            r.setFill(Color.rgb(208, 194, 255));
+	            passengers = new Text();
+	            passengers.setText("DOWN");;
+		        passengers.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 12));
+		        passengers.setFill(Color.BLACK);
+		        group.getChildren().addAll(r, passengers);
+		        passengerGroups.getChildren().add(group);
+		    }
+
+		    while(floor.getChildren().size() > groupUp + groupDown +2) {
+		        floor.getChildren().remove(floor.getChildren().size()-1);
+		    }
+		    floor.getChildren().add(passengerGroups);
 	 }
 	 
 	 public void setTimebox(int time, int eState, int ePass){
 		 currTime.setText("" + time);
-		 state.setText("" + eState);
+		 if (eState == 0) currState = "STOP";
+		 if (eState == 1) currState = "MVTOFLR";
+		 if (eState == 2) currState = "OPENDR";
+		 if (eState == 3) currState = "OFFLD";
+		 if (eState == 4) currState = "BOARD";
+		 if (eState == 4) currState = "CLOSEDR";
+		 if (eState == 4) currState = "MV1FLR";
+		 state.setText("" + currState);
 		 pass.setText("" + ePass);
 				 
 	 }
 	 
-	 private StackPane showDirection() {
-		 StackPane arr = new StackPane();
-		 Polygon arrowUp = new Polygon(
-	                300, 100 + Math.sqrt(3) / 3 * 25,
-	                300 + 25, 100,
-	                300, 100 - Math.sqrt(3) / 3 * 25
-	        );
-		 Polygon negArrow = new Polygon(
-	                300, 100 + Math.sqrt(3) / 3 * 25,
-	                300 + 25, 100,
-	                300, 100 - Math.sqrt(3) / 3 * 25
-	        );
-		 Rectangle stem = new Rectangle();
-		 arr.getChildren().addAll(arrowUp, negArrow, stem);
-		 return arr;
+	 private void createButtons() {
+		buttons = new HBox();
+		buttons.setSpacing(10);
+		buttons.setAlignment(Pos.CENTER);
+		
+		logging = new Button("Logging");
+		logging.setOnAction(e -> controller.enableLogging());
+		logging.setFont(Font.font("Helvetica", 16));
+		logging.setStyle("-fx-background-color: rgb(199, 186, 255); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
+		
+		run = new Button("Run");
+		run.setOnAction(e -> t.play());
+		run.setFont(Font.font("Helvetica", 16));
+		run.setStyle("-fx-background-color: rgb(121, 224, 135); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
+		
+		step = new Button("Step");
+		step.setOnAction(e -> controller.stepSim());
+		step.setFont(Font.font("Helvetica", 16));
+		step.setStyle("-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
+		
+		stepLabel = new Label("Step #:");
+		stepLabel.setFont(Font.font("Helvetica", 16));
+		
+		stepBy = new TextField();
+		stepBy.setPrefColumnCount(7);
+		stepBy.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
+		stepBy.setStyle("-fx-background-color: WHITE; -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black;");
+		//			step.setOnMouseEntered(e -> step.setStyle("-fx-font-weight: bold;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
+		//	        step.setOnMouseExited(e -> step.setStyle("-fx-font-weight: normal;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
+
 	 }
 	
 	 private VBox createFloors(HBox[] floors) {
@@ -230,12 +304,23 @@ public class ElevatorSimulation extends Application {
 	     return vb;
 	 }
 	 
-	 public int getTime() {
-		 return time; 
+	 public void endSimulation() {
+		 t.stop();
 	 }
 	 
-	 public void endSimulation() {
-		 //stop timeline
+	 private void initTimeline() {
+		t = new Timeline(new KeyFrame(Duration.millis(millisPerTick), e -> controller.stepSim()));
+		t.setCycleCount(Animation. INDEFINITE);
+		currTime.setText("" + time);
+		pass.setText("" + passengers);
+		state.setText("STOP");
+	 }
+	 
+	 private void stepUntil(int stepNum) {
+		 for (int i = 0; i < stepNum; i++) {
+			 controller.stepSim();
+		 }
+		 time += stepNum;
 	 }
 	
 	/**

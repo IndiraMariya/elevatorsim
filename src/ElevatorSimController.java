@@ -89,13 +89,26 @@ public class ElevatorSimController {
 		passQ = new GenericQueue<>(PASSENGERS_QSIZE);
 		building.initializeElevator(capacity, floorTicks, doorTicks, passPerTick);
 		initializePassengerData(testfile);	
+		enableLogging();
 	}
 	
 	//TODO: Write methods to update the GUI display
 	//      Needs to cover the Elevator state, Elevator passengers
 	//      and queues for each floor, as well as the current time
-	public void updateGUI(ElevatorSimulation sim, int state, int pass, int time) {
-		sim.setTimebox(time, state, pass);
+	public void updateGUI() {
+		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
+		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
+		for (int i = 0; i < NUM_FLOORS; i ++) {
+			int passUp = building.getNumPassengerGroupsOnFloor(i, 1);
+			int passDown = building.getNumPassengerGroupsOnFloor(i, -1);
+			gui.createPass(i,passUp, passDown);
+		}
+		gui.showDirection(building.getElevatorFloor(), 1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), 1));
+		gui.showDirection(building.getElevatorFloor(), -1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), -1));
+		if (endSim) {
+			gui.endSimulation();
+		}
+
 	}
 	/**
 	 * Config simulation. Reads the filename, and parses the
@@ -236,12 +249,12 @@ public class ElevatorSimController {
 			building.onAllPassengersAdded();
 			building.updateElevator(stepCnt);
 			if (gui != null) {
-				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
+				updateGUI();
 			}
 		}
 		else {
 			if (gui != null) {
-				updateGUI(gui, building.getElevatorState(), building.getElevatorPassengerCount(), stepCnt);
+				updateGUI();
 			}
 			building.closeLogs(stepCnt);
 			building.processPassengerData();
