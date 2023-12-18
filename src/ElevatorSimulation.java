@@ -82,7 +82,7 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Start.
+	 * Initialize the GUI design. 
 	 *
 	 * @param primaryStage the primary stage
 	 * @throws Exception the exception
@@ -135,6 +135,14 @@ public class ElevatorSimulation extends Application {
 		primaryStage.show(); // Display the stage
 	}
 
+	 
+	 /**
+	  * Helper method to create a HBox, including arrows
+	  * and floor indicators, for a single floor. 
+	  * 
+	  * @param floor the floor
+	  * @return HBox the generated HBox
+	  */
 	 private HBox createHBox(String floor) {
 		 HBox hBox = new HBox();
 		 hBox.setSpacing(15);
@@ -179,6 +187,14 @@ public class ElevatorSimulation extends Application {
 		return hBox;
 	 }
 	
+	 
+	 /** 
+	  * Indicate the active floor that the elevator
+	  * is currently on.
+	  * 
+	  * @param floor the floor
+	  * @param state the state
+	  */
 	 public void setFloor(int floor, int state) {
 		 for (int i = 0; i < floors.length; i++) {
 			 StackPane floorStackPane = (StackPane) floors[i].getChildren().get(0);
@@ -190,6 +206,14 @@ public class ElevatorSimulation extends Application {
 		 circle.setFill(Color.rgb(191, 232, 181));
 	 }
 
+	 
+	 /** 
+	  * Show the direction of the elevator on a given floor.
+	  * 
+	  * @param floor the floor
+	  * @param dir the direction
+	  * @param call if there's a call
+	  */
 	 public void showDirection(int floor, int dir, Boolean call) {
 		 VBox arrows = (VBox) floors[floors.length-floor-1].getChildren().get(1);
 	     Polygon triangle2 = (Polygon) arrows.getChildren().get(0);
@@ -207,7 +231,14 @@ public class ElevatorSimulation extends Application {
 			 triangle3.setFill(Color.rgb(184, 212, 217));
 		 }
 	 }
-
+<<<<<<< HEAD
+	/**
+	 * Create a passenger icon in the GUI.
+	 *
+	 * @param floorNum floor number
+	 * @param groupUp number of groups going up
+	 * @param groupDown number of groups going down
+	 */
 	public void createPass(int floorNum, int groupUp, int groupDown) {
 		HBox floor = floors[floors.length - 1 - floorNum];
 		HBox passengerGroups = new HBox();
@@ -249,6 +280,16 @@ public class ElevatorSimulation extends Application {
 		return group;
 	}
 
+
+	 
+	 /** 
+	  * Sets time and currState in the top bar
+	  * of the GUI. 
+	  * 
+	  * @param time the time
+	  * @param eState the // TODO INDIRA WHAT SI THIS!!!!
+	  * @param ePass the // TODO INDIRA WHAT IS THIS!!!!
+	  */
 	 public void setTimebox(int time, int eState, int ePass){
 		 currTime.setText("" + time);
 		 if (eState == STOP) currState = "STOP";
@@ -307,6 +348,13 @@ public class ElevatorSimulation extends Application {
 				"-fx-border-color: black;");
 	 }
 	
+	 
+	 /** 
+	  * Creates a VBox out of a list of floor HBoxes.
+	  * 
+	  * @param floors List of HBoxes
+	  * @return VBox the VBox
+	  */
 	 private VBox createFloors(HBox[] floors) {
 	     VBox vb = new VBox();
 	     vb.setAlignment(Pos.CENTER);
@@ -318,10 +366,17 @@ public class ElevatorSimulation extends Application {
 	     return vb;
 	 }
 	 
+	 /** 
+	  * Ends the simulation.
+	  */
 	 public void endSimulation() {
 		 t.stop();
 	 }
 	 
+
+	 /** 
+	  * Initializes the timeline.
+	  */
 	 private void initTimeline() {
 		t = new Timeline(new KeyFrame(Duration.millis(millisPerTick), e -> controller.stepSim()));
 		t.setCycleCount(Animation. INDEFINITE);
@@ -330,6 +385,12 @@ public class ElevatorSimulation extends Application {
 		state.setText("STOP");
 	 }
 	 
+	 
+	 /** 
+	  * Runs stepSim until iteration number stepNum. 
+	  * 
+	  * @param stepNum number of steps to run
+	  */
 	 private void stepUntil(int stepNum) {
 		 for (int i = 0; i < stepNum; i++) {
 			 controller.stepSim();

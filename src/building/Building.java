@@ -195,6 +195,8 @@ public class Building {
 	 * @param floor floor to look at
 	 * @param dir direction to look call
 	 * @return whether there is a call
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public boolean isCallInDirectionOnFloor(int floor, int dir) {
 		return floors[floor].hasCall(dir);
