@@ -307,6 +307,10 @@ public class ElevatorSimulation extends Application {
 				 
 	 }
 	 
+	 /**
+	  * Creates Run, Step, and Logging buttons in the bottom bar.
+	  * 
+	  */
 	 private void createButtons() {
 		buttons = new HBox();
 		buttons.setSpacing(10);
