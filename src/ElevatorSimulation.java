@@ -104,16 +104,14 @@ public class ElevatorSimulation extends Application {
 		timebox.setAlignment(Pos.CENTER);
 		
 		Label timeLabel = new Label("Time:");
-		timeLabel.setFont(Font.font("Helvetica", 20));
 		currTime.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
 		
 		Label passLabel = new Label("Passengers:");
-		passLabel.setFont(Font.font("Helvetica", 20));
 		pass.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
 		
 		Label stateLabel = new Label("State:");
-		stateLabel.setFont(Font.font("Helvetica", 20));
 		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		
 		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state);
 
 		floors = new HBox[NUM_FLOORS];
@@ -129,7 +127,6 @@ public class ElevatorSimulation extends Application {
 		bp.setBottom(buttons);
 		timebox.setStyle("-fx-padding: 10 0 20 0;");
 		bp.setTop(timebox);
-		
         initTimeline();
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
