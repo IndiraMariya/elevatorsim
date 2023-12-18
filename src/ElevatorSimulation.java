@@ -287,8 +287,8 @@ public class ElevatorSimulation extends Application {
 	  * of the GUI. 
 	  * 
 	  * @param time the time
-	  * @param eState the // TODO INDIRA WHAT SI THIS!!!!
-	  * @param ePass the // TODO INDIRA WHAT IS THIS!!!!
+	  * @param eState the state of the elevator at the given time
+	  * @param ePass the number of passengers at the given time
 	  */
 	 public void setTimebox(int time, int eState, int ePass){
 		 currTime.setText("" + time);
