@@ -131,7 +131,9 @@ public class Building {
 	 * PEER REVIEWED BY MK
 	 */
 	public boolean hasSimulationEnded(int time) {
-		return elevator.getCurrState() == Elevator.STOP && elevator.getPrevState() == Elevator.STOP && !callMgr.isCallPending();
+		return elevator.getCurrState() == Elevator.STOP &&
+				elevator.getPrevState() == Elevator.STOP &&
+				!callMgr.isCallPending();
 	}
 
 	/**
