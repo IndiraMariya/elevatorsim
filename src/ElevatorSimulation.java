@@ -231,8 +231,8 @@ public class ElevatorSimulation extends Application {
 			 triangle3.setFill(Color.rgb(184, 212, 217));
 		 }
 	 }
-<<<<<<< HEAD
-	/**
+
+	 /**
 	 * Create a passenger icon in the GUI.
 	 *
 	 * @param floorNum floor number
@@ -243,7 +243,6 @@ public class ElevatorSimulation extends Application {
 		HBox floor = floors[floors.length - 1 - floorNum];
 		HBox passengerGroups = new HBox();
 		passengerGroups.setSpacing(10);
-		Text passengers;
 		StackPane group;
 
 		for (int i = 0; i < groupUp; i++) {
@@ -261,6 +260,12 @@ public class ElevatorSimulation extends Application {
 		floor.getChildren().add(passengerGroups);
 	 }
 
+	/**
+	 * Helper method creating Stack group representing a passenger group
+	 *
+	 * @param dir Direction of passenger group
+	 * @return StackPane representing PassengerGroup
+	 */
 	private StackPane createPassengerGroup(int dir) {
 		Text passengers;
 		StackPane group;
@@ -280,9 +285,7 @@ public class ElevatorSimulation extends Application {
 		return group;
 	}
 
-
-	 
-	 /** 
+	 /**
 	  * Sets time and currState in the top bar
 	  * of the GUI. 
 	  * 
