@@ -65,7 +65,10 @@ public class ElevatorSimController {
 
 	/**  The size of the queue to store Passengers at the start of the simulation. */
 	private final int PASSENGERS_QSIZE = 1000;	
-	
+
+	private final int UP = 1;
+	private final int DOWN = -1;
+
 	/**
 	 * Instantiates a new elevator sim controller. 
 	 * Reads the configuration file to configure the building and
@@ -91,10 +94,13 @@ public class ElevatorSimController {
 		initializePassengerData(testfile);	
 		enableLogging();
 	}
-	
+
 	//TODO: Write methods to update the GUI display
 	//      Needs to cover the Elevator state, Elevator passengers
 	//      and queues for each floor, as well as the current time
+	/**
+	 * Updates the GUI
+	 */
 	public void updateGUI() {
 		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
@@ -103,8 +109,16 @@ public class ElevatorSimController {
 			int passDown = building.getNumPassengerGroupsOnFloor(i, -1);
 			gui.createPass(i,passUp, passDown);
 		}
-		gui.showDirection(building.getElevatorFloor(), 1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), 1));
-		gui.showDirection(building.getElevatorFloor(), -1, building.isCallInDirectionOnFloor(building.getElevatorFloor(), -1));
+		gui.showDirection(
+				building.getElevatorFloor(),
+				UP,
+				building.isCallInDirectionOnFloor(building.getElevatorFloor(), UP)
+		);
+		gui.showDirection(
+				building.getElevatorFloor(),
+				DOWN,
+				building.isCallInDirectionOnFloor(building.getElevatorFloor(), DOWN)
+		);
 		if (endSim) {
 			gui.endSimulation();
 		}
