@@ -47,7 +47,10 @@ public class ElevatorSimulation extends Application {
 	private final int BOARD = Elevator.BOARD;
 	private final int CLOSEDR = Elevator.CLOSEDR;
 	private final int MV1FLR = Elevator.MV1FLR;
-	
+
+	private final int UP = 1;
+	private final int DOWN = -1;
+
 	private Pane pane;
 	private Scene scene;
 	private StackPane sp;
@@ -113,16 +116,13 @@ public class ElevatorSimulation extends Application {
 		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
 		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state);
 
-
 		floors = new HBox[NUM_FLOORS];
-	    	for (int i = 0; i < floors.length; i++) {
-	    		floors[i] = createHBox((NUM_FLOORS-i) + "");
+		for (int i = 0; i < floors.length; i++) {
+			floors[i] = createHBox((NUM_FLOORS-i) + "");
 	    }
 
 	    // Create the scene with VBox containing all floors
-	    VBox vb = createFloors(floors);
         pane.getChildren().addAll(createFloors(floors));
-		
 		createButtons();
 		buttons.getChildren().addAll(run,step, stepLabel, stepBy,logging);
 		buttons.setStyle("-fx-padding: 0 0 10 0;");
@@ -133,7 +133,6 @@ public class ElevatorSimulation extends Application {
         initTimeline();
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
-		
 	}
 
 	 private HBox createHBox(String floor) {
@@ -208,54 +207,57 @@ public class ElevatorSimulation extends Application {
 			 triangle3.setFill(Color.rgb(184, 212, 217));
 		 }
 	 }
-	 
-	 public void createPass(int floorNum, int groupUp, int groupDown) {
-		 HBox floor = floors[floors.length - 1 - floorNum];
-		    HBox passengerGroups = new HBox();
-		    passengerGroups.setSpacing(10);
-		    Text passengers;
-		    StackPane group;
 
-		    for (int i = 0; i < groupUp; i++) {
-		        group = new StackPane();
-		        Rectangle r = new Rectangle(50, 50);
-		        r.setStroke(Color.BLACK);
-	            r.setFill(Color.rgb(255, 242, 161));
-	            passengers = new Text();
-	            passengers.setText("UP");
-		        passengers.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 12));
-		        passengers.setFill(Color.BLACK);
-		        group.getChildren().addAll(r, passengers);
-		        passengerGroups.getChildren().add(group);
-		    }
-		    for (int i = 0; i < groupDown; i++) {
-		        group = new StackPane();
-		        Rectangle r = new Rectangle(50, 50);
-		        r.setStroke(Color.BLACK);
-	            r.setFill(Color.rgb(208, 194, 255));
-	            passengers = new Text();
-	            passengers.setText("DOWN");;
-		        passengers.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 12));
-		        passengers.setFill(Color.BLACK);
-		        group.getChildren().addAll(r, passengers);
-		        passengerGroups.getChildren().add(group);
-		    }
+	public void createPass(int floorNum, int groupUp, int groupDown) {
+		HBox floor = floors[floors.length - 1 - floorNum];
+		HBox passengerGroups = new HBox();
+		passengerGroups.setSpacing(10);
+		Text passengers;
+		StackPane group;
 
-		    while(floor.getChildren().size() > groupUp + groupDown +2) {
-		        floor.getChildren().remove(floor.getChildren().size()-1);
-		    }
-		    floor.getChildren().add(passengerGroups);
+		for (int i = 0; i < groupUp; i++) {
+			group = createPassengerGroup(UP);
+			passengerGroups.getChildren().add(group);
+		}
+		for (int i = 0; i < groupDown; i++) {
+			group = createPassengerGroup(DOWN);
+			passengerGroups.getChildren().add(group);
+		}
+
+		while (floor.getChildren().size() > groupUp + groupDown + 2) {
+			floor.getChildren().remove(floor.getChildren().size()-1);
+		}
+		floor.getChildren().add(passengerGroups);
 	 }
-	 
+
+	private StackPane createPassengerGroup(int dir) {
+		Text passengers;
+		StackPane group;
+
+		group = new StackPane();
+		Rectangle r = new Rectangle(50, 50);
+		r.setStroke(Color.BLACK);
+		if (dir == UP) r.setFill(Color.rgb(255, 242, 161));
+		else if (dir == DOWN) r.setFill(Color.rgb(208, 194, 255));
+		passengers = new Text();
+		if (dir == UP) passengers.setText("UP");
+		else if (dir == DOWN) passengers.setText("DOWN");
+		passengers.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 12));
+		passengers.setFill(Color.BLACK);
+		group.getChildren().addAll(r, passengers);
+
+		return group;
+	}
+
 	 public void setTimebox(int time, int eState, int ePass){
 		 currTime.setText("" + time);
-		 if (eState == 0) currState = "STOP";
-		 if (eState == 1) currState = "MVTOFLR";
-		 if (eState == 2) currState = "OPENDR";
-		 if (eState == 3) currState = "OFFLD";
-		 if (eState == 4) currState = "BOARD";
-		 if (eState == 4) currState = "CLOSEDR";
-		 if (eState == 4) currState = "MV1FLR";
+		 if (eState == STOP) currState = "STOP";
+		 if (eState == MVTOFLR) currState = "MVTOFLR";
+		 if (eState == OPENDR) currState = "OPENDR";
+		 if (eState == OFFLD) currState = "OFFLD";
+		 if (eState == BOARD) currState = "BOARD";
+		 if (eState == CLOSEDR) currState = "CLOSEDR";
+		 if (eState == MV1FLR) currState = "MV1FLR";
 		 state.setText("" + currState);
 		 pass.setText("" + ePass);
 				 
@@ -269,17 +271,29 @@ public class ElevatorSimulation extends Application {
 		logging = new Button("Logging");
 		logging.setOnAction(e -> controller.enableLogging());
 		logging.setFont(Font.font("Helvetica", 16));
-		logging.setStyle("-fx-background-color: rgb(199, 186, 255); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
+		logging.setStyle("-fx-background-color: rgb(199, 186, 255); " +
+				"-fx-background-radius: 5; " +
+				"-fx-border-radius: 5;" +
+				"-fx-border-color: black; " +
+				"-fx-text-fill: black;");
 		
 		run = new Button("Run");
 		run.setOnAction(e -> t.play());
 		run.setFont(Font.font("Helvetica", 16));
-		run.setStyle("-fx-background-color: rgb(121, 224, 135); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
+		run.setStyle("-fx-background-color: rgb(121, 224, 135); " +
+				"-fx-background-radius: 5; " +
+				"-fx-border-radius: 5;" +
+				"-fx-border-color: black; " +
+				"-fx-text-fill: black;");
 		
 		step = new Button("Step");
 		step.setOnAction(e -> controller.stepSim());
 		step.setFont(Font.font("Helvetica", 16));
-		step.setStyle("-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;");
+		step.setStyle("-fx-background-color: rgb(224, 255, 161); " +
+				"-fx-background-radius: 5; " +
+				"-fx-border-radius: 5;" +
+				"-fx-border-color: black; " +
+				"-fx-text-fill: black;");
 		
 		stepLabel = new Label("Step #:");
 		stepLabel.setFont(Font.font("Helvetica", 16));
@@ -287,10 +301,10 @@ public class ElevatorSimulation extends Application {
 		stepBy = new TextField();
 		stepBy.setPrefColumnCount(7);
 		stepBy.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
-		stepBy.setStyle("-fx-background-color: WHITE; -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black;");
-		//			step.setOnMouseEntered(e -> step.setStyle("-fx-font-weight: bold;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
-		//	        step.setOnMouseExited(e -> step.setStyle("-fx-font-weight: normal;-fx-background-color: rgb(224, 255, 161); -fx-background-radius: 5; -fx-border-radius: 5;-fx-border-color: black; -fx-text-fill: black;"));
-
+		stepBy.setStyle("-fx-background-color: WHITE; " +
+				"-fx-background-radius: 5; " +
+				"-fx-border-radius: 5;" +
+				"-fx-border-color: black;");
 	 }
 	
 	 private VBox createFloors(HBox[] floors) {
