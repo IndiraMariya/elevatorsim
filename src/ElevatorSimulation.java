@@ -59,6 +59,7 @@ public class ElevatorSimulation extends Application {
 	Text currTime= new Text();
 	Text pass= new Text();
 	Text state= new Text();
+	Text dir = new Text();
 	private Timeline t;
 	String currState;
 	HBox buttons;
@@ -112,7 +113,9 @@ public class ElevatorSimulation extends Application {
 		Label stateLabel = new Label("State:");
 		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
 		
-		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state);
+		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		
+		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state, dir);
 
 		floors = new HBox[NUM_FLOORS];
 		for (int i = 0; i < floors.length; i++) {
@@ -290,7 +293,7 @@ public class ElevatorSimulation extends Application {
 	  * @param eState the state of the elevator at the given time
 	  * @param ePass the number of passengers at the given time
 	  */
-	 public void setTimebox(int time, int eState, int ePass){
+	 public void setTimebox(int time, int eState, int ePass, int direc){
 		 currTime.setText("" + time);
 		 if (eState == STOP) currState = "STOP";
 		 if (eState == MVTOFLR) currState = "MVTOFLR";
@@ -301,6 +304,9 @@ public class ElevatorSimulation extends Application {
 		 if (eState == MV1FLR) currState = "MV1FLR";
 		 state.setText("" + currState);
 		 pass.setText("" + ePass);
+		 if (direc == 1) dir.setText("UP");
+		 else dir.setText("DOWN");
+		 
 				 
 	 }
 	 

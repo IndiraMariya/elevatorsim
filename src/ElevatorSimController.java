@@ -102,7 +102,7 @@ public class ElevatorSimController {
 	 * Updates the GUI
 	 */
 	public void updateGUI() {
-		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
+		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount(), building.getElevatorDirection());
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
 		for (int i = 0; i < NUM_FLOORS; i ++) {
 			int passUp = building.getNumPassengerGroupsOnFloor(i, 1);
