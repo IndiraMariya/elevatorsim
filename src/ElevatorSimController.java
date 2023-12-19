@@ -278,7 +278,9 @@ public class ElevatorSimController {
 				building.addPassengers(passQ.poll());
 			}
 			building.onAllPassengersAdded();
-			updateState();
+			if (gui != null) {
+				updateState();
+			}
 			building.updateElevator(stepCnt);
 			if (gui != null) {
 				updateGUI();
