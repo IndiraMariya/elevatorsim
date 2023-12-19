@@ -1,8 +1,10 @@
 package building;
-
 import passengers.Passengers;
 
 /**
+ * 
+ * @author Matthew Kim
+ * 
  * The Class CallManager. This class models all of the calls on each floor,
  * and then provides methods that allow the building to determine what needs
  * to happen (ie, state transitions).
@@ -32,9 +34,7 @@ public class CallManager {
 	
 	/** The down call pending - true if any down calls exit */
 	private boolean downCallPending;
-	
-	//TODO: Add any additional fields here..
-	
+		
 	/**
 	 * Instantiates a new call manager.
 	 *
@@ -48,8 +48,6 @@ public class CallManager {
 		downCalls = new boolean[NUM_FLOORS];
 		upCallPending = false;
 		downCallPending = false;
-		
-		//TODO: Initialize any added fields here
 	}
 	
 	/**

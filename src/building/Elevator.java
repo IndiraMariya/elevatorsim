@@ -1,10 +1,13 @@
 package building;
 import java.util.ArrayList;
 import passengers.Passengers;
+
 /**
  * The Class Elevator.
  *
- * @author This class will represent an elevator, and will contain
+ * @author Matthew Kim
+ * 
+ * This class will represent an elevator, and will contain
  * configuration information (capacity, speed, etc) as well
  * as state information - such as stopped, direction, and count
  * of passengers targeting each floor...
