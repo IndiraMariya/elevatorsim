@@ -7,10 +7,11 @@ import building.Building;
 import genericqueue.GenericQueue;
 import myfileio.MyFileIO;
 import passengers.Passengers;
+//Owned By: Indira Mariya
 
 /**
  * The Class ElevatorSimController.
- */
+ */ 
 public class ElevatorSimController {
 	
 	/**  Constant to specify the configuration file for the simulation. */
@@ -102,7 +103,7 @@ public class ElevatorSimController {
 	 * Updates the GUI
 	 */
 	public void updateGUI() {
-		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount());
+		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount(), building.getElevatorDirection());
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
 		for (int i = 0; i < NUM_FLOORS; i ++) {
 			int passUp = building.getNumPassengerGroupsOnFloor(i, 1);
