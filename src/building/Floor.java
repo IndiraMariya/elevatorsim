@@ -8,6 +8,8 @@ import passengers.Passengers;
 /**
  * The Class Floor. This class provides the up/down queues to hold
  * Passengers as they wait for the Elevator.
+ *
+ * @author Sabrina Yen-Ko
  */
 public class Floor {
 	/**  Constant for representing direction. */

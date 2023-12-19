@@ -4,6 +4,8 @@ package passengers;
  * The Class Passengers. Represents a GROUP of passengers that are 
  * traveling together from one floor to another. Tracks information that 
  * can be used to analyze Elevator performance.
+ *
+ * @author Sabrina Yen-Ko
  */
 public class Passengers {
 	

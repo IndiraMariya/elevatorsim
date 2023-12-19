@@ -14,6 +14,8 @@ import java.util.logging.SimpleFormatter;
 
 /**
  * The Class Building.
+ *
+ * @author Sabrina Yen-Ko
  */
 public class Building {
 
