@@ -7,10 +7,11 @@ import building.Building;
 import genericqueue.GenericQueue;
 import myfileio.MyFileIO;
 import passengers.Passengers;
+//Owned By: Indira Mariya
 
 /**
  * The Class ElevatorSimController.
- */
+ */ 
 public class ElevatorSimController {
 	
 	/**  Constant to specify the configuration file for the simulation. */

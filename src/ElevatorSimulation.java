@@ -1,4 +1,3 @@
-//Owned By: Indira Mariya
 import building.Elevator;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -26,7 +25,7 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+//Owned By: Indira Mariya
 
 public class ElevatorSimulation extends Application {
 	/** Instantiate the GUI fields */
