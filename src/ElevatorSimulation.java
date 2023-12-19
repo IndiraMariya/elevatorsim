@@ -292,8 +292,14 @@ public class ElevatorSimulation extends Application {
 	  * @param eState the state of the elevator at the given time
 	  * @param ePass the number of passengers at the given time
 	  */
-	 public void setTimebox(int time, int eState, int ePass, int direc){
+	 public void setTimebox(int time, int ePass, int direc){
 		 currTime.setText("" + time);
+		 pass.setText("" + ePass);
+		 if (direc == 1) dir.setText("UP");
+		 else dir.setText("DOWN"); 
+	 }
+	 
+	 public void setState(int eState) {
 		 if (eState == STOP) currState = "STOP";
 		 if (eState == MVTOFLR) currState = "MVTOFLR";
 		 if (eState == OPENDR) currState = "OPENDR";
@@ -302,11 +308,6 @@ public class ElevatorSimulation extends Application {
 		 if (eState == CLOSEDR) currState = "CLOSEDR";
 		 if (eState == MV1FLR) currState = "MV1FLR";
 		 state.setText("" + currState);
-		 pass.setText("" + ePass);
-		 if (direc == 1) dir.setText("UP");
-		 else dir.setText("DOWN");
-		 
-				 
 	 }
 	 
 	 /**
