@@ -103,7 +103,7 @@ public class ElevatorSimController {
 	 * Updates the GUI
 	 */
 	public void updateGUI() {
-		gui.setTimebox(stepCnt, building.getElevatorState(), building.getElevatorPassengerCount(), building.getElevatorDirection());
+		gui.setTimebox(stepCnt, building.getElevatorPassengerCount(), building.getElevatorDirection());
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
 		for (int i = 0; i < NUM_FLOORS; i ++) {
 			int passUp = building.getNumPassengerGroupsOnFloor(i, 1);
@@ -124,6 +124,13 @@ public class ElevatorSimController {
 			gui.endSimulation();
 		}
 
+	}
+	
+	/**
+	 * Updates the State
+	 */
+	public void updateState() {
+		gui.setState(building.getElevatorState());
 	}
 	/**
 	 * Config simulation. Reads the filename and parses the
@@ -271,6 +278,7 @@ public class ElevatorSimController {
 				building.addPassengers(passQ.poll());
 			}
 			building.onAllPassengersAdded();
+			updateState();
 			building.updateElevator(stepCnt);
 			if (gui != null) {
 				updateGUI();
