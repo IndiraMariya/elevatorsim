@@ -285,11 +285,11 @@ public class ElevatorSimulation extends Application {
 	}
 
 	 /**
-	  * Sets time and currState in the top bar
+	  * Sets time, number of passengers, and direction in the top bar
 	  * of the GUI. 
 	  * 
 	  * @param time the time
-	  * @param eState the state of the elevator at the given time
+	  * @param direc the direc of the elevator at the given time
 	  * @param ePass the number of passengers at the given time
 	  */
 	 public void setTimebox(int time, int ePass, int direc){
@@ -299,6 +299,12 @@ public class ElevatorSimulation extends Application {
 		 else dir.setText("DOWN"); 
 	 }
 	 
+	 /**
+	  * Sets currState in the top bar
+	  * of the GUI. 
+	  * 
+	  * @param eState the state
+	  */
 	 public void setState(int eState) {
 		 if (eState == STOP) currState = "STOP";
 		 if (eState == MVTOFLR) currState = "MVTOFLR";
