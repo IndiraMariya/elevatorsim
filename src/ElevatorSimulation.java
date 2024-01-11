@@ -330,7 +330,7 @@ public class ElevatorSimulation extends Application {
 	 }
 	 
 	 /**
-	  * Creates Run, Step, and Logging buttons in the bottom bar.
+	  * Creates Run, Logging, and Pause buttons in the bottom bar.
 	  * 
 	  * PEER REVIEWED BY MK
 	  */
@@ -369,6 +369,11 @@ public class ElevatorSimulation extends Application {
 
 	 }
 	 
+	 /**
+	  * Creates Step button in the bottom bar.
+	  * 
+	  * PEER REVIEWED BY MK
+	  */
 	 private void createStepButton() {
 			step = new Button("Step");
 			step.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
