@@ -365,23 +365,27 @@ public class ElevatorSimulation extends Application {
 				"-fx-border-radius: 5;" +
 				"-fx-border-color: black; " +
 				"-fx-text-fill: black;");
-		
-		step = new Button("Step");
-		step.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
-		step.setFont(Font.font("Helvetica", 16));
-		step.setStyle("-fx-background-color: rgb(224, 255, 161); " +
-				"-fx-background-radius: 5; " +
-				"-fx-border-radius: 5;" +
-				"-fx-border-color: black; " +
-				"-fx-text-fill: black;");
-		
+		createStepButton();
 
-		stepBy = new TextField("1");
-		stepBy.setPrefColumnCount(7);
-		stepBy.setStyle("-fx-background-color: WHITE; " +
-				"-fx-background-radius: 5; " +
-				"-fx-border-radius: 5;" +
-				"-fx-border-color: black;");
+	 }
+	 
+	 private void createStepButton() {
+			step = new Button("Step");
+			step.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
+			step.setFont(Font.font("Helvetica", 16));
+			step.setStyle("-fx-background-color: rgb(224, 255, 161); " +
+					"-fx-background-radius: 5; " +
+					"-fx-border-radius: 5;" +
+					"-fx-border-color: black; " +
+					"-fx-text-fill: black;");
+			
+
+			stepBy = new TextField("1");
+			stepBy.setPrefColumnCount(7);
+			stepBy.setStyle("-fx-background-color: WHITE; " +
+					"-fx-background-radius: 5; " +
+					"-fx-border-radius: 5;" +
+					"-fx-border-color: black;");
 	 }
 	
 	 
