@@ -261,7 +261,13 @@ public class ElevatorSimController {
 	 * Enable logging. A pass-through from the GUI to building
 	 */
 	public void enableLogging() {
-		building.enableLogging();
+		if (building.isLoggingOn()){
+			building.disableLogging();
+		}
+		else {
+			building.enableLogging();
+		}
+		
 	}	
 	
  	/**

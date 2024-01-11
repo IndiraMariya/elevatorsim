@@ -65,7 +65,7 @@ public class ElevatorSimulation extends Application {
 	Button logging;
 	Button run;
 	Button step;
-	Label stepLabel;
+	Button stop;
 	TextField stepBy;
 	HBox[] floors;
 	Polygon triangle;
@@ -124,7 +124,7 @@ public class ElevatorSimulation extends Application {
 	    // Create the scene with VBox containing all floors
         pane.getChildren().addAll(createFloors(floors));
 		createButtons();
-		buttons.getChildren().addAll(run,step, stepLabel, stepBy,logging);
+		buttons.getChildren().addAll(run, stop, step, stepBy,logging);
 		buttons.setStyle("-fx-padding: 0 0 10 0;");
 		bp.setBottom(buttons);
 		timebox.setStyle("-fx-padding: 10 0 20 0;");
@@ -337,8 +337,17 @@ public class ElevatorSimulation extends Application {
 				"-fx-border-color: black; " +
 				"-fx-text-fill: black;");
 		
+		stop = new Button("Stop");
+		stop.setOnAction(e -> t.pause());
+		stop.setFont(Font.font("Helvetica", 16));
+		stop.setStyle("-fx-background-color: rgb(255, 225, 127 ); " +
+				"-fx-background-radius: 5; " +
+				"-fx-border-radius: 5;" +
+				"-fx-border-color: black; " +
+				"-fx-text-fill: black;");
+		
 		step = new Button("Step");
-		step.setOnAction(e -> controller.stepSim());
+		step.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
 		step.setFont(Font.font("Helvetica", 16));
 		step.setStyle("-fx-background-color: rgb(224, 255, 161); " +
 				"-fx-background-radius: 5; " +
@@ -346,12 +355,9 @@ public class ElevatorSimulation extends Application {
 				"-fx-border-color: black; " +
 				"-fx-text-fill: black;");
 		
-		stepLabel = new Label("Step #:");
-		stepLabel.setFont(Font.font("Helvetica", 16));
-		
-		stepBy = new TextField();
+
+		stepBy = new TextField("1");
 		stepBy.setPrefColumnCount(7);
-		stepBy.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
 		stepBy.setStyle("-fx-background-color: WHITE; " +
 				"-fx-background-radius: 5; " +
 				"-fx-border-radius: 5;" +

@@ -135,6 +135,20 @@ public class Building {
 				elevator.getPrevState() == Elevator.STOP &&
 				!callMgr.isCallPending();
 	}
+	
+	
+	/**
+	 * Returns whether logger is on
+	 *
+	 * @return boolean true if the logger is on
+	 * 
+	 */
+	public boolean isLoggingOn() {
+		if (LOGGER.getLevel().equals(Level.OFF)) {
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Gets the elevator state
@@ -552,6 +566,14 @@ public class Building {
 		logElevatorConfig(elevator.getCapacity(),elevator.getTicksPerFloor(), elevator.getTicksDoorOpenClose(),
 					          elevator.getPassPerTick(), elevator.getCurrState(),elevator.getCurrFloor());
 
+	}
+	
+	/**
+	 * Disables logging.
+	 * 
+	 */
+	public void disableLogging() {
+		LOGGER.setLevel(Level.OFF);
 	}
 
 	/**
