@@ -74,6 +74,8 @@ public class ElevatorSimulation extends Application {
 
 	/**
 	 * Instantiates a new elevator simulation.
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public ElevatorSimulation() {
 		controller = new ElevatorSimController(this);	
@@ -86,13 +88,11 @@ public class ElevatorSimulation extends Application {
 	 *
 	 * @param primaryStage the primary stage
 	 * @throws Exception the exception
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// You need to design the GUI. Note that the test name should
-		// appear in the Title of the window!!
-		//TODO: Complete your GUI, including adding any helper methods.
-				//      Meet the 30 line limit...
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
 		bp = new BorderPane();
 		pane = new Pane();
@@ -141,6 +141,8 @@ public class ElevatorSimulation extends Application {
 	  * 
 	  * @param floor the floor
 	  * @return HBox the generated HBox
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 private HBox createHBox(String floor) {
 		 HBox hBox = new HBox();
@@ -176,7 +178,6 @@ public class ElevatorSimulation extends Application {
         Rotate rotate2 = new Rotate(210, 308, 100);
         triangleDown.getTransforms().add(rotate2);
         triangleDown.setFill(Color.rgb(184, 212, 217));	
-	  
         
 	    arrow.getChildren().addAll(triangle,triangleDown);
 		hBox.getChildren().addAll(stackPane, arrow);
@@ -193,6 +194,8 @@ public class ElevatorSimulation extends Application {
 	  * 
 	  * @param floor the floor
 	  * @param state the state
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 public void setFloor(int floor, int state) {
 		 for (int i = 0; i < floors.length; i++) {
@@ -212,6 +215,8 @@ public class ElevatorSimulation extends Application {
 	  * @param floor the floor
 	  * @param dir the direction
 	  * @param call if there's a call
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 public void showDirection(int floor, int dir, Boolean call) {
 		 VBox arrows = (VBox) floors[floors.length-floor-1].getChildren().get(1);
@@ -237,6 +242,8 @@ public class ElevatorSimulation extends Application {
 	 * @param floorNum floor number
 	 * @param groupUp number of groups going up
 	 * @param groupDown number of groups going down
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void createPass(int floorNum, int groupUp, int groupDown) {
 		HBox floor = floors[floors.length - 1 - floorNum];
@@ -264,6 +271,8 @@ public class ElevatorSimulation extends Application {
 	 *
 	 * @param dir Direction of passenger group
 	 * @return StackPane representing PassengerGroup
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private StackPane createPassengerGroup(int dir) {
 		Text passengers;
@@ -289,8 +298,10 @@ public class ElevatorSimulation extends Application {
 	  * of the GUI. 
 	  * 
 	  * @param time the time
-	  * @param direc the direc of the elevator at the given time
+	  * @param direc the direction of the elevator at the given time
 	  * @param ePass the number of passengers at the given time
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 public void setTimebox(int time, int ePass, int direc){
 		 currTime.setText("" + time);
@@ -304,6 +315,8 @@ public class ElevatorSimulation extends Application {
 	  * of the GUI. 
 	  * 
 	  * @param eState the state
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 public void setState(int eState) {
 		 if (eState == STOP) currState = "STOP";
@@ -319,6 +332,7 @@ public class ElevatorSimulation extends Application {
 	 /**
 	  * Creates Run, Step, and Logging buttons in the bottom bar.
 	  * 
+	  * PEER REVIEWED BY MK
 	  */
 	 private void createButtons() {
 		buttons = new HBox();
@@ -376,6 +390,8 @@ public class ElevatorSimulation extends Application {
 	  * 
 	  * @param floors List of HBoxes
 	  * @return VBox the VBox
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 private VBox createFloors(HBox[] floors) {
 	     VBox vb = new VBox();
@@ -390,6 +406,8 @@ public class ElevatorSimulation extends Application {
 	 
 	 /** 
 	  * Ends the simulation.
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 public void endSimulation() {
 		 t.stop();
@@ -398,6 +416,8 @@ public class ElevatorSimulation extends Application {
 
 	 /** 
 	  * Initializes the timeline.
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 private void initTimeline() {
 		t = new Timeline(new KeyFrame(Duration.millis(millisPerTick), e -> controller.stepSim()));
@@ -412,6 +432,8 @@ public class ElevatorSimulation extends Application {
 	  * Runs stepSim until iteration number stepNum. 
 	  * 
 	  * @param stepNum number of steps to run
+	  *
+	  * PEER REVIEWED BY MK
 	  */
 	 private void stepUntil(int stepNum) {
 		 for (int i = 0; i < stepNum; i++) {
