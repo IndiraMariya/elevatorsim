@@ -144,6 +144,7 @@ public class Building {
 	 *
 	 * @return boolean true if the logger is on
 	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public boolean isLoggingOn() {
 		if (LOGGER.getLevel().equals(Level.OFF)) {
@@ -157,7 +158,6 @@ public class Building {
 	 *
 	 * @return the elevator state
 	 * 
-	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorState() {
 		return elevator.getCurrState();
@@ -168,7 +168,6 @@ public class Building {
 	 *
 	 * @return the elevator direction
 	 * 
-	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorDirection() {
 		return elevator.getDirection();
@@ -188,7 +187,6 @@ public class Building {
 	 *
 	 * @return the number of passengers in the elevator
 	 * 
-	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorPassengerCount() {
 		return elevator.getNumPassengers();
@@ -573,6 +571,7 @@ public class Building {
 	/**
 	 * Disables logging.
 	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public void disableLogging() {
 		LOGGER.setLevel(Level.OFF);
@@ -622,6 +621,8 @@ public class Building {
 	 * @param passPerTick the pass per tick
 	 * @param state the state
 	 * @param floor the floor
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void logElevatorConfig(int capacity, int ticksPerFloor, int ticksDoorOpenClose,
 			                       int passPerTick, int state, int floor) {
