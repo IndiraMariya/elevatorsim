@@ -70,6 +70,7 @@ public class ElevatorSimulation extends Application {
 	HBox[] floors;
 	Polygon triangle;
 	Polygon triangleDown;
+
 	
 
 	/**
@@ -112,9 +113,10 @@ public class ElevatorSimulation extends Application {
 		Label stateLabel = new Label("State:");
 		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
 		
-		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		Label direcLabel = new Label("Direction:");
+
 		
-		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state, dir);
+		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state, direcLabel, dir);
 
 		floors = new HBox[NUM_FLOORS];
 		for (int i = 0; i < floors.length; i++) {
@@ -308,6 +310,7 @@ public class ElevatorSimulation extends Application {
 		 pass.setText("" + ePass);
 		 if (direc == 1) dir.setText("UP");
 		 else dir.setText("DOWN"); 
+		 dir.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 20));
 	 }
 	 
 	 /**
