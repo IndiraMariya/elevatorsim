@@ -1,0 +1,4 @@
+Time,NumPass,FromFloor,To Floor,Polite,Wait,
+10,3,6,3,TRUE,1000,"elevator goes to 6th floor, boards and moves down"
+18,3,3,6,TRUE,1000,should not board while elevator is moving down
+21,6,3,1,TRUE,1000,boards while initial passenger is moving down - takes 2 ticks

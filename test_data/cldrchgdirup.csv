@@ -1,0 +1,3 @@
+Time,NumPass,FromFloor,To Floor,Polite,Wait,
+10,3,2,1,TRUE,1000,"elevator moves to floor 2, boards passengers and moves down"
+30,3,6,1,TRUE,1000,arrives during close dr state and forces change direction

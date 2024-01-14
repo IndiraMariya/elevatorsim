@@ -1,0 +1,3 @@
+Time,NumPass,FromFloor,To Floor,Polite,Wait,
+10,3,1,6,TRUE,1000,boards and elevator moves up
+45,3,1,6,TRUE,1000,arrive during close dr state and causes direction change 

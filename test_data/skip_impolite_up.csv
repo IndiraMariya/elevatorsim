@@ -1,0 +1,4 @@
+Time,NumPass,FromFloor,To Floor,Polite,Wait,
+10,10,1,6,TRUE,1000,elevator boards and direction set to up
+10,4,1,6,TRUE,1000,boards
+10,3,1,6,FALSE,1000,skipped but impolite - should not cause doors to open during close door!

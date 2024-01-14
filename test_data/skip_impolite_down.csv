@@ -1,0 +1,4 @@
+Time,NumPass,FromFloor,To Floor,Polite,Wait,
+10,10,6,1,TRUE,1000,move elevator to sixth floor and board
+10,4,6,1,TRUE,1000,boards
+10,3,6,1,FALSE,1000,skipped but impolite - should NOT cause doors to open again!
