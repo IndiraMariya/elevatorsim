@@ -25,17 +25,20 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-//Owned By: Indira Mariya
 
+/**
+ * The Class ElevatorSimulation.
+ *
+ * @author Indira Mariya
+ */
 public class ElevatorSimulation extends Application {
 	/** Instantiate the GUI fields */
 	private ElevatorSimController controller;
 	private final int NUM_FLOORS;
-	private int currFloor;
 	private int passengers;
 	private int time;
 	
-	/** you MUST use millisPerTick as the duration for your timeline */
+	/** Duration for the timeline */
 	private static int millisPerTick = 250;
 
 	/** Local copies of the states for tracking purposes */
@@ -52,12 +55,11 @@ public class ElevatorSimulation extends Application {
 
 	private Pane pane;
 	private Scene scene;
-	private StackPane sp;
 	private BorderPane bp;
 	
-	Text currTime= new Text();
-	Text pass= new Text();
-	Text state= new Text();
+	Text currTime = new Text();
+	Text pass = new Text();
+	Text state = new Text();
 	Text dir = new Text();
 	private Timeline t;
 	String currState;
@@ -71,8 +73,6 @@ public class ElevatorSimulation extends Application {
 	Polygon triangle;
 	Polygon triangleDown;
 
-	
-
 	/**
 	 * Instantiates a new elevator simulation.
 	 * 
@@ -81,7 +81,6 @@ public class ElevatorSimulation extends Application {
 	public ElevatorSimulation() {
 		controller = new ElevatorSimController(this);	
 		NUM_FLOORS = controller.getNumFloors();
-		currFloor = 0;
 	}
 
 	/**

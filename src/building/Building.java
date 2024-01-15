@@ -75,13 +75,12 @@ public class Building {
 		passSuccess = new ArrayList<Passengers>();
 		gaveUp = new ArrayList<Passengers>();
 		initializeBuildingLogger(logfile);
-		// passDataFile is where you will write all the results for those passengers who successfully
-		// arrived at their destination and those who gave up...
+		// passDataFile is where all the results for those passengers who successfully arrived at their destination
+		// and those who gave up go
 		fio = new MyFileIO();
 		passDataFile = fio.getFileHandle(logfile.replaceAll(".log","PassData.csv"));
 
 		// create the floors, call manager and the elevator arrays
-		// note that YOU will need to create and config each specific elevator...
 		floors = new Floor[NUM_FLOORS];
 		for (int i = 0; i < NUM_FLOORS; i++) {
 			floors[i]= new Floor(FLOOR_QSIZE);
@@ -218,7 +217,6 @@ public class Building {
 		return floors[floor].hasCall(dir);
 	}
 
-	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
 	 * Initialize building logger. Sets formating, file to log to, and
 	 * turns the logger OFF by default
@@ -416,7 +414,6 @@ public class Building {
 		int curFloor = elevator.getCurrFloor();
 		int dir = elevator.getDirection();
 		if (callMgr.isCallOnFloor(curFloor, dir) && callMgr.isNextGroupOnFloorImpolite(curFloor, dir)) {
-			// TODO: check if action needs to be taken
 			return Elevator.OPENDR;
 		}
 

@@ -7,10 +7,11 @@ import building.Building;
 import genericqueue.GenericQueue;
 import myfileio.MyFileIO;
 import passengers.Passengers;
-//Owned By: Indira Mariya
 
 /**
  * The Class ElevatorSimController.
+ *
+ * @author Indira Mariya
  */ 
 public class ElevatorSimController {
 	
@@ -96,19 +97,18 @@ public class ElevatorSimController {
 		enableLogging();
 	}
 
-	//TODO: Write methods to update the GUI display
-	//      Needs to cover the Elevator state, Elevator passengers
-	//      and queues for each floor, as well as the current time
 	/**
 	 * Updates the GUI
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
-	public void updateGUI() {
+	private void updateGUI() {
 		gui.setTimebox(stepCnt, building.getElevatorPassengerCount(), building.getElevatorDirection());
 		gui.setFloor(building.getElevatorFloor(), building.getElevatorState());
-		for (int i = 0; i < NUM_FLOORS; i ++) {
+		for (int i = 0; i < NUM_FLOORS; i++) {
 			int passUp = building.getNumPassengerGroupsOnFloor(i, 1);
 			int passDown = building.getNumPassengerGroupsOnFloor(i, -1);
-			gui.createPass(i,passUp, passDown);
+			gui.createPass(i, passUp, passDown);
 		}
 		gui.showDirection(
 				building.getElevatorFloor(),
@@ -128,10 +128,13 @@ public class ElevatorSimController {
 	
 	/**
 	 * Updates the State
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
-	public void updateState() {
+	private void updateState() {
 		gui.setState(building.getElevatorState());
 	}
+
 	/**
 	 * Config simulation. Reads the filename and parses the
 	 * parameters.
@@ -259,6 +262,8 @@ public class ElevatorSimController {
 
 	/**
 	 * Enable logging. A pass-through from the GUI to building
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	public void enableLogging() {
 		if (building.isLoggingOn()){
@@ -271,13 +276,11 @@ public class ElevatorSimController {
 	}	
 	
  	/**
-	 * Step sim. See the comments below for the functionality you
-	 * must implement......
+	 * Step sim. Step the timeline by one tick, check if passengers need to be added, check state change
 	 * 
 	 * PEER REVIEWED BY MK
 	 */
 	public void stepSim() {
- 		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
 		if (!building.hasSimulationEnded(stepCnt) || !passQ.isEmpty()) {
 			while (!passQ.isEmpty() && passQ.peek().getTime() == stepCnt) {

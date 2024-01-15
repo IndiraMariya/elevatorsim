@@ -206,7 +206,7 @@ public class Elevator {
 	 *
 	 * PEER REVIEWED BY SYK
 	 */
-	void updateCurrState(int nextState) {
+	protected void updateCurrState(int nextState) {
 		this.prevState = this.currState;
 		this.currState = nextState;
 		if (this.prevState != this.currState) {
@@ -224,7 +224,7 @@ public class Elevator {
 	 *
 	 * PEER REVIEWED BY SYK
 	 */
-	public boolean isDoorOpen() {
+	protected boolean isDoorOpen() {
 		return doorState == DROPEN;
 	}
 	
@@ -257,9 +257,11 @@ public class Elevator {
 	 * of offloading or boarding (delay has not passed).
 	 * 
 	 * @return is elevator offloading or boarding -- boolean
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected boolean isTransitioning() {
-		numPassengersTransitioning -= passPerTick; // TODO: consider if we want this in its own method
+		numPassengersTransitioning -= passPerTick;
 		return numPassengersTransitioning > 0;
 	}
 
@@ -269,6 +271,8 @@ public class Elevator {
 	 * a specific floor).
 	 * 
 	 * @return is elevator transitioning between floors -- boolean
+	 *
+	 * PEER REVIEWED BY SYK
 	 */
 	protected boolean atFloor() {
 		if (currState == MV1FLR || currState == MVTOFLR) {
@@ -293,7 +297,7 @@ public class Elevator {
 	 *
 	 * PEER REVIEWED BY SYK
 	 */
-	public int getNumPassengers() {
+	protected int getNumPassengers() {
 		int count = 0;
 		for (ArrayList<Passengers> groupByFloor : passByFloor) {
 			for (Passengers group: groupByFloor) {
@@ -380,7 +384,7 @@ public class Elevator {
 	 *
 	 * @return the direction
 	 */
-	public int getDirection() {
+	int getDirection() {
 		return direction;
 	}
 
@@ -389,7 +393,7 @@ public class Elevator {
 	 *
 	 * @return moveToFloor
 	 */
-	public int getMoveToFloor() {
+	int getMoveToFloor() {
 		return moveToFloor;
 	}
 
@@ -398,7 +402,7 @@ public class Elevator {
 	 *
 	 * @param moveToFloor floor to move to
 	 */
-	public void setMoveToFloor(int moveToFloor) {
+	void setMoveToFloor(int moveToFloor) {
 		this.moveToFloor = moveToFloor;
 	}
 
@@ -407,7 +411,7 @@ public class Elevator {
 	 *
 	 * @param direction sets direction
 	 */
-	public void setDirection(int direction) {
+	void setDirection(int direction) {
 		this.direction = direction;
 	}
 
@@ -416,7 +420,7 @@ public class Elevator {
 	 *
 	 * @return postMoveToFloorDir
 	 */
-	public int getPostMoveToFloorDir() {
+	int getPostMoveToFloorDir() {
 		return postMoveToFloorDir;
 	}
 
@@ -425,7 +429,7 @@ public class Elevator {
 	 *
 	 * @param postMoveToFloorDir postMoveToFloor direction
 	 */
-	public void setPostMoveToFloorDir(int postMoveToFloorDir) {
+	void setPostMoveToFloorDir(int postMoveToFloorDir) {
 		this.postMoveToFloorDir = postMoveToFloorDir;
 	}
 }

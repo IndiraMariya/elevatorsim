@@ -70,11 +70,10 @@ public class Passengers {
 	 * PEER REVIEWED BY MK
 	 */
 	public Passengers(int time, int numPass, int on, int dest, boolean polite, int waitTime) {
-	//       Remember to appropriately adjust the onFloor and destFloor to account
-	//       to convert from American to European numbering...
 		// set values
 		this.time = time;
 		this.numPass = numPass;
+		// adjust floors between American and European numbering
 		this.onFloor = on - 1;
 		this.destFloor = dest - 1;
 		this.polite = polite;
@@ -196,7 +195,6 @@ public class Passengers {
 	public void setBoardTime(int boardTime) {
 		this.boardTime = boardTime;
 	}
-
 
 	/**
 	 * Sets the time the passenger arrived.
