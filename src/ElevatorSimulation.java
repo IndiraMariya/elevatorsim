@@ -98,32 +98,19 @@ public class ElevatorSimulation extends Application {
 		bp = new BorderPane();
 		pane = new Pane();
 		bp.setCenter(pane);
-		scene = new Scene(bp, 475, 525);
+		scene = new Scene(bp, 550, 525);
 		
 		HBox timebox = new HBox();
 		timebox.setSpacing(10);
 		timebox.setAlignment(Pos.CENTER);
+		createTimeBox(timebox);
 		
-		Label timeLabel = new Label("Time:");
-		currTime.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
 		
-		Label passLabel = new Label("Passengers:");
-		pass.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
-		
-		Label stateLabel = new Label("State:");
-		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
-		
-		Label direcLabel = new Label("Direction:");
-
-		
-		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state, direcLabel, dir);
-
 		floors = new HBox[NUM_FLOORS];
 		for (int i = 0; i < floors.length; i++) {
 			floors[i] = createHBox((NUM_FLOORS-i) + "");
 	    }
 
-	    // Create the scene with VBox containing all floors
         pane.getChildren().addAll(createFloors(floors));
 		createButtons();
 		buttons.getChildren().addAll(run, stop, step, stepBy,logging);
@@ -132,8 +119,30 @@ public class ElevatorSimulation extends Application {
 		timebox.setStyle("-fx-padding: 10 0 20 0;");
 		bp.setTop(timebox);
         initTimeline();
-		primaryStage.setScene(scene); // Place the scene in the stage
-		primaryStage.show(); // Display the stage
+		primaryStage.setScene(scene); 
+		primaryStage.show();
+	}
+	
+	private HBox createTimeBox(HBox timebox){
+		Label timeLabel = new Label("Time:");
+		currTime.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		currTime.setWrappingWidth(40);
+		
+		Label passLabel = new Label("Passengers:");
+		pass.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		pass.setWrappingWidth(30);
+		
+		Label stateLabel = new Label("State:");
+		state.setFont(Font.font("Helvetica",FontWeight.BOLD, 22));
+		state.setWrappingWidth(110);
+		
+		Label direcLabel = new Label("Direction:");
+		dir.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 20));
+		dir.setWrappingWidth(80);
+
+		
+		timebox.getChildren().addAll(timeLabel, currTime, passLabel, pass, stateLabel, state, direcLabel, dir);
+		return timebox;
 	}
 
 	 
@@ -310,7 +319,6 @@ public class ElevatorSimulation extends Application {
 		 pass.setText("" + ePass);
 		 if (direc == 1) dir.setText("UP");
 		 else dir.setText("DOWN"); 
-		 dir.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 20));
 	 }
 	 
 	 /**
