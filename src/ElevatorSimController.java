@@ -93,8 +93,7 @@ public class ElevatorSimController {
 		building = new Building(NUM_FLOORS,logfile);
 		passQ = new GenericQueue<>(PASSENGERS_QSIZE);
 		building.initializeElevator(capacity, floorTicks, doorTicks, passPerTick);
-		initializePassengerData(testfile);	
-		enableLogging();
+		initializePassengerData(testfile);
 	}
 
 	/**
