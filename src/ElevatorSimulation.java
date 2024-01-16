@@ -1,5 +1,6 @@
 import building.Elevator;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -97,7 +98,7 @@ public class ElevatorSimulation extends Application {
 		bp = new BorderPane();
 		pane = new Pane();
 		bp.setCenter(pane);
-		scene = new Scene(bp, 450, 525);
+		scene = new Scene(bp, 475, 525);
 		
 		HBox timebox = new HBox();
 		timebox.setSpacing(10);
@@ -351,7 +352,14 @@ public class ElevatorSimulation extends Application {
 				"-fx-text-fill: black;");
 		
 		run = new Button("Run");
-		run.setOnAction(e -> t.play());
+		run.setOnAction(e -> {
+			if (time == 0)
+				t.play();
+			
+			if((t.getStatus().equals(Status.PAUSED)))
+				t.play();
+		});
+				
 		run.setFont(Font.font("Helvetica", 16));
 		run.setStyle("-fx-background-color: rgb(121, 224, 135); " +
 				"-fx-background-radius: 5; " +
@@ -378,7 +386,10 @@ public class ElevatorSimulation extends Application {
 	  */
 	 private void createStepButton() {
 			step = new Button("Step");
-			step.setOnAction(e -> stepUntil(Integer.parseInt(stepBy.getText())));
+			step.setOnAction(e -> {
+				if (!stepBy.getText().isEmpty() && Integer.parseInt(stepBy.getText()) > 0)
+				stepUntil(Integer.parseInt(stepBy.getText()));
+						});
 			step.setFont(Font.font("Helvetica", 16));
 			step.setStyle("-fx-background-color: rgb(224, 255, 161); " +
 					"-fx-background-radius: 5; " +
@@ -447,6 +458,8 @@ public class ElevatorSimulation extends Application {
 	  * PEER REVIEWED BY MK
 	  */
 	 private void stepUntil(int stepNum) {
+		 if (t.getStatus().equals(Status.STOPPED))
+			 return;
 		 for (int i = 0; i < stepNum; i++) {
 			 controller.stepSim();
 		 }
