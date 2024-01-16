@@ -157,6 +157,7 @@ public class Building {
 	 *
 	 * @return the elevator state
 	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorState() {
 		return elevator.getCurrState();
@@ -167,6 +168,7 @@ public class Building {
 	 *
 	 * @return the elevator direction
 	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorDirection() {
 		return elevator.getDirection();
@@ -176,6 +178,8 @@ public class Building {
 	 * gets the elevator's current floor
 	 *
 	 * @return the elevator floor
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	public int getElevatorFloor() {
 		return elevator.getCurrFloor();
@@ -185,6 +189,8 @@ public class Building {
 	 * gets the number of passengers in the elevator
 	 *
 	 * @return the number of passengers in the elevator
+	 * 
+	 * PEER REVIEWED BY MK
 	 * 
 	 */
 	public int getElevatorPassengerCount() {
@@ -694,6 +700,8 @@ public class Building {
 	 * @param floor the floor
 	 * @param dir the dir
 	 * @param id the id
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void logSkip(int time, int numPass, int floor, int dir, int id) {
 		LOGGER.info("Time="+time+"   Skip="+numPass+" Floor="+ (floor+1)
@@ -708,6 +716,8 @@ public class Building {
 	 * @param floor the floor
 	 * @param dir the dir
 	 * @param id the id
+	 * 
+	 * PEER REVIEWED BY MK
 	 */
 	private void logBoard(int time, int numPass, int floor, int dir, int id) {
 		LOGGER.info("Time="+time+"   Board="+numPass+" Floor="+ (floor+1)
