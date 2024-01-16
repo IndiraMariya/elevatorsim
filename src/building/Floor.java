@@ -25,6 +25,7 @@ public class Floor {
 	 *
 	 * @param qSize Size of the queue
 	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	public Floor(int qSize) {
 		down = new GenericQueue<Passengers>(qSize);

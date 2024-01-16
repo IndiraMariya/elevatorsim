@@ -395,8 +395,12 @@ public class ElevatorSimulation extends Application {
 	 private void createStepButton() {
 			step = new Button("Step");
 			step.setOnAction(e -> {
-				if (!stepBy.getText().isEmpty() && Integer.parseInt(stepBy.getText()) > 0)
-				stepUntil(Integer.parseInt(stepBy.getText()));
+					if (time == 0)
+						t.play();
+				if (!stepBy.getText().isEmpty() && Integer.parseInt(stepBy.getText()) > 0) {
+					stepUntil(Integer.parseInt(stepBy.getText()));
+					t.pause();
+				}
 						});
 			step.setFont(Font.font("Helvetica", 16));
 			step.setStyle("-fx-background-color: rgb(224, 255, 161); " +
