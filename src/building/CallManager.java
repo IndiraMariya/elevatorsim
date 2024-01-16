@@ -40,6 +40,8 @@ public class CallManager {
 	 *
 	 * @param floors the floors
 	 * @param numFloors the num floors
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	public CallManager(Floor[] floors, int numFloors) {
 		this.floors = floors;
@@ -58,6 +60,8 @@ public class CallManager {
 	 * more efficient, could only update when there has been a change to the floor queues -
 	 * either passengers being added or being removed. The alternative is to dynamically
 	 * recalculate the values of specific fields when needed.
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	protected void updateCallStatus() {
 		for (int i = 0; i < NUM_FLOORS; i++) {
@@ -73,6 +77,8 @@ public class CallManager {
 	 *
 	 * @param floor the floor
 	 * @return the passengers
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	protected Passengers prioritizePassengerCalls(int floor) {
 		Floor currentFloor = floors[floor];
@@ -115,6 +121,8 @@ public class CallManager {
 	 * @param floor the floor to check
 	 * @param dir the direction to check
 	 * @return whether there is a call
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	protected boolean isCallOnFloor(int floor, int dir) {
 		return dir == UP ? upCalls[floor] : downCalls[floor];
@@ -125,6 +133,8 @@ public class CallManager {
 	 *
 	 * @param floor floor to check
 	 * @return if there is a call in either direction
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	protected boolean isCallOnFloor(int floor) {
 		return isCallOnFloor(floor, UP) || isCallOnFloor(floor, DOWN);
@@ -134,6 +144,8 @@ public class CallManager {
 	 * Updates the relevant variable based on current state
 	 *
 	 * @param dir direction to update
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	private void updateCallPending(int dir) {
 		if (dir == UP) {
@@ -160,6 +172,8 @@ public class CallManager {
 	 * Checks if there is a call pending
 	 *
 	 * @return Whether there is a call pending
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	protected boolean isCallPending() {
 		return upCallPending || downCallPending;
@@ -171,6 +185,8 @@ public class CallManager {
 	 * @param floor the floor to check from
 	 * @param dir the direction to check
 	 * @return whether there is a call in the specified direction
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	protected boolean isCallInDirection(int floor, int dir) {
 		return getNumCallsInDirection(floor, dir) != 0;
@@ -182,6 +198,8 @@ public class CallManager {
 	 * @param floor the floor to check from
 	 * @param dir the direction to check
 	 * @return number of calls in the specified direction (does NOT include current floor)
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	private int getNumCallsInDirection(int floor, int dir) {
 		int count = 0;
@@ -205,6 +223,8 @@ public class CallManager {
 	 * @param floor floor to check
 	 * @param dir direction of elevator
 	 * @return whether the next group is impolite or not
+	 * 
+	 * PEER REVIEWED BY IM
 	 */
 	protected boolean isNextGroupOnFloorImpolite(int floor, int dir) {
 		Passengers nextGroup = floors[floor].peekNextGroup(dir);
